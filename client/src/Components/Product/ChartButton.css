@@ -1,0 +1,24 @@
+.modal-stackedBar {
+    max-width: 60%;
+}
+  
+.modal-pie {
+    max-width: 45%;
+}
+  
+.modal-polar {
+    max-width: 20%;
+}
+  
+.modal-traffic {
+    max-width: 40%;
+}
+  
+.chart-container {
+    width: 100%;
+}
+  
+.form-container {
+    width: 100%;
+}
+  

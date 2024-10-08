@@ -1,0 +1,61 @@
+
+.header-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.header_content{
+    height: 140px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.header-brand{
+    display: flex;
+}
+.header-brand h1:hover{
+    text-decoration: underline;
+}
+.header-brand h1:hover{
+    text-decoration: none;
+    color: linear-gradient(to right, #fa74aa 0%, #fe9974 100%);
+
+}
+.header-brand a {
+    background-image: linear-gradient(to right, #fa74aa 0%, #fe9974 100%);
+    -webkit-background-clip: text; /* Cho phép màu gradient được áp dụng trên màu chữ */
+    color: transparent; /* Đặt màu chữ trở thành trong suốt để màu gradient hiển thị */
+    font-size: 2em; 
+ 
+  }
+
+.me-auto a:hover {
+    color: #f55f8d;   
+}
+.right-navbar a:hover{
+    color: #f55f8d;   
+
+}
+.me-auto a:hover {
+    animation: upToDown 0.6s forwards 1; 
+}
+.right-navbar a:hover {
+    transition: all 0.2s;
+    text-decoration: underline;
+    /* forwards: giữ cho phần tử ở trạng thái cuối cùng*/
+
+}
+    
+@keyframes upToDown {
+    49% {
+      transform: translateY(50%);
+    }
+    50% {
+      opacity: 0;
+      transform: translateY(-50%);
+    }
+    51% {
+      opacity: 1;
+    }
+}

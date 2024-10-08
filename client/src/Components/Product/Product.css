@@ -1,0 +1,14 @@
+.nav-search {
+    width: 40%;
+}
+
+.product-items {
+    margin-top: 2rem;
+    display: flex;
+  
+}
+.product-items .container{
+    --mdb-gutter-x: 16rem;
+    padding-right: calc(var(--mdb-gutter-x) * 0.1);
+    margin-right: 0rem;
+}

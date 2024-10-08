@@ -1,0 +1,8 @@
+.custom-dropdown-item {
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+}
+
+.rs-dropdown-menu-toggle-icon svg {
+}

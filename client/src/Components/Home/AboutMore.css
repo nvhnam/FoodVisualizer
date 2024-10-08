@@ -1,0 +1,41 @@
+.about-more-content{
+    padding: 6rem;
+    padding-top: 10rem;
+    overflow: hidden;
+    background-image: url(../../asset/bG-amd.png);
+    background-position: top;
+    background-size: 100%;
+
+}
+.about-more-content strong{
+    font-size: 70px;
+    font-weight: 700;
+    color: #262626;
+    margin-bottom: 20px;
+    line-height: 1.0;
+    position: relative;
+}
+.about-more-content strong::before{
+    content: "";
+    position: absolute;
+    left: 32%;
+    top: 4.5rem;
+    width: 40rem;
+    height: 14px;
+    transform: skew(-12deg) translateX(-50%);
+    background: rgba(238,111,87,0.5);
+    z-index: -1;
+}
+.about-more-detail {
+    padding: 4rem 10rem 0 10rem;
+    line-height: 3rem;
+}
+.about-more-content p{
+    font-size: 17px;
+}
+.about-more-detail h1{
+    font-size: 22px;
+    color: #d47272;
+    text-decoration: underline;
+    text-decoration-color: #f53131;
+}

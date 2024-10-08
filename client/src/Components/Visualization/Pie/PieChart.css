@@ -1,0 +1,46 @@
+.pie-style{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+ 
+}
+.pie-item{
+    margin: 0;
+    padding: 0;
+}
+/* .pie1{
+    grid-column: 1 / span 2;
+}
+.pie3{
+    grid-column: 2 / span 3;
+}
+.pie4{
+    grid-column: 1 / span 2;
+} */
+
+.inf {
+    font-family:Arial, Helvetica, sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    color: black;
+  }
+h3{
+    font-family: Arial, Helvetica, sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    color: black;
+    text-align: center;
+  }
+h2{
+    font-family: Arial, Helvetica, sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 26px;
+    color: black;
+    text-align: center;
+  }
+  

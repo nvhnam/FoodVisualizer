@@ -1,0 +1,36 @@
+.modal-content{
+  overflow: hidden;
+}
+.list-group{
+  max-height: 20rem;
+}
+
+.traf-lgt .list-group .item-color hr{
+  border: 1px solid black;
+}
+.traf-lgt .inf {
+  font-family:Arial, Helvetica, sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
+  color: black;
+}
+.traf-lgt .list-group .item-color h3{
+  font-family: Arial, Helvetica, sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
+  color: black;
+  text-align: center;
+}
+.traf-lgt .list-group .item-color h2{
+  font-family: Arial, Helvetica, sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 26px;
+  color: black;
+  text-align: center;
+}
