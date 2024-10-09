@@ -16,6 +16,8 @@ app.use(cookieParser());
 // Get all products in "product" table for UI
 import getProduct from "./routes/getProduct-r.js";
 app.use("/", getProduct);
+import getNutrients from "./routes/getNutrients-r.js";
+app.use("/", getNutrients);
 // User
 import authUser from "./routes/auth-r.js";
 app.use("/auth", authUser);
