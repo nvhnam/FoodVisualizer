@@ -268,7 +268,7 @@ const Product = ({ isChecked, isToggle }) => {
                         variant="top"
                         src={productItem.img}
                         style={{ minHeight: "12rem" }}
-                        className="w-100 h-100 overflow-hidden"
+                        className="w-100 h-100 overflow-hidden rounded-top"
                       />
                     ) : (
                       <div

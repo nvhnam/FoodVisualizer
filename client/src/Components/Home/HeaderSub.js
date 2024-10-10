@@ -39,8 +39,8 @@ const HeaderSub = () => {
             </Nav>
 
             <Nav className="right-navbar">
-              <Nav.Link href="#deets">Log In</Nav.Link>
-              <Nav.Link eventKey={2} href="#memes">
+              <Nav.Link href="/login">Log In</Nav.Link>
+              <Nav.Link eventKey={2} href="/signup">
                 Sign Up
               </Nav.Link>
             </Nav>

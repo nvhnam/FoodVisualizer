@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,6 +12,7 @@ import Container from "@mui/material/Container";
 import { createTheme } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./authContext";
 
 const Login = () => {
   const [values, setValues] = useState({
@@ -30,6 +31,8 @@ const Login = () => {
     return newErrors;
   };
 
+  console.log(values);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setValues({
@@ -47,6 +50,14 @@ const Login = () => {
     setErrors(newErrors);
   };
 
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("user") || null)
+  );
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(currentUser));
+  }, [currentUser]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const formErrors = validate();
@@ -58,13 +69,17 @@ const Login = () => {
           },
         })
         .then((res) => {
-          if (res.data.status === "success") {
-            const { token } = res.data;
+          console.log(res);
+          if (res.data.status === 200) {
+            setCurrentUser(res.data.user);
+            console.log("User: ", res.data.user);
+            const token = res.data.token;
+            console.log("Token: ", token);
             setSuccess(true);
             setLoginError("");
-            window.alert("Login successful! Redirecting...");
-            localStorage.setItem("token", token); // Store token in localStorage
-            setTimeout(() => navigate("/"), 2000);
+            // window.alert("Login successful! Redirecting...");
+            localStorage.setItem("token", token);
+            setTimeout(() => navigate("/"), 1000);
           } else {
             setLoginError(res.data.message);
             setSuccess(false);
@@ -83,6 +98,20 @@ const Login = () => {
     }
   };
 
+  // const { login } = useContext(AuthContext);
+
+  // const login = () => {};
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await login(values);
+  //     navigate("/");
+  //   } catch (error) {
+  //     setErrors(error.response.data);
+  //   }
+  // };
+
   const defaultTheme = createTheme();
 
   function Copyright(props) {
@@ -91,7 +120,8 @@ const Login = () => {
         variant="body2"
         color="text.secondary"
         align="center"
-        {...props}>
+        {...props}
+      >
         {"Copyright © "}
         <Link color="inherit" href="/">
           NutrinSight
@@ -111,7 +141,8 @@ const Login = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-        }}>
+        }}
+      >
         <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
@@ -151,7 +182,8 @@ const Login = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}>
+            sx={{ mt: 3, mb: 2 }}
+          >
             Sign In
           </Button>
           <Grid container>

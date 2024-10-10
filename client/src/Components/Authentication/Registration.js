@@ -110,7 +110,8 @@ const Registration = () => {
           },
         })
         .then((res) => {
-          if (res.data.status === "Success") {
+          console.log(res.data);
+          if (res.data.message === "User registered successfully") {
             setSuccess(true);
             setErrorExist("");
             setTimeout(() => navigate("/login"), 2000);
@@ -137,7 +138,8 @@ const Registration = () => {
         variant="body2"
         color="text.secondary"
         align="center"
-        {...props}>
+        {...props}
+      >
         {"Copyright © "}
         <Link color="inherit" href="/">
           KNF
@@ -157,7 +159,8 @@ const Registration = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-        }}>
+        }}
+      >
         <Avatar sx={{ m: 1, bgcolor: "warning.main" }}>
           <LockOutlinedIcon />
         </Avatar>
@@ -226,7 +229,8 @@ const Registration = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}>
+            sx={{ mt: 3, mb: 2 }}
+          >
             Sign Up
           </Button>
           {errorExist && (
@@ -240,7 +244,11 @@ const Registration = () => {
             </Typography>
           )}
           {success && (
-            <Typography style={{ color: "green" }} variant="subtitle1">
+            <Typography
+              className="textcenter"
+              style={{ color: "green" }}
+              variant="subtitle1"
+            >
               Success
             </Typography>
           )}

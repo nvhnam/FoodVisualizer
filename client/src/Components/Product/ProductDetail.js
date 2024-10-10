@@ -11,6 +11,7 @@ import { Button } from "@mui/material";
 const ProductDetail = ({ isChecked }) => {
   const [product, setProduct] = useState(null);
   const { productId } = useParams();
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const fetchFood = async () => {
@@ -31,6 +32,37 @@ const ProductDetail = ({ isChecked }) => {
   if (product === null) {
     return <p>Loading...</p>;
   }
+
+  const handleAddToCart = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setErrorMessage("Please log in to add products to your cart.");
+        return;
+      }
+
+      const response = await axios.post(
+        "http://localhost:8008/cart",
+        {
+          productId,
+          quantity: 1,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setErrorMessage("");
+      }
+    } catch (error) {
+      setErrorMessage("Failed to add product to cart. Please try again.");
+    }
+  };
+
   return (
     <>
       <HeaderSub />
@@ -48,12 +80,12 @@ const ProductDetail = ({ isChecked }) => {
 
         <div
           className="pd_content d-md-flex d-sm-block align-items-start flex-row"
-          style={{ height: "450px" }}
+          style={{ height: "480px" }}
         >
           <div className="pd_item w-25 p-0 rounded">
             <img
               src={product.img}
-              className="rounded w-100 h-100px mb-3"
+              className="rounded-top w-100 h-100px mb-3"
               style={{ objectfit: "contain", height: "300px" }}
               alt={product.name}
             />
@@ -62,21 +94,28 @@ const ProductDetail = ({ isChecked }) => {
             <p className="mt-3" style={{ textAlign: "left" }}>
               <span>Brand:</span> {product.brand}{" "}
             </p>
-            <div className="d-flex justify-content-between align-items-center">
-              <p className="my-n2" style={{ textAlign: "left" }}>
+            <div className="d-flex justify-content-between align-items-center w-100 mt-n2">
+              <p className="my-auto w-50" style={{ textAlign: "left" }}>
                 <span>Origin:</span> {product.origin}{" "}
               </p>
-              <div>
+
+              <div className="d-flex w-50 pr-2 justify-content-center">
                 <Button
                   variant="contained"
                   color="success"
-                  size="large"
-                  className="px-5 py-2"
+                  size="medium"
+                  className="px-5 py-2 mr-3"
+                  onClick={handleAddToCart}
                 >
                   Buy
                 </Button>
               </div>
             </div>
+            {errorMessage && (
+              <p className="text-center fs-6 mt-1" style={{ color: "red" }}>
+                {errorMessage}
+              </p>
+            )}
           </div>
 
           <div className="pd_item">

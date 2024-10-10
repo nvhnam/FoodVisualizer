@@ -8,18 +8,17 @@ import moment from "moment-timezone";
 dotenvConfig();
 
 const saltRounds = 10;
-const secretKey = process.env.secretKey;
+const secretKey = process.env.JWT_SECRET;
 
 export default class User {
-  constructor(username, email, password, age, gender) {
+  constructor(username, email, password, age) {
     this.username = username;
     this.email = email;
     this.password = password;
     this.age = age;
-    this.gender = gender;
   }
 
-  static async registerUser(username, email, password, age, gender) {
+  static async registerUser(username, email, password, age) {
     try {
       const checkExist = `SELECT * FROM user WHERE username = ? OR email = ?`;
       const [results] = await dbPool.query(checkExist, [username, email]);
@@ -46,25 +45,24 @@ export default class User {
   }
 
   static async loginUser(username, password) {
+    const thePassword = password;
     try {
       const query = `SELECT * FROM user WHERE username = ?`;
       const [results] = await dbPool.query(query, [username]);
       const user = results[0];
+      console.log("user: ", user);
       if (!user) {
         return { status: "error", message: "User not found" };
       }
 
-      const checkPassword = await bcrypt.compare(password, user.password);
+      const checkPassword = await bcrypt.compare(thePassword, user.password);
       if (!checkPassword) {
         return { status: "error", message: "Incorrect password" };
       }
 
       // Tạo JWT token khi đăng nhập thành công
       const token = this.generateToken(user.user_id);
-
-      // Cập nhật token trong cơ sở dữ liệu
-      const updateQuery = `UPDATE user SET token = ? WHERE user_id = ?`;
-      await dbPool.query(updateQuery, [token, user.user_id]);
+      // const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
 
       // Lấy giờ token bắt đầu và kết thúc
       const vietnamTime = moment().tz("Asia/Ho_Chi_Minh");
@@ -76,7 +74,11 @@ export default class User {
       console.log(`Token issued at: ${tokenStart}`);
       console.log(`Token expires at: ${tokenExpiration}`);
 
-      return { status: "success", user, token };
+      // const { thePassword, ...other } = user;
+      // const name = user.username;
+      // const id = user.user_id;
+
+      return { status: 200, other: user, token: token };
     } catch (error) {
       console.error("Error logging in user:", error);
       return { status: "error", message: "Internal server error" };
