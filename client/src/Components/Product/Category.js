@@ -10,7 +10,7 @@ const Category = ({ onSelectCategory }) => {
       try {
         const response = await axios.get("http://localhost:8008/categories");
         const uniqueCategories = getUniqueCategories(response.data);
-        console.log("Filtered products:", response.data);
+        // console.log("Filtered products:", response.data);
         setCategories(uniqueCategories);
       } catch (error) {
         console.error("Error fetching categories:", error);

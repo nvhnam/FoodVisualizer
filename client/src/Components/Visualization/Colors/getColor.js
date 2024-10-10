@@ -26,10 +26,10 @@ const getColor = (
   let nutrient = label.toLowerCase();
   let color = "#7BC35F";
 
-  console.log(
-    `Nutrient: ${nutrient}, Value: ${valuePer100g}, Thresholds:`,
-    unitThresholds[nutrient]
-  );
+  // console.log(
+  //   `Nutrient: ${nutrient}, ValuePer100g: ${valuePer100g}, Thresholds:`,
+  //   unitThresholds[nutrient]
+  // );
 
   if (nutrient in unitThresholds) {
     const isHighPortion =

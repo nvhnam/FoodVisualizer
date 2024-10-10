@@ -6,8 +6,9 @@ import { useParams } from "react-router-dom";
 // import Col from "react-bootstrap/Col";
 import ChartButton from "./ChartButton.js";
 import "./ProductDetail.css";
-
-const ProductDetail = () => {
+import HeaderSub from "../Home/HeaderSub.js";
+import { Button } from "@mui/material";
+const ProductDetail = ({ isChecked }) => {
   const [product, setProduct] = useState(null);
   const { productId } = useParams();
 
@@ -31,52 +32,62 @@ const ProductDetail = () => {
     return <p>Loading...</p>;
   }
   return (
-    <div className="pd" key={product.product_id}>
-      <h3>How much nutrition is in this food?</h3>
-      {/* <h1>Our Digital Services</h1> */}
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <ChartButton productId={product.product_id} />
-      </div>
+    <>
+      <HeaderSub />
+      <div className="pd w-100 mt-4" key={product.product_id}>
+        {isChecked ? (
+          <>
+            <h3>How much nutrition is in this food?</h3>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <ChartButton productId={product.product_id} />
+            </div>
+          </>
+        ) : (
+          <h3>Our Digital Services</h3>
+        )}
 
-      <div className="pd_content">
-        <div className="pd_item">
-          <img
-            src={product.img}
-            style={{ width: "16rem" }}
-            alt={product.name}
-          />
-          <h3> {product.product_name}</h3>
+        <div
+          className="pd_content d-md-flex d-sm-block align-items-start flex-row"
+          style={{ height: "450px" }}
+        >
+          <div className="pd_item w-25 p-0 rounded">
+            <img
+              src={product.img}
+              className="rounded w-100 h-100px mb-3"
+              style={{ objectfit: "contain", height: "300px" }}
+              alt={product.name}
+            />
+            <h3 className="text-center"> {product.product_name}</h3>
 
-          <p style={{ textAlign: "left" }}>
-            <span>Origin:</span> {product.brand}{" "}
-          </p>
-        </div>
-        <div className="pd_item">
-          <h3>Directions </h3>
-          <ul>
-            {product.description &&
-              product.description.split(". ").map((desc, index) => (
-                <li key={index} className="">
-                  {desc.trim()}
-                </li>
-              ))}
-          </ul>{" "}
-          <h3>Storage</h3>
-          <ul>
-            {product.storage &&
-              product.storage.split(". ").map((sto, index) => (
-                <li key={index} className="">
-                  {sto.trim()}
-                </li>
-              ))}
-          </ul>{" "}
-        </div>
-        <div className="pd_item">
-          <h3>Ingredients:</h3>
-          <p>{product.ingredients}</p>
+            <p className="mt-3" style={{ textAlign: "left" }}>
+              <span>Brand:</span> {product.brand}{" "}
+            </p>
+            <div className="d-flex justify-content-between align-items-center">
+              <p className="my-n2" style={{ textAlign: "left" }}>
+                <span>Origin:</span> {product.origin}{" "}
+              </p>
+              <div>
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  className="px-5 py-2"
+                >
+                  Buy
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="pd_item">
+            <h3 className="text-center">Ingredients:</h3>
+            <div className="w-100 h-75 d-flex flex-column justify-content-between">
+              <p>{product.ingredients}</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

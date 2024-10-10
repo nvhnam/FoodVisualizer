@@ -8,31 +8,31 @@ function PieChart({ showPerContainer }) {
   const { productId } = useParams();
   const {
     wOneHundredGram,
-    // wServing,
-    // perServing,
+    wServing,
+    perServing,
     wContainer,
     perContainer,
     packSize,
-    // servingSize,
+    servingSize,
     packUnit,
-    // servingUnit,
+    servingUnit,
     energy,
   } = NutrientsData(productId);
   if (!energy) {
     console.error("Energy data is null");
     return <div>Energy data not available</div>;
   }
-  // const perDisplay = showPerContainer ? perContainer : perServing;
-  // const wDisplay = showPerContainer ? wContainer : wServing;
-  // const textDisplay = showPerContainer ? "container" : "serving";
-  // const sizeDisplay = showPerContainer ? packSize : servingSize;
-  // const unitDisplay = showPerContainer ? packUnit : servingUnit;
+  const perDisplay = showPerContainer ? perContainer : perServing;
+  const wDisplay = showPerContainer ? wContainer : wServing;
+  const textDisplay = showPerContainer ? "container" : "serving";
+  const sizeDisplay = showPerContainer ? packSize : servingSize;
+  const unitDisplay = showPerContainer ? packUnit : servingUnit;
 
-  const perDisplay = perContainer;
-  const wDisplay = wContainer;
-  const textDisplay = "container";
-  const sizeDisplay = packSize;
-  const unitDisplay = packUnit;
+  // const perDisplay = perContainer;
+  // const wDisplay = wContainer;
+  // const textDisplay = "container";
+  // const sizeDisplay = packSize;
+  // const unitDisplay = packUnit;
 
   return (
     <div className="" style={{ width: "36rem" }}>

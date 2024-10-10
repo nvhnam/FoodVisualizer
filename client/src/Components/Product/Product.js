@@ -12,8 +12,9 @@ import { MDBInput } from "mdb-react-ui-kit";
 import HeaderSub from "../Home/HeaderSub";
 import "rsuite/dist/rsuite.min.css";
 import Category from "./Category";
+import TrafficLight from "../Visualization/Traffic Light System/TrafficLight.js";
 
-const Product = () => {
+const Product = ({ isChecked, isToggle }) => {
   const [product, setProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [foodPerPage] = useState(18);
@@ -51,7 +52,7 @@ const Product = () => {
             },
           });
 
-          console.log("Filtered Response:", response.data);
+          // console.log("Filtered Response:", response.data);
 
           const filteredProducts = response.data.map((filteredItem) => {
             const productImage = product.find(
@@ -63,7 +64,6 @@ const Product = () => {
               img: productImage ? productImage.img : null,
             };
           });
-
           setSearchResults(filteredProducts);
         } catch (error) {
           console.error("Error fetching filtered products:", error);
@@ -84,8 +84,13 @@ const Product = () => {
             .includes(searchTerm.toLowerCase())
         )
       : product;
+
     setSearchResults(results);
-  }, [searchTerm, product]);
+  }, [searchTerm, product, currentPage, foodPerPage]);
+
+  // const handleToggle = () => {
+  //   setIsChecked(!isChecked);
+  // };
 
   const last = currentPage * foodPerPage;
   const first = last - foodPerPage;
@@ -169,100 +174,150 @@ const Product = () => {
   };
 
   return (
-    <div className="product">
+    <div className="product d-flex flex-column align-items-center w-100 h-100">
       <HeaderSub />
 
-      <div className="product-items" style={{ marginTop: "6rem" }}>
+      <div
+        className="product-items p-1 mx-auto d-flex "
+        style={{ marginTop: "6rem" }}
+      >
         <div className="select-items" style={{ marginLeft: "2rem" }}>
           <Category onSelectCategory={handleSelectedCategory} />
         </div>
-        <Container>
-          <div className="nav-search">
-            <div className="form-outline" data-mdb-input-init>
-              <MDBInput
-                type="text"
-                id="formTextExample1"
-                className="form-control"
-                aria-describedby="textExample1"
-                placeholder="Kind Of Food"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                onKeyDown={handleKeyDown}
-              />
-              {searchTerm !== "" && (
-                <div style={{ maxHeight: "160px", overflowY: "auto" }}>
-                  {searchResults.map((productItem) => (
-                    <div
-                      key={productItem.product_id}
-                      style={{ marginBottom: "10px" }}
-                    >
-                      <Card.Body>
-                        <Link
-                          to={`/product-detail/${productItem.product_id}`}
-                          style={{ textDecoration: "none" }}
-                        >
-                          <p>{truncate(productItem.product_name, 50)}</p>
-                        </Link>
-                      </Card.Body>
-                    </div>
-                  ))}
-                </div>
-              )}
+        <div className="container">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="nav-search">
+              <div className="form-outline" data-mdb-input-init>
+                <MDBInput
+                  type="text"
+                  id="formTextExample1"
+                  className="form-control"
+                  aria-describedby="textExample1"
+                  placeholder="Kind Of Food"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  onKeyDown={handleKeyDown}
+                />
+                {searchTerm !== "" && (
+                  <div style={{ maxHeight: "160px", overflowY: "auto" }}>
+                    {searchResults.map((productItem) => (
+                      <div
+                        key={productItem.product_id}
+                        style={{ marginBottom: "10px" }}
+                      >
+                        <Card.Body>
+                          <Link
+                            to={`/product-detail/${productItem.product_id}`}
+                            style={{ textDecoration: "none" }}
+                          >
+                            <p>{truncate(productItem.product_name, 50)}</p>
+                          </Link>
+                        </Card.Body>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div id="textExample1" className="form-text">
+                We have a board of food.
+              </div>
             </div>
-            <div id="textExample1" className="form-text">
-              We have a board of food.
+
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="flexSwitchCheckChecked"
+                checked={isChecked}
+                onChange={isToggle}
+              />
+              <label
+                className="form-check-label"
+                htmlFor="flexSwitchCheckChecked"
+              >
+                Show Nutrition Labelling
+              </label>
             </div>
           </div>
-          <Row>
-            {currentFood.map((productItem) => (
-              <Col
-                style={{ marginTop: "1rem" }}
-                key={productItem.product_id}
-                xs={6}
-                md={4}
-              >
-                <Card
-                  style={{
-                    width: "17rem",
-                    height: "17.5rem",
-                    overflow: "hidden",
-                  }}
+
+          <Row className="d-flex gap-3 mt-2">
+            {currentFood.map((productItem, index) => {
+              return (
+                <Col
+                  style={{ marginTop: "1rem" }}
+                  key={productItem.product_id}
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  className="w-auto h-auto mx-auto"
                 >
-                  {productItem.img ? (
-                    <Card.Img
-                      variant="top"
-                      src={productItem.img}
-                      style={{ width: "17rem", height: "12rem" }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        width: "17rem",
-                        height: "12rem",
-                        backgroundColor: "#e0e0e0",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
+                  <Card
+                    style={{
+                      width: "18rem",
+                      maxHeight: "27.5rem",
+                      minHeight: "20rem",
+                      height: "100%",
+                      // overflow: "hidden",
+                    }}
+                    // className="w-75 h-75"
+                  >
+                    {productItem.img ? (
+                      <Card.Img
+                        variant="top"
+                        src={productItem.img}
+                        style={{ minHeight: "12rem" }}
+                        className="w-100 h-100 overflow-hidden"
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: "17rem",
+                          height: "12rem",
+                          backgroundColor: "#e0e0e0",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <span>No Image Available</span>
+                      </div>
+                    )}
+                    <Card.Body
+                      className="w-100 h-auto d-flex justify-content-center align-items-center"
+                      style={{ padding: "1rem" }}
                     >
-                      <span>No Image Available</span>
-                    </div>
-                  )}
-                  <Card.Body style={{ padding: "1rem" }}>
-                    <Card.Title title={productItem.product_name}>
-                      {truncate(productItem.product_name, 21)}
-                    </Card.Title>
-                    <Link to={`/product-detail/${productItem.product_id}`}>
-                      <Button variant="outlined" size="small" color="warning">
-                        View Detail
-                      </Button>
-                    </Link>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
+                      <div className="w-100 h-100 d-flex flex-column  align-items-center gap-2">
+                        <Card.Title title={productItem.product_name}>
+                          {truncate(productItem.product_name, 21)}
+                        </Card.Title>
+                        {isChecked && (
+                          <TrafficLight
+                            productId={productItem.product_id}
+                            showText={false}
+                            mainPage={true}
+                            showPerContainer={true}
+                            theWidth=""
+                          />
+                        )}
+                        <Link to={`/product-detail/${productItem.product_id}`}>
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            color="warning"
+                          >
+                            View Detail
+                          </Button>
+                        </Link>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              );
+            })}
           </Row>
-        </Container>
+        </div>
       </div>
       <div style={{ marginTop: "6rem" }}>
         <Pagination style={{ display: "flex", justifyContent: "flex-end" }}>

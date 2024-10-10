@@ -18,6 +18,7 @@ import Registration from "./Components/Authentication/Registration";
 import LogIn from "./Components/Authentication/LogIn";
 import Loading from "./Components/Loading/Loading";
 import ManagePage from "./Components/Admin/ManagePage";
+import { isVisible } from "@testing-library/user-event/dist/utils";
 
 const LoadingIndicator = () => (
   <div
@@ -34,6 +35,14 @@ const LoadingIndicator = () => (
 function App() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState(() => {
+    const savedState = localStorage.getItem("toggleState");
+    return savedState === "true" ? true : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("toggleState", isChecked);
+  }, [isChecked]);
 
   useEffect(() => {
     setLoading(true);
@@ -44,6 +53,11 @@ function App() {
   if (loading) {
     return <LoadingIndicator />;
   }
+
+  const handleToggle = () => {
+    setIsChecked(!isChecked);
+  };
+
   return (
     <Routes class>
       {/* Trang Home và About */}
@@ -56,8 +70,14 @@ function App() {
       <Route path="/signup" element={<Registration />} />
 
       {/* Trang biểu thị dữ liệu */}
-      <Route path="/product-list" element={<Product />} />
-      <Route path="/product-detail/:productId" element={<ProductDetail />} />
+      <Route
+        path="/product-list"
+        element={<Product isChecked={isChecked} isToggle={handleToggle} />}
+      />
+      <Route
+        path="/product-detail/:productId"
+        element={<ProductDetail isChecked={isChecked} />}
+      />
       <Route path="/dv/:productId" element={<DataV />} />
       {/* <Route path="/dv/:foodId" element={<DataV />} />
       <Route path="/food/food-detail/:foodId" element={<ProductDetail />} />

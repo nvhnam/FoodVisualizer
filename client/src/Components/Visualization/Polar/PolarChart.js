@@ -23,14 +23,14 @@ function PolarChart({ showPerContainer }) {
   const { productId } = useParams();
   const {
     wOneHundredGram,
-    // wServing,
-    // perServing,
+    wServing,
+    perServing,
     wContainer,
     perContainer,
     packSize,
-    // servingSize,
+    servingSize,
     packUnit,
-    // servingUnit,
+    servingUnit,
     energy,
   } = NutrientsData(productId);
 
@@ -39,17 +39,17 @@ function PolarChart({ showPerContainer }) {
     return <div>Energy data not available</div>;
   }
 
-  // const perDisplay = showPerContainer ? perContainer : perServing;
-  // const wDisplay = showPerContainer ? wContainer : wServing;
-  // const textDisplay = showPerContainer ? "container" : "serving";
-  // const sizeDisplay = showPerContainer ? packSize : servingSize;
-  // const unitDisplay = showPerContainer ? packUnit : servingUnit;
+  const perDisplay = showPerContainer ? perContainer : perServing;
+  const wDisplay = showPerContainer ? wContainer : wServing;
+  const textDisplay = showPerContainer ? "container" : "serving";
+  const sizeDisplay = showPerContainer ? packSize : servingSize;
+  const unitDisplay = showPerContainer ? packUnit : servingUnit;
 
-  const perDisplay = perContainer;
-  const wDisplay = wContainer;
-  const textDisplay = "container";
-  const sizeDisplay = packSize;
-  const unitDisplay = packUnit;
+  // const perDisplay = perContainer;
+  // const wDisplay = wContainer;
+  // const textDisplay = "container";
+  // const sizeDisplay = packSize;
+  // const unitDisplay = packUnit;
 
   return (
     <div style={{ width: "38rem" }}>
