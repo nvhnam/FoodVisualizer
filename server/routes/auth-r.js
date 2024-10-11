@@ -21,7 +21,7 @@ authUser.post("/login", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const result = await User.loginUser(username, password);
-    console.log("Log in info: ", result.token);
+    // console.log("Log in info: ", result.token);
     if (result.status === "error") {
       return res.status(401).json({ error: "Invalid username or password" });
     }

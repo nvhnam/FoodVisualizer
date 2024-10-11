@@ -30,4 +30,16 @@ getCart.post("/cart/add", async (req, res) => {
   }
 });
 
+getCart.delete("/cart/:userId/:productId", async (req, res) => {
+  const { userId, productId } = req.params;
+
+  try {
+    await Cart.removeProductFromCart(userId, productId);
+    res.status(200).send("Product removed successfully");
+  } catch (error) {
+    console.error("Error removing product from cart", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 export default getCart;

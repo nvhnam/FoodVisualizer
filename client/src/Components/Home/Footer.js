@@ -16,22 +16,22 @@ const Footer = () => {
         </div>
 
         <div>
-          <a href="" className="me-4 text-reset">
+          <a href="/" className="me-4 text-reset">
             <MDBIcon color="secondary" fab icon="facebook-f" />
           </a>
-          <a href="" className="me-4 text-reset">
+          <a href="/" className="me-4 text-reset">
             <MDBIcon color="secondary" fab icon="twitter" />
           </a>
-          <a href="" className="me-4 text-reset">
+          <a href="/" className="me-4 text-reset">
             <MDBIcon color="secondary" fab icon="google" />
           </a>
-          <a href="" className="me-4 text-reset">
+          <a href="/" className="me-4 text-reset">
             <MDBIcon color="secondary" fab icon="instagram" />
           </a>
-          <a href="" className="me-4 text-reset">
+          <a href="/" className="me-4 text-reset">
             <MDBIcon color="secondary" fab icon="linkedin" />
           </a>
-          <a href="" className="me-4 text-reset">
+          <a href="/" className="me-4 text-reset">
             <MDBIcon color="secondary" fab icon="github" />
           </a>
         </div>
@@ -43,13 +43,9 @@ const Footer = () => {
             <MDBCol md="3" lg="4" xl="3" className="mx-auto mb-4">
               <h6 className="text-uppercase fw-bold mb-4">
                 <MDBIcon color="secondary" icon="gem" className="me-3" />
-                Company name
+                NutrinSight
               </h6>
-              <p>
-                Here you can use rows and columns to organize your footer
-                content. Lorem ipsum dolor sit amet, consectetur adipisicing
-                elit.
-              </p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
             </MDBCol>
 
             <MDBCol md="2" lg="2" xl="2" className="mx-auto mb-4">
@@ -125,10 +121,11 @@ const Footer = () => {
 
       <div
         className="text-center p-4"
-        style={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}>
+        style={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
+      >
         © 2024 Website:
-        <a className="text-reset fw-bold" href="https://mdbootstrap.com/">
-          knf.com
+        <a className="text-reset fw-bold m-1" href="/">
+          NutrinSight.com
         </a>
       </div>
     </MDBFooter>

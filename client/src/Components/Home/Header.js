@@ -47,18 +47,21 @@ const Header = () => {
             <Navbar.Brand href="#home">
               <img
                 src={myBrandIcon}
-                style={{ width: "3rem" }}
+                style={{ width: "2rem" }}
                 alt="Icon Visualization"
               />
             </Navbar.Brand>
             <Link to="/" style={{ textDecoration: "none" }}>
               {" "}
-              <h1>NutrinSight</h1>
+              <h1 className="fs-3">NutrinSight</h1>
             </Link>
           </div>
 
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
+          <Navbar.Collapse
+            id="responsive-navbar-nav"
+            style={{ marginLeft: "2rem" }}
+          >
             <Nav className="me-auto">
               <Nav.Link href="#about" onClick={scrollToAbout}>
                 About Us
@@ -76,7 +79,10 @@ const Header = () => {
                     </span>
                     Cart
                   </Nav.Link>
-                  <Nav.Link href="/user" className="gap-1 d-flex">
+                  <Nav.Link
+                    style={{ pointerEvents: "none" }}
+                    className="gap-1 d-flex"
+                  >
                     <span className="">
                       <i className="fa-solid fa-user"></i>
                     </span>

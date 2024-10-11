@@ -24,9 +24,6 @@ export default class Cart {
   }
 
   static async postUserCart(userId, productId) {
-    // const theUserId = userId;
-    // const theProductId = productId;
-    // console.log("Backend: ", theUserId, theProductId);
     if (!userId || !productId) {
       return {
         status: "error",
@@ -55,5 +52,11 @@ export default class Cart {
       console.error("Error adding product to cart:", error);
       return { error: "Internal server error" };
     }
+  }
+
+  static async removeProductFromCart(userId, productId) {
+    const query = `DELETE FROM cart WHERE user_id = ? AND product_id = ?`;
+    const [result] = await dbPool.query(query, [userId, productId]);
+    return result;
   }
 }

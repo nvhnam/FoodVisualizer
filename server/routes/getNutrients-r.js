@@ -50,7 +50,14 @@ getNutrients.get("/nutrients/:userId", async (req, res) => {
       totalNutrition.salt += item.salt * item.quantity;
     });
 
-    console.log(totalNutrition);
+    totalNutrition.energy = parseFloat(totalNutrition.energy.toFixed(1));
+    totalNutrition.calories = parseFloat(totalNutrition.calories.toFixed(1));
+    totalNutrition.fat = parseFloat(totalNutrition.fat.toFixed(1));
+    totalNutrition.saturates = parseFloat(totalNutrition.saturates.toFixed(1));
+    totalNutrition.sugars = parseFloat(totalNutrition.sugars.toFixed(1));
+    totalNutrition.salt = parseFloat(totalNutrition.salt.toFixed(1));
+
+    // console.log(totalNutrition);
 
     res.json({ totalNutrition });
   } catch (error) {

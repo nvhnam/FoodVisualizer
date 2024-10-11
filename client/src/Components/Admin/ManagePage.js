@@ -20,7 +20,8 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`horizontal-tabpanel-${index}`}
       aria-labelledby={`horizontal-tab-${index}`}
-      {...other}>
+      {...other}
+    >
       {value === index && (
         <Box sx={{ p: 3 }}>
           <Typography>{children}</Typography>
@@ -60,15 +61,17 @@ export default function HorizontalTabs() {
             bgcolor: "background.paper",
             display: "flex",
             flexDirection: "column",
-            height: 600, // Adjusted height
-          }}>
+            height: 600,
+          }}
+        >
           <Tabs
             orientation="horizontal"
             variant="scrollable"
             value={value}
             onChange={handleChange}
             aria-label="Horizontal tabs example"
-            sx={{ borderBottom: 1, borderColor: "divider" }}>
+            sx={{ borderBottom: 1, borderColor: "divider" }}
+          >
             <Tab label="Products" {...a11yProps(0)} />
             <Tab label="Nutrients" {...a11yProps(1)} />
             <Tab label="Categories" {...a11yProps(2)} />

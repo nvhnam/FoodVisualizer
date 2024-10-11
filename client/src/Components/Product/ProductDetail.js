@@ -5,6 +5,7 @@ import ChartButton from "./ChartButton.js";
 import "./ProductDetail.css";
 import HeaderSub from "../Home/HeaderSub.js";
 import { Button } from "@mui/material";
+import Footer from "../Home/Footer.js";
 const ProductDetail = ({ isChecked }) => {
   const [product, setProduct] = useState(null);
   const { productId } = useParams();
@@ -64,17 +65,20 @@ const ProductDetail = ({ isChecked }) => {
         setErrorMessage("");
         alert("Product added to cart successfully!");
       } else {
-        setErrorMessage("Failed to add product to cart. Please try again.");
+        setErrorMessage("Please log in to add products to your cart.");
       }
     } catch (error) {
-      setErrorMessage("Failed to add product to cart. Please try again.");
+      setErrorMessage("Please log in to add products to your cart.");
     }
   };
 
   return (
     <>
       <HeaderSub />
-      <div className="pd w-100 mt-4" key={product.product_id}>
+      <div
+        className="pd w-100 mt-4 d-flex flex-column align-items-center"
+        key={product.product_id}
+      >
         {isChecked ? (
           <>
             <h3>How much nutrition is in this food?</h3>
@@ -87,8 +91,8 @@ const ProductDetail = ({ isChecked }) => {
         )}
 
         <div
-          className="pd_content d-md-flex d-sm-block align-items-start flex-row"
-          style={{ height: "480px" }}
+          className="pd_content d-md-flex d-sm-block align-items-start flex-row justify-content-center w-100"
+          style={{ maxWidth: "1300px", height: "480px" }}
         >
           <div className="pd_item w-25 p-0 rounded">
             <img
@@ -134,6 +138,7 @@ const ProductDetail = ({ isChecked }) => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

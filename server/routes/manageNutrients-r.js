@@ -21,16 +21,6 @@ handleNutrients.get("/nutrients", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-// handleNutrients.get("/nutrients/:productId", async (req, res) => {
-//   const product_id = req.params.productId;
-//   try {
-//     const result = await NutrientsModel.getNutrientsByProductId(product_id);
-//     res.send(result);
-//   } catch (error) {
-//     console.error("Error:", error);
-//     res.status(500).send(error.message);
-//   }
-// });
 
 handleNutrients.put("/nutrients/:productId", async (req, res) => {
   const product_id = req.params.productId;
