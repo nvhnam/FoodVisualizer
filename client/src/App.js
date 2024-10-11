@@ -18,6 +18,7 @@ import Registration from "./Components/Authentication/Registration";
 import LogIn from "./Components/Authentication/LogIn";
 import Loading from "./Components/Loading/Loading";
 import ManagePage from "./Components/Admin/ManagePage";
+import Cart from "./Components/Cart/Cart";
 import { isVisible } from "@testing-library/user-event/dist/utils";
 
 const LoadingIndicator = () => (
@@ -60,16 +61,14 @@ function App() {
 
   return (
     <Routes class>
-      {/* Trang Home và About */}
       <Route path="/" exact element={<Home />} />
       <Route path="/about" exact element={<About />} />
       <Route path="/about-us-more" exact element={<AboutMore />} />
+      <Route path="/cart" element={<Cart />} />
 
-      {/* Trang đăng nhập */}
       <Route path="/login" element={<LogIn />} />
       <Route path="/signup" element={<Registration />} />
 
-      {/* Trang biểu thị dữ liệu */}
       <Route
         path="/product-list"
         element={<Product isChecked={isChecked} isToggle={handleToggle} />}
@@ -85,7 +84,6 @@ function App() {
       <Route path="/food/bar/:foodId" element={<StackedBarChart />} />
       <Route path="/food/pie/:foodId" element={<PieChart />} /> */}
 
-      {/* Admin */}
       {/* <Route path="/mng" element={<ManageProduct />} /> */}
       <Route path="/mng-page" element={<ManagePage />} />
     </Routes>

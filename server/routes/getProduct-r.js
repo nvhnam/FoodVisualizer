@@ -28,6 +28,8 @@ getProduct.get("/product-nutrients/:productId", async (req, res) => {
   try {
     const { productId } = req.params;
 
+    console.log(productId);
+
     const product = await Product.getProductNutrients(productId);
     res.json(product);
   } catch (error) {

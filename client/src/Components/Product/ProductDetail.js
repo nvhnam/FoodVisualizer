@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-// import { Card } from "react-bootstrap";
-// import Row from "react-bootstrap/Row";
-// import Col from "react-bootstrap/Col";
 import ChartButton from "./ChartButton.js";
 import "./ProductDetail.css";
 import HeaderSub from "../Home/HeaderSub.js";
@@ -12,6 +9,10 @@ const ProductDetail = ({ isChecked }) => {
   const [product, setProduct] = useState(null);
   const { productId } = useParams();
   const [errorMessage, setErrorMessage] = useState("");
+  const [values, setValues] = useState({
+    userId: "",
+    productId: "",
+  });
 
   useEffect(() => {
     const fetchFood = async () => {
@@ -35,17 +36,21 @@ const ProductDetail = ({ isChecked }) => {
 
   const handleAddToCart = async () => {
     try {
+      const storedUser = localStorage.getItem("user");
       const token = localStorage.getItem("token");
+      const userId = JSON.parse(storedUser).user_id;
+      // console.log("UserID: ", userId);
+      // console.log("ProductID: ", productId);
       if (!token) {
         setErrorMessage("Please log in to add products to your cart.");
         return;
       }
 
       const response = await axios.post(
-        "http://localhost:8008/cart",
+        "http://localhost:8008/cart/add",
         {
-          productId,
-          quantity: 1,
+          userId: userId,
+          productId: product.product_id,
         },
         {
           headers: {
@@ -57,6 +62,9 @@ const ProductDetail = ({ isChecked }) => {
 
       if (response.status === 200) {
         setErrorMessage("");
+        alert("Product added to cart successfully!");
+      } else {
+        setErrorMessage("Failed to add product to cart. Please try again.");
       }
     } catch (error) {
       setErrorMessage("Failed to add product to cart. Please try again.");

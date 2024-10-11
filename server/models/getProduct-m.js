@@ -4,7 +4,6 @@ import { dbPool } from "../dbconfig.js";
 // sql.on("error", (err) => {
 //   throw err;
 // });
-// MODEL: dùng để tạo truy vấn
 export default class Product {
   constructor(product_id) {
     this.product_id = product_id;
@@ -17,7 +16,7 @@ export default class Product {
 
       const [results] = await dbPool.query(query, [id]);
       if (results.length > 0) {
-        return results[0]; // trả về 1 item duy nhất theo id
+        return results[0];
       } else {
         throw new Error("Product item not found");
       }

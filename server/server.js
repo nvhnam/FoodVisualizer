@@ -18,6 +18,11 @@ import getProduct from "./routes/getProduct-r.js";
 app.use("/", getProduct);
 import getNutrients from "./routes/getNutrients-r.js";
 app.use("/", getNutrients);
+
+// Get cart
+import getCart from "./routes/getCart-r.js";
+app.use("/", getCart);
+
 // User
 import authUser from "./routes/auth-r.js";
 app.use("/auth", authUser);
