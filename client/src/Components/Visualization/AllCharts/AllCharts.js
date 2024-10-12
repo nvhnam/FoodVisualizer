@@ -57,7 +57,6 @@ export const AllCharts = () => {
     try {
       const token = localStorage.getItem("token");
 
-      // Kiểm tra xem token có tồn tại không
       if (!token) {
         alert("You need to log in before rating.");
         navigate("/login");
@@ -65,17 +64,16 @@ export const AllCharts = () => {
       }
 
       const decodedToken = jwtDecode(token);
-      const currentTime = moment().unix(); // theo giây
+      const currentTime = moment().unix();
       const expirationTime = decodedToken.exp;
 
       if (currentTime > expirationTime) {
-        // Nếu token hết hạn
         alert("Your session has expired. Please log in again.");
         navigate("/login");
         return;
       }
 
-      setOpen(true); // Mở Rating nếu token hợp lệ
+      setOpen(true);
     } catch (error) {
       console.error("Error:", error);
       alert("Failed to verify token. Please log in again.");

@@ -37,12 +37,6 @@ const TrafficLight = ({
   const sizeDisplay = showPerContainer ? packSize : servingSize;
   const unitDisplay = showPerContainer ? packUnit : servingUnit;
 
-  // const perDisplay = perContainer;
-  // const wDisplay = wContainer;
-  // const textDisplay = "container";
-  // const sizeDisplay = packSize;
-  // const unitDisplay = packUnit;
-
   return (
     <div className="traf-lgt" style={{ width: theWidth }}>
       {perDisplay &&
@@ -139,8 +133,8 @@ const TrafficLight = ({
                   of an adult's reference intake
                 </h3>
                 <h3 className="inf">
-                  Typical values (as sold) per 100g: Energy {energy.Energy}kJ/
-                  {energy.Calories}kcal{" "}
+                  Typical values (as sold) per 100g: Energy {energy.Energy}J/
+                  {energy.Calories}cal{" "}
                 </h3>
               </>
             )}

@@ -70,11 +70,6 @@ function BarChart({ showPerContainer }) {
   const textDisplay = showPerContainer ? "container" : "serving";
   const sizeDisplay = showPerContainer ? packSize : servingSize;
   const unitDisplay = showPerContainer ? packUnit : servingUnit;
-  // const perDisplay = perContainer;
-  // const wDisplay = wContainer;
-  // const textDisplay = "container";
-  // const sizeDisplay = packSize;
-  // const unitDisplay = packUnit;
 
   return (
     <div style={{ width: "36rem" }}>
@@ -120,7 +115,7 @@ function BarChart({ showPerContainer }) {
               },
               tooltip: {
                 bodyFont: {
-                  size: 20, // Text trong tooltip
+                  size: 20,
                 },
                 callbacks: {
                   label: function (context) {
@@ -174,8 +169,8 @@ function BarChart({ showPerContainer }) {
         of an adult's reference intake
       </h3>
       <h3 className="inf" style={{ marginLeft: "1rem" }}>
-        Typical values (as sold) per 100{unitDisplay}: Energy {energy.Energy}kJ/
-        {energy.Calories}kcal{" "}
+        Typical values (as sold) per 100{unitDisplay}: Energy {energy.Energy}J/
+        {energy.Calories}cal{" "}
       </h3>
     </div>
   );

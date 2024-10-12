@@ -28,12 +28,6 @@ function PieChart({ showPerContainer }) {
   const sizeDisplay = showPerContainer ? packSize : servingSize;
   const unitDisplay = showPerContainer ? packUnit : servingUnit;
 
-  // const perDisplay = perContainer;
-  // const wDisplay = wContainer;
-  // const textDisplay = "container";
-  // const sizeDisplay = packSize;
-  // const unitDisplay = packUnit;
-
   return (
     <div className="" style={{ width: "36rem" }}>
       {perDisplay && wOneHundredGram && wDisplay && unitDisplay && (
@@ -144,8 +138,8 @@ function PieChart({ showPerContainer }) {
           </h3>
           <h3 className="inf" style={{ marginLeft: "1rem" }}>
             Typical values (as sold) per 100{unitDisplay}: Energy{" "}
-            {energy?.Energy}kJ/
-            {energy?.Calories}kcal
+            {energy?.Energy}J/
+            {energy?.Calories}cal
           </h3>
         </>
       )}

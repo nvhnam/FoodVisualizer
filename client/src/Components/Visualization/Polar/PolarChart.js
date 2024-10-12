@@ -45,12 +45,6 @@ function PolarChart({ showPerContainer }) {
   const sizeDisplay = showPerContainer ? packSize : servingSize;
   const unitDisplay = showPerContainer ? packUnit : servingUnit;
 
-  // const perDisplay = perContainer;
-  // const wDisplay = wContainer;
-  // const textDisplay = "container";
-  // const sizeDisplay = packSize;
-  // const unitDisplay = packUnit;
-
   return (
     <div style={{ width: "38rem" }}>
       <h3 className="inf" style={{ textAlign: "center" }}>
@@ -64,17 +58,16 @@ function PolarChart({ showPerContainer }) {
               datasets: [
                 {
                   data: Object.values(perDisplay),
-                  backgroundColor: Object.keys(wOneHundredGram).map(
-                    (label) =>
-                      getColor(
-                        label,
-                        wOneHundredGram[label],
-                        wDisplay[label],
-                        sizeDisplay,
-                        unitDisplay
-                      )
-                        .replace("rgb", "rgba")
-                        .replace(")", ", 0.7)") // Adding opacity
+                  backgroundColor: Object.keys(wOneHundredGram).map((label) =>
+                    getColor(
+                      label,
+                      wOneHundredGram[label],
+                      wDisplay[label],
+                      sizeDisplay,
+                      unitDisplay
+                    )
+                      .replace("rgb", "rgba")
+                      .replace(")", ", 0.7)")
                   ),
                   borderWidth: 1,
                   borderColor: "#ffffff",
@@ -133,7 +126,7 @@ function PolarChart({ showPerContainer }) {
                   min: 0,
                   ticks: {
                     font: {
-                      size: 10, // Font size của trục số
+                      size: 10,
                     },
                     color: "black",
                   },
@@ -149,8 +142,8 @@ function PolarChart({ showPerContainer }) {
         of an adult's reference intake
       </h3>
       <h3 className="inf" style={{ marginLeft: "1rem" }}>
-        Typical values (as sold) per 100{unitDisplay}: Energy {energy.Energy}kJ/
-        {energy.Calories}kcal{" "}
+        Typical values (as sold) per 100{unitDisplay}: Energy {energy.Energy}J/
+        {energy.Calories}cal{" "}
       </h3>
     </div>
   );
