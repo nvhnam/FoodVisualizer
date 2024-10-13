@@ -107,7 +107,15 @@ const ProductDetail = ({ isChecked }) => {
               <span>Brand:</span> {product.brand}{" "}
             </p>
             <div className="d-flex justify-content-between align-items-center w-100 mt-n2">
-              <p className="my-auto w-50" style={{ textAlign: "left" }}>
+              <p
+                className="my-auto w-50 text-break"
+                style={{
+                  textAlign: "left",
+                  wordBreak: "break-word",
+                  height: "1.4rem",
+                  overflow: "hidden",
+                }}
+              >
                 <span>Origin:</span> {product.origin}{" "}
               </p>
 

@@ -23,6 +23,11 @@ const Product = ({ isChecked, isToggle }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
+  const [fatFilter, setFatFilter] = useState("all");
+  const [saturatesFilter, setSaturatesFilter] = useState("all");
+  const [sugarsFilter, setSugarsFilter] = useState("all");
+  const [saltFilter, setSaltFilter] = useState("all");
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -31,7 +36,22 @@ const Product = ({ isChecked, isToggle }) => {
           ...item,
           img: item.img || null,
         }));
-        setProduct(productData);
+        const nutrientResponse = await axios.get(
+          "http://localhost:8008/nutrients"
+        );
+        const nutrientData = nutrientResponse.data;
+
+        const productsWithNutrients = productData.map((productItem) => {
+          const nutrient = nutrientData.find(
+            (n) => n.product_id === productItem.product_id
+          );
+          return {
+            ...productItem,
+            nutrients: nutrient || {},
+          };
+        });
+
+        setProduct(productsWithNutrients);
         setSearchTerm("");
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -40,6 +60,52 @@ const Product = ({ isChecked, isToggle }) => {
 
     fetchProduct();
   }, []);
+
+  useEffect(() => {
+    const filterProducts = () => {
+      const filtered = product.filter((item) => {
+        const { nutrients } = item;
+        if (!nutrients) return true;
+        const matchesFat =
+          fatFilter === "all" ||
+          (fatFilter === "low" && nutrients.fat < 3) ||
+          (fatFilter === "medium" &&
+            nutrients.fat >= 3 &&
+            nutrients.fat < 17.5) ||
+          (fatFilter === "high" && nutrients.fat >= 17.5);
+
+        const matchesSaturates =
+          saturatesFilter === "all" ||
+          (saturatesFilter === "low" && nutrients.saturates < 1.5) ||
+          (saturatesFilter === "medium" &&
+            nutrients.saturates >= 1.5 &&
+            nutrients.saturates < 5) ||
+          (saturatesFilter === "high" && nutrients.saturates >= 5);
+
+        const matchesSugars =
+          sugarsFilter === "all" ||
+          (sugarsFilter === "low" && nutrients.sugars < 5) ||
+          (sugarsFilter === "medium" &&
+            nutrients.sugars >= 5 &&
+            nutrients.sugars < 22.5) ||
+          (sugarsFilter === "high" && nutrients.sugars >= 22.5);
+
+        const matchesSalt =
+          saltFilter === "all" ||
+          (saltFilter === "low" && nutrients.salt < 0.3) ||
+          (saltFilter === "medium" &&
+            nutrients.salt >= 0.3 &&
+            nutrients.salt < 1.5) ||
+          (saltFilter === "high" && nutrients.salt >= 1.5);
+
+        return matchesFat && matchesSaturates && matchesSugars && matchesSalt;
+      });
+
+      setSearchResults(filtered);
+    };
+
+    filterProducts();
+  }, [fatFilter, saturatesFilter, sugarsFilter, saltFilter, product]);
 
   useEffect(() => {
     const fetchFilteredProducts = async () => {
@@ -180,13 +246,308 @@ const Product = ({ isChecked, isToggle }) => {
         <HeaderSub />
 
         <div
-          className="product-items p-1 mx-auto d-flex "
+          className="product-items p-1 mx-auto d-flex gap-5"
           style={{ marginTop: "7rem" }}
         >
-          <div className="select-items" style={{ marginLeft: "2rem" }}>
+          <div className="select-items w-25">
             <Category onSelectCategory={handleSelectedCategory} />
+            <div style={{ marginBottom: "3.2rem" }}></div>
+            {isChecked && (
+              <div className="w-100 h-100">
+                <div className="w-100 h-auto d-flex justify-content-start mb-4">
+                  <h3 className="text-left fs-4">Traffic Light</h3>
+                </div>
+                <div className="w-100 h-auto d-flex flex-column gap-2">
+                  <div className="w-100 h-auto">
+                    <label className="w-50 mb-2 fs-6">Fat:</label>
+                    <div className="d-flex  w-100 gap-1">
+                      <div className="w-auto bg-secondary rounded px-2 py-1 d-flex justify-content-between gap-1">
+                        <input
+                          type="radio"
+                          id="fat-all"
+                          name="fat"
+                          value="all"
+                          checked={fatFilter === "all"}
+                          onChange={() => setFatFilter("all")}
+                        />
+                        <label
+                          htmlFor="fat-all"
+                          style={{ fontWeight: "bold", color: "black" }}
+                        >
+                          All
+                        </label>
+                      </div>
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-success">
+                        <input
+                          type="radio"
+                          id="fat-low"
+                          name="fat"
+                          value="low"
+                          checked={fatFilter === "low"}
+                          onChange={() => setFatFilter("low")}
+                        />
+                        <label
+                          htmlFor="fat-low"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          Low
+                        </label>
+                      </div>
+
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-warning">
+                        <input
+                          type="radio"
+                          id="fat-medium"
+                          name="fat"
+                          value="medium"
+                          checked={fatFilter === "medium"}
+                          onChange={() => setFatFilter("medium")}
+                        />
+                        <label
+                          htmlFor="fat-medium"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          Medium
+                        </label>
+                      </div>
+
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-danger">
+                        <input
+                          type="radio"
+                          id="fat-high"
+                          name="fat"
+                          value="high"
+                          checked={fatFilter === "high"}
+                          onChange={() => setFatFilter("high")}
+                        />
+                        <label
+                          htmlFor="fat-high"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          High
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-100 h-auto">
+                    <label className="w-50 mb-2 fs-6">Saturated Fat:</label>
+                    <div className="d-flex w-100 gap-1">
+                      <div className="w-auto bg-secondary rounded px-2 py-1 d-flex justify-content-between gap-1">
+                        <input
+                          type="radio"
+                          id="saturates-all"
+                          name="saturates"
+                          value="all"
+                          checked={saturatesFilter === "all"}
+                          onChange={() => setSaturatesFilter("all")}
+                        />
+                        <label
+                          htmlFor="saturates-all"
+                          style={{ fontWeight: "bold", color: "black" }}
+                        >
+                          All
+                        </label>
+                      </div>
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-success">
+                        <input
+                          type="radio"
+                          id="saturates-low"
+                          name="saturates"
+                          value="low"
+                          checked={saturatesFilter === "low"}
+                          onChange={() => setSaturatesFilter("low")}
+                        />
+                        <label
+                          htmlFor="saturates-low"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          Low
+                        </label>
+                      </div>
+
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-warning">
+                        <input
+                          type="radio"
+                          id="saturates-medium"
+                          name="saturates"
+                          value="medium"
+                          checked={saturatesFilter === "medium"}
+                          onChange={() => setSaturatesFilter("medium")}
+                        />
+                        <label
+                          htmlFor="saturates-medium"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          Medium
+                        </label>
+                      </div>
+
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-danger">
+                        <input
+                          type="radio"
+                          id="saturates-high"
+                          name="saturates"
+                          value="high"
+                          checked={saturatesFilter === "high"}
+                          onChange={() => setSaturatesFilter("high")}
+                        />
+                        <label
+                          htmlFor="saturates-high"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          High
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-100 h-auto">
+                    <label className="w-50 mb-2 fs-6">Sugars:</label>
+                    <div className="d-flex  w-100 gap-1">
+                      <div className="w-auto bg-secondary rounded px-2 py-1 d-flex justify-content-between gap-1">
+                        <input
+                          type="radio"
+                          id="sugars-all"
+                          name="sugars"
+                          value="all"
+                          checked={sugarsFilter === "all"}
+                          onChange={() => setSugarsFilter("all")}
+                        />
+                        <label
+                          htmlFor="sugars-all"
+                          style={{ fontWeight: "bold", color: "black" }}
+                        >
+                          All
+                        </label>
+                      </div>
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-success">
+                        <input
+                          type="radio"
+                          id="sugars-low"
+                          name="sugars"
+                          value="low"
+                          checked={sugarsFilter === "low"}
+                          onChange={() => setSugarsFilter("low")}
+                        />
+                        <label
+                          htmlFor="sugars-low"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          Low
+                        </label>
+                      </div>
+
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-warning">
+                        <input
+                          type="radio"
+                          id="sugars-medium"
+                          name="sugars"
+                          value="medium"
+                          checked={sugarsFilter === "medium"}
+                          onChange={() => setSugarsFilter("medium")}
+                        />
+                        <label
+                          htmlFor="sugars-medium"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          Medium
+                        </label>
+                      </div>
+
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-danger">
+                        <input
+                          type="radio"
+                          id="sugars-high"
+                          name="sugars"
+                          value="high"
+                          checked={sugarsFilter === "high"}
+                          onChange={() => setSugarsFilter("high")}
+                        />
+                        <label
+                          htmlFor="sugars-high"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          High
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="w-100 h-auto">
+                    <label className="w-50 mb-2 fs-6">Salt:</label>
+                    <div className="d-flex  w-100 gap-1">
+                      <div className="w-auto bg-secondary rounded px-2 py-1 d-flex justify-content-between gap-1">
+                        <input
+                          type="radio"
+                          id="salt-all"
+                          name="salt"
+                          value="all"
+                          checked={saltFilter === "all"}
+                          onChange={() => setSaltFilter("all")}
+                        />
+                        <label
+                          htmlFor="salt-all"
+                          style={{ fontWeight: "bold", color: "black" }}
+                        >
+                          All
+                        </label>
+                      </div>
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-success">
+                        <input
+                          type="radio"
+                          id="salt-low"
+                          name="salt"
+                          value="low"
+                          checked={saltFilter === "low"}
+                          onChange={() => setSaltFilter("low")}
+                        />
+                        <label
+                          htmlFor="salt-low"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          Low
+                        </label>
+                      </div>
+
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-warning">
+                        <input
+                          type="radio"
+                          id="salt-medium"
+                          name="salt"
+                          value="medium"
+                          checked={saltFilter === "medium"}
+                          onChange={() => setSaltFilter("medium")}
+                        />
+                        <label
+                          htmlFor="salt-medium"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          Medium
+                        </label>
+                      </div>
+
+                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-danger">
+                        <input
+                          type="radio"
+                          id="salt-high"
+                          name="salt"
+                          value="high"
+                          checked={saltFilter === "high"}
+                          onChange={() => setSaltFilter("high")}
+                        />
+                        <label
+                          htmlFor="salt-high"
+                          style={{ fontWeight: "bold", color: "white" }}
+                        >
+                          High
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="container">
+          <div className="container-fluid ">
             <div className="d-flex justify-content-between align-items-center">
               <div className="nav-search">
                 <div className="form-outline" data-mdb-input-init>
