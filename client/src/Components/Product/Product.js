@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable no-mixed-operators */
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-global-assign */
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
@@ -14,6 +17,7 @@ import "rsuite/dist/rsuite.min.css";
 import Category from "./Category";
 import TrafficLight from "../Visualization/Traffic Light System/TrafficLight.js";
 import Footer from "../Home/Footer";
+import { useChat } from "ai/react";
 
 const Product = ({ isChecked, isToggle }) => {
   const [product, setProduct] = useState([]);
@@ -27,6 +31,70 @@ const Product = ({ isChecked, isToggle }) => {
   const [saturatesFilter, setSaturatesFilter] = useState("all");
   const [sugarsFilter, setSugarsFilter] = useState("all");
   const [saltFilter, setSaltFilter] = useState("all");
+
+  const { messages, input, setInput, append, setMessages } = useChat({
+    // initialMessages:
+    //   "Hi, can you help me to have a better health based on my details?",
+    streamProtocol: "text",
+    fetch: "http://localhost:8008/api/chat",
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Add user input to messages
+      // await append({ role: "user", content: input });
+      const newMessage = { role: "user", content: input };
+      await append(newMessage);
+
+      const updatedMessages = [...messages, newMessage];
+      // setMessages(newMessages);
+      // const updatedMessages = [...messages];
+      // Send messages to backend
+      // console.log("FE: ", updatedMessages);
+      const response = await fetch("http://localhost:8008/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messages: updatedMessages }),
+      });
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      // console.log("response: ", response);
+      // console.log("reader: ", reader);
+      // console.log("decoder: ", decoder);
+
+      let finalResponse = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        finalResponse += decoder.decode(value);
+      }
+      // append({ role: "system", content: finalResponse });
+
+      const assistantMessage = { role: "system", content: finalResponse };
+      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+      // setMessages([
+      //   ...newMessages,
+      //   { role: "assistant", content: finalResponse },
+      // ]);
+      setInput("");
+    } catch (error) {
+      console.error("Error fetching chat:", error);
+    }
+  };
+
+  const chatParent = useRef(null);
+
+  useEffect(() => {
+    const domNode = chatParent.current;
+    if (domNode) {
+      domNode.scrollTop = domNode.scrollHeight;
+    }
+  }, [chatParent]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -238,6 +306,15 @@ const Product = ({ isChecked, isToggle }) => {
     }
 
     return items;
+  };
+
+  const handleNewlines = (text) => {
+    return text.split("\n").map((str, index) => (
+      <span key={index}>
+        {str}
+        <br />
+      </span>
+    ));
   };
 
   return (
@@ -547,7 +624,8 @@ const Product = ({ isChecked, isToggle }) => {
               </div>
             )}
           </div>
-          <div className="container-fluid ">
+
+          <div className="container-fluid">
             <div className="d-flex justify-content-between align-items-center">
               <div className="nav-search">
                 <div className="form-outline" data-mdb-input-init>
@@ -604,7 +682,7 @@ const Product = ({ isChecked, isToggle }) => {
               </div>
             </div>
 
-            <Row className="d-flex gap-3 mt-2">
+            <Row className="d-flex  gap-3 mt-2">
               {currentFood.map((productItem, index) => {
                 return (
                   <Col
@@ -682,6 +760,63 @@ const Product = ({ isChecked, isToggle }) => {
                 );
               })}
             </Row>
+          </div>
+
+          <div className="d-flex flex-column w-50 h-75 align-items-center justify-content-center">
+            <section className="mb-4">
+              <form
+                className="d-flex align-items-center"
+                onSubmit={handleSubmit}
+              >
+                <input
+                  className="form-control flex-1 me-2"
+                  placeholder="Type your question here..."
+                  type="text"
+                  value={input}
+                  onChange={(event) => {
+                    setInput(event.target.value);
+                  }}
+                  // onKeyDown={async (event) => {
+                  //   if (event.key === "Enter") {
+                  //     append({ content: input, role: "user" });
+                  //     // setInput("");
+                  //   }
+                  // }}
+                />
+                <button className="btn btn-primary" type="submit">
+                  Submit
+                </button>
+              </form>
+            </section>
+
+            <section className="container p-0 w-100">
+              <ul
+                ref={chatParent}
+                className="list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
+                style={{ height: "500px" }}
+              >
+                {messages.map((m, index) => (
+                  <li
+                    key={m.id || index}
+                    className={
+                      m.role === "user"
+                        ? "d-flex mb-3"
+                        : "d-flex flex-row-reverse mb-3"
+                    }
+                  >
+                    <div
+                      className={`p-3 rounded-3 shadow-sm ${
+                        m.role === "user"
+                          ? "bg-primary text-white"
+                          : "bg-secondary text-white"
+                      }`}
+                    >
+                      <p className="mb-0 fs-6">{handleNewlines(m.content)}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
           </div>
         </div>
         <div style={{ marginTop: "6rem" }}>

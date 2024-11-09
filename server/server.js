@@ -19,6 +19,9 @@ app.use("/", getProduct);
 import getNutrients from "./routes/getNutrients-r.js";
 app.use("/", getNutrients);
 
+import handleChat from "./routes/handleChat-r.js";
+app.use("/", handleChat);
+
 // Get cart
 import getCart from "./routes/getCart-r.js";
 app.use("/", getCart);
