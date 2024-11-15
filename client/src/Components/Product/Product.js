@@ -32,24 +32,37 @@ const Product = ({ isChecked, isToggle }) => {
   const [sugarsFilter, setSugarsFilter] = useState("all");
   const [saltFilter, setSaltFilter] = useState("all");
 
-  const { messages, input, setInput, append, setMessages } = useChat({
-    // initialMessages:
-    //   "Hi, can you help me to have a better health based on my details?",
-    streamProtocol: "text",
-    fetch: "http://localhost:8008/api/chat",
-  });
+  const { messages, input, setInput, append, setMessages } = useChat(
+    {
+      streamProtocol: "text",
+      fetch: "http://localhost:8008/api/chat",
+    },
+    { onFinish: "" }
+  );
+
+  useEffect(() => {
+    const savedMessages = localStorage.getItem("chatMessages");
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    }
+  }, [setMessages]);
+
+  const deleteMessage = () => {
+    localStorage.removeItem("chatMessages");
+    setMessages([]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Add user input to messages
       // await append({ role: "user", content: input });
       const newMessage = { role: "user", content: input };
       await append(newMessage);
 
       const updatedMessages = [...messages, newMessage];
-      // setMessages(newMessages);
+      setMessages(updatedMessages);
+      localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
       // const updatedMessages = [...messages];
       // Send messages to backend
       // console.log("FE: ", updatedMessages);
@@ -76,7 +89,10 @@ const Product = ({ isChecked, isToggle }) => {
       // append({ role: "system", content: finalResponse });
 
       const assistantMessage = { role: "system", content: finalResponse };
-      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+      // setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+      const newMessages = [...updatedMessages, assistantMessage];
+      setMessages(newMessages);
+      localStorage.setItem("chatMessages", JSON.stringify(newMessages));
       // setMessages([
       //   ...newMessages,
       //   { role: "assistant", content: finalResponse },
@@ -787,6 +803,15 @@ const Product = ({ isChecked, isToggle }) => {
                   Submit
                 </button>
               </form>
+              <Button
+                variant="contained"
+                className="mt-2 w-100"
+                size="small"
+                color="error"
+                onClick={deleteMessage}
+              >
+                Remove all messages
+              </Button>
             </section>
 
             <section className="container p-0 w-100">
