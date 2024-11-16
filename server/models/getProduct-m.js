@@ -83,4 +83,26 @@ export default class Product {
       throw error;
     }
   }
+
+  static async getAllProductsWithNutrients() {
+    try {
+      const [products, nutrients] = await Promise.all([
+        dbPool.query("SELECT * FROM product"),
+        dbPool.query("SELECT * FROM nutrient"),
+      ]);
+
+      return products[0].map((product) => {
+        const nutrient = nutrients[0].find(
+          (n) => n.product_id === product.product_id
+        );
+        return {
+          ...product,
+          nutrients: nutrient || {},
+        };
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      throw error;
+    }
+  }
 }

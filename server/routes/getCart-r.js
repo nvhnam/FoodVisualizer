@@ -15,6 +15,22 @@ getCart.get("/cart/:userId", async (req, res) => {
   }
 });
 
+getCart.get("/cart-with-nutrients/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const cart = await Cart.getUserCartWithNutrients(userId);
+    // console.log("Total Nutrition: ", cart);
+    res.json({
+      status: cart.status,
+      cartItem: cart.cartItems,
+      totalNutrition: cart.totalNutrition,
+    });
+  } catch (error) {
+    console.error("Error", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 getCart.post("/cart/add", async (req, res) => {
   try {
     const userId = req.body.userId;

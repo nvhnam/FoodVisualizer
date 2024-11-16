@@ -13,27 +13,39 @@ const Cart = ({ isChecked }) => {
   const [totalNutrition, setTotalNutrition] = useState({});
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const userId = JSON.parse(storedUser).user_id;
+    const fetchCartAndNutrition = async () => {
+      const storedUser = localStorage.getItem("user");
+      const userId = JSON.parse(storedUser).user_id;
 
-    axios
-      .get(`${URL || `http://localhost:${PORT}`}/cart/${userId}`)
-      .then(async (res) => {
-        const fetchedCartItems = res.data.cartItem || [];
-        setCartItems(fetchedCartItems);
-        return axios.get(
-          `${URL || `http://localhost:${PORT}`}/nutrients/${userId}`
-        );
-      })
-      .then((res) => {
-        const total = res.data.totalNutrition;
-        setTotalNutrition(total);
-        // console.log("total: ", total);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [totalNutrition]);
+      //   axios
+      //     .get(`${URL || `http://localhost:${PORT}`}/cart/${userId}`)
+      //     .then(async (res) => {
+      //       const fetchedCartItems = res.data.cartItem || [];
+      //       setCartItems(fetchedCartItems);
+      //       return axios.get(
+      //         `${URL || `http://localhost:${PORT}`}/nutrients/${userId}`
+      //       );
+      //     })
+      //     .then((res) => {
+      //       const total = res.data.totalNutrition;
+      //       setTotalNutrition(total);
+      //       // console.log("total: ", total);
+      //     })
+      //     .catch((err) => {
+      //       console.error(err);
+      //     });
+      // };
+
+      const response = await axios.get(
+        `${URL || `http://localhost:${PORT}`}/cart-with-nutrients/${userId}`
+      );
+      const { cartItem, totalNutrition } = response.data;
+      console.log(cartItem);
+      setCartItems(cartItem);
+      setTotalNutrition(totalNutrition);
+    };
+    fetchCartAndNutrition();
+  }, []);
 
   // console.log("Cart: ", cartItems);
 

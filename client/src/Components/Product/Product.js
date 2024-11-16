@@ -118,29 +118,35 @@ const Product = ({ isChecked, isToggle }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        // const response = await axios.get(
+        //   `${URL || `http://localhost:${PORT}`}/product`
+        // );
+        // const productData = response.data.map((item) => ({
+        //   ...item,
+        //   img: item.img || null,
+        // }));
+        // const nutrientResponse = await axios.get(
+        //   `${URL || `http://localhost:${PORT}`}/nutrients`
+        // );
+        // const nutrientData = nutrientResponse.data;
+
+        // const productsWithNutrients = productData.map((productItem) => {
+        //   const nutrient = nutrientData.find(
+        //     (n) => n.product_id === productItem.product_id
+        //   );
+        //   return {
+        //     ...productItem,
+        //     nutrients: nutrient || {},
+        //   };
+        // });
+
+        // setProduct(productsWithNutrients);
+        // setSearchTerm("");
+
         const response = await axios.get(
-          `${URL || `http://localhost:${PORT}`}/product`
+          `${URL || `http://localhost:${PORT}`}/product-with-nutrients`
         );
-        const productData = response.data.map((item) => ({
-          ...item,
-          img: item.img || null,
-        }));
-        const nutrientResponse = await axios.get(
-          `${URL || `http://localhost:${PORT}`}/nutrients`
-        );
-        const nutrientData = nutrientResponse.data;
-
-        const productsWithNutrients = productData.map((productItem) => {
-          const nutrient = nutrientData.find(
-            (n) => n.product_id === productItem.product_id
-          );
-          return {
-            ...productItem,
-            nutrients: nutrient || {},
-          };
-        });
-
-        setProduct(productsWithNutrients);
+        setProduct(response.data);
         setSearchTerm("");
       } catch (error) {
         console.error("Error fetching products:", error);

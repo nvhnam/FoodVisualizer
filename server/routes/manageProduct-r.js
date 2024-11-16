@@ -21,6 +21,7 @@ handleProduct.get("/product", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
 handleProduct.put("/product/:productId", async (req, res) => {
   const product_id = req.params.productId;
   try {
