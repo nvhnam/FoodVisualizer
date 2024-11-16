@@ -20,7 +20,7 @@ import Footer from "../Home/Footer";
 import { useChat } from "ai/react";
 
 const PORT = process.env.REACT_APP_PORT;
-const URL = process.env.REACT_APP_URL;
+const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 
 const Product = ({ isChecked, isToggle }) => {
   const [product, setProduct] = useState([]);
@@ -193,7 +193,7 @@ const Product = ({ isChecked, isToggle }) => {
     const fetchFilteredProducts = async () => {
       if (selectedCategory) {
         try {
-          let api = `http://localhost:${PORT}/filter`;
+          let api = `${URL}/filter`;
 
           const response = await axios.get(api, {
             params: {

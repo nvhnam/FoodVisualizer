@@ -8,6 +8,7 @@ import { Button } from "@mui/material";
 import Footer from "../Home/Footer.js";
 
 const PORT = process.env.REACT_APP_PORT;
+const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 const ProductDetail = ({ isChecked }) => {
   const [product, setProduct] = useState(null);
   const { productId } = useParams();
@@ -20,9 +21,7 @@ const ProductDetail = ({ isChecked }) => {
   useEffect(() => {
     const fetchFood = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:${PORT}/product-detail/${productId}`
-        );
+        const response = await axios.get(`${URL}/product-detail/${productId}`);
         setProduct(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -50,7 +49,7 @@ const ProductDetail = ({ isChecked }) => {
       }
 
       const response = await axios.post(
-        `http://localhost:${PORT}/cart/add`,
+        `${URL}/cart/add`,
         {
           userId: userId,
           productId: product.product_id,

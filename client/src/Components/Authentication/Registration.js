@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import "./Registration.css";
 
 const PORT = process.env.REACT_APP_PORT;
+const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 
 const Registration = () => {
   const [values, setValues] = useState({
@@ -106,15 +107,11 @@ const Registration = () => {
     const formErrors = validate();
     if (Object.keys(formErrors).length === 0) {
       axios
-        .post(
-          `http://localhost:${PORT}/auth/register`,
-          JSON.stringify(values),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .post(`${URL}/auth/register`, JSON.stringify(values), {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
         .then((res) => {
           console.log(res.data);
           if (res.data.message === "User registered successfully") {

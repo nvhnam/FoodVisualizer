@@ -3,6 +3,7 @@ import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 
 const PORT = process.env.REACT_APP_PORT;
+const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 
 export const AuthContext = createContext();
 
@@ -12,7 +13,7 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (inputs) => {
-    const res = await axios.post(`http://localhost:${PORT}/auth/login`, inputs);
+    const res = await axios.post(`${URL}/auth/login`, inputs);
     setCurrentUser(res.data);
   };
 

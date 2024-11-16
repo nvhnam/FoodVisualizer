@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const PORT = process.env.REACT_APP_PORT;
+const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 
 const split = (input) => {
   const match = input.match(/([\d.]+)([a-zA-Z]+)/);
@@ -46,7 +47,7 @@ export const NutrientsData = (productId) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:${PORT}/product-nutrients/${productId}`
+          `${URL}/product-nutrients/${productId}`
         );
         const nutrition_data = response.data;
         // console.log("Fecth single Data: ", nutrition_data);

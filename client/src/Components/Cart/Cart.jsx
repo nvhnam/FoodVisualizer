@@ -6,6 +6,7 @@ import TrafficLight from "../Visualization/Traffic Light System/TrafficLight";
 import Footer from "../Home/Footer";
 
 const PORT = process.env.REACT_APP_PORT;
+const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 
 const Cart = ({ isChecked }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -16,11 +17,11 @@ const Cart = ({ isChecked }) => {
     const userId = JSON.parse(storedUser).user_id;
 
     axios
-      .get(`http://localhost:${PORT}/cart/${userId}`)
+      .get(`${URL}/cart/${userId}`)
       .then(async (res) => {
         const fetchedCartItems = res.data.cartItem || [];
         setCartItems(fetchedCartItems);
-        return axios.get(`http://localhost:${PORT}/nutrients/${userId}`);
+        return axios.get(`${URL}/nutrients/${userId}`);
       })
       .then((res) => {
         const total = res.data.totalNutrition;
@@ -41,7 +42,7 @@ const Cart = ({ isChecked }) => {
     const userId = JSON.parse(storedUser).user_id;
 
     axios
-      .delete(`http://localhost:${PORT}/cart/${userId}/${productId}`)
+      .delete(`${URL}/cart/${userId}/${productId}`)
       .then((res) => {
         console.log(res.data);
         setCartItems((prevItems) =>
