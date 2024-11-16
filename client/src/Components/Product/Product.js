@@ -125,7 +125,9 @@ const Product = ({ isChecked, isToggle }) => {
           ...item,
           img: item.img || null,
         }));
-        const nutrientResponse = await axios.get(`${URL}/nutrients`);
+        const nutrientResponse = await axios.get(
+          `${URL || `http://localhost:${PORT}`}/nutrients`
+        );
         const nutrientData = nutrientResponse.data;
 
         const productsWithNutrients = productData.map((productItem) => {
