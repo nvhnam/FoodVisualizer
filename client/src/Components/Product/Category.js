@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Dropdown } from "rsuite";
 
+const PORT = process.env.REACT_APP_PORT;
+
 const Category = ({ onSelectCategory }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:8008/categories");
+        const response = await axios.get(`http://localhost:${PORT}/categories`);
         const uniqueCategories = getUniqueCategories(response.data);
         // console.log("Filtered products:", response.data);
         setCategories(uniqueCategories);

@@ -19,6 +19,9 @@ import TrafficLight from "../Visualization/Traffic Light System/TrafficLight.js"
 import Footer from "../Home/Footer";
 import { useChat } from "ai/react";
 
+const PORT = process.env.REACT_APP_PORT;
+const URL = process.env.REACT_APP_URL;
+
 const Product = ({ isChecked, isToggle }) => {
   const [product, setProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,13 +35,10 @@ const Product = ({ isChecked, isToggle }) => {
   const [sugarsFilter, setSugarsFilter] = useState("all");
   const [saltFilter, setSaltFilter] = useState("all");
 
-  const { messages, input, setInput, append, setMessages } = useChat(
-    {
-      streamProtocol: "text",
-      fetch: "http://localhost:8008/api/chat",
-    },
-    { onFinish: "" }
-  );
+  const { messages, input, setInput, append, setMessages } = useChat({
+    streamProtocol: "text",
+    fetch: `${URL}/api/chat`,
+  });
 
   useEffect(() => {
     const savedMessages = localStorage.getItem("chatMessages");
@@ -66,7 +66,7 @@ const Product = ({ isChecked, isToggle }) => {
       // const updatedMessages = [...messages];
       // Send messages to backend
       // console.log("FE: ", updatedMessages);
-      const response = await fetch("http://localhost:8008/api/chat", {
+      const response = await fetch(`${URL}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,14 +115,12 @@ const Product = ({ isChecked, isToggle }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get("http://localhost:8008/product");
+        const response = await axios.get(`${URL}/product`);
         const productData = response.data.map((item) => ({
           ...item,
           img: item.img || null,
         }));
-        const nutrientResponse = await axios.get(
-          "http://localhost:8008/nutrients"
-        );
+        const nutrientResponse = await axios.get(`${URL}/nutrients`);
         const nutrientData = nutrientResponse.data;
 
         const productsWithNutrients = productData.map((productItem) => {
@@ -195,7 +193,7 @@ const Product = ({ isChecked, isToggle }) => {
     const fetchFilteredProducts = async () => {
       if (selectedCategory) {
         try {
-          let api = "http://localhost:8008/filter";
+          let api = `http://localhost:${PORT}/filter`;
 
           const response = await axios.get(api, {
             params: {

@@ -20,6 +20,8 @@ import FormGroup from "@mui/material/FormGroup";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import moment from "moment-timezone";
+
+const PORT = process.env.REACT_APP_PORT;
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -106,7 +108,7 @@ export const AllCharts = () => {
 
       for (const type of selectedTypes) {
         const response = await axios.post(
-          "http://localhost:8008/record/rating",
+          `http://localhost:${PORT}/record/rating`,
           {
             token,
             typeOfChart: type,

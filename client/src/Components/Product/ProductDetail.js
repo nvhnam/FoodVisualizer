@@ -6,6 +6,8 @@ import "./ProductDetail.css";
 import HeaderSub from "../Home/HeaderSub.js";
 import { Button } from "@mui/material";
 import Footer from "../Home/Footer.js";
+
+const PORT = process.env.REACT_APP_PORT;
 const ProductDetail = ({ isChecked }) => {
   const [product, setProduct] = useState(null);
   const { productId } = useParams();
@@ -19,7 +21,7 @@ const ProductDetail = ({ isChecked }) => {
     const fetchFood = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8008/product-detail/${productId}`
+          `http://localhost:${PORT}/product-detail/${productId}`
         );
         setProduct(response.data);
       } catch (error) {
@@ -48,7 +50,7 @@ const ProductDetail = ({ isChecked }) => {
       }
 
       const response = await axios.post(
-        "http://localhost:8008/cart/add",
+        `http://localhost:${PORT}/cart/add`,
         {
           userId: userId,
           productId: product.product_id,

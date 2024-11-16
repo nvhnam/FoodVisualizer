@@ -5,6 +5,8 @@ import { Button } from "@mui/material";
 import TrafficLight from "../Visualization/Traffic Light System/TrafficLight";
 import Footer from "../Home/Footer";
 
+const PORT = process.env.REACT_APP_PORT;
+
 const Cart = ({ isChecked }) => {
   const [cartItems, setCartItems] = useState([]);
   const [totalNutrition, setTotalNutrition] = useState({});
@@ -14,11 +16,11 @@ const Cart = ({ isChecked }) => {
     const userId = JSON.parse(storedUser).user_id;
 
     axios
-      .get(`http://localhost:8008/cart/${userId}`)
+      .get(`http://localhost:${PORT}/cart/${userId}`)
       .then(async (res) => {
         const fetchedCartItems = res.data.cartItem || [];
         setCartItems(fetchedCartItems);
-        return axios.get(`http://localhost:8008/nutrients/${userId}`);
+        return axios.get(`http://localhost:${PORT}/nutrients/${userId}`);
       })
       .then((res) => {
         const total = res.data.totalNutrition;
@@ -39,7 +41,7 @@ const Cart = ({ isChecked }) => {
     const userId = JSON.parse(storedUser).user_id;
 
     axios
-      .delete(`http://localhost:8008/cart/${userId}/${productId}`)
+      .delete(`http://localhost:${PORT}/cart/${userId}/${productId}`)
       .then((res) => {
         console.log(res.data);
         setCartItems((prevItems) =>

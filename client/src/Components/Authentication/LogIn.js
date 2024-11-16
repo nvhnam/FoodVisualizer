@@ -13,6 +13,7 @@ import { createTheme } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./authContext";
+const PORT = process.env.REACT_APP_PORT;
 
 const Login = () => {
   const [values, setValues] = useState({
@@ -63,7 +64,7 @@ const Login = () => {
     const formErrors = validate();
     if (Object.keys(formErrors).length === 0) {
       axios
-        .post("http://localhost:8008/auth/login", JSON.stringify(values), {
+        .post(`http://localhost:${PORT}/auth/login`, JSON.stringify(values), {
           headers: {
             "Content-Type": "application/json",
           },

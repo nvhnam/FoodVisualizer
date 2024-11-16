@@ -49,6 +49,9 @@ app.use("/mng-user", handleUser);
 import recordChoice from "./routes/record-r.js";
 app.use("/record", recordChoice);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Enable this for local dev and disable when
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
+
+export default app;
