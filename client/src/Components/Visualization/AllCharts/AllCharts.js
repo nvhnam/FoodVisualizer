@@ -22,6 +22,7 @@ import { jwtDecode } from "jwt-decode";
 import moment from "moment-timezone";
 
 const PORT = process.env.REACT_APP_PORT;
+const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -108,7 +109,7 @@ export const AllCharts = () => {
 
       for (const type of selectedTypes) {
         const response = await axios.post(
-          `http://localhost:${PORT}/record/rating`,
+          `${URL || `http://localhost:${PORT}`}/record/rating`,
           {
             token,
             typeOfChart: type,

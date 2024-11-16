@@ -11,7 +11,9 @@ const Category = ({ onSelectCategory }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${URL}/categories`);
+        const response = await axios.get(
+          `${URL || `http://localhost:${PORT}`}/categories`
+        );
         const uniqueCategories = getUniqueCategories(response.data);
         // console.log("Filtered products:", response.data);
         setCategories(uniqueCategories);

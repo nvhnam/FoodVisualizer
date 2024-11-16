@@ -65,11 +65,15 @@ const Login = () => {
     const formErrors = validate();
     if (Object.keys(formErrors).length === 0) {
       axios
-        .post(`${URL}/auth/login`, JSON.stringify(values), {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+        .post(
+          `${URL || `http://localhost:${PORT}`}/auth/login`,
+          JSON.stringify(values),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
         .then((res) => {
           console.log(res);
           if (res.data.status === 200) {

@@ -13,7 +13,10 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (inputs) => {
-    const res = await axios.post(`${URL}/auth/login`, inputs);
+    const res = await axios.post(
+      `${URL || `http://localhost:${PORT}`}/auth/login`,
+      inputs
+    );
     setCurrentUser(res.data);
   };
 

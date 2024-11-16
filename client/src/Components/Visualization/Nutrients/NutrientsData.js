@@ -47,7 +47,7 @@ export const NutrientsData = (productId) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${URL}/product-nutrients/${productId}`
+          `${URL || `http://localhost:${PORT}`}/product-nutrients/${productId}`
         );
         const nutrition_data = response.data;
         // console.log("Fecth single Data: ", nutrition_data);

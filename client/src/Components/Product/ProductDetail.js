@@ -21,7 +21,9 @@ const ProductDetail = ({ isChecked }) => {
   useEffect(() => {
     const fetchFood = async () => {
       try {
-        const response = await axios.get(`${URL}/product-detail/${productId}`);
+        const response = await axios.get(
+          `${URL || `http://localhost:${PORT}`}/product-detail/${productId}`
+        );
         setProduct(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);

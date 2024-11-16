@@ -37,7 +37,7 @@ const Product = ({ isChecked, isToggle }) => {
 
   const { messages, input, setInput, append, setMessages } = useChat({
     streamProtocol: "text",
-    fetch: `${URL}/api/chat`,
+    fetch: `${URL || `http://localhost:${PORT}`}/api/chat`,
   });
 
   useEffect(() => {
@@ -66,13 +66,16 @@ const Product = ({ isChecked, isToggle }) => {
       // const updatedMessages = [...messages];
       // Send messages to backend
       // console.log("FE: ", updatedMessages);
-      const response = await fetch(`${URL}/api/chat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ messages: updatedMessages }),
-      });
+      const response = await fetch(
+        `${URL || `http://localhost:${PORT}`}/api/chat`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ messages: updatedMessages }),
+        }
+      );
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
@@ -115,7 +118,9 @@ const Product = ({ isChecked, isToggle }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`${URL}/product`);
+        const response = await axios.get(
+          `${URL || `http://localhost:${PORT}`}/product`
+        );
         const productData = response.data.map((item) => ({
           ...item,
           img: item.img || null,
@@ -193,7 +198,7 @@ const Product = ({ isChecked, isToggle }) => {
     const fetchFilteredProducts = async () => {
       if (selectedCategory) {
         try {
-          let api = `${URL}/filter`;
+          let api = `${URL || `http://localhost:${PORT}`}/filter`;
 
           const response = await axios.get(api, {
             params: {

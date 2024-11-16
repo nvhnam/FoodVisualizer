@@ -17,11 +17,13 @@ const Cart = ({ isChecked }) => {
     const userId = JSON.parse(storedUser).user_id;
 
     axios
-      .get(`${URL}/cart/${userId}`)
+      .get(`${URL || `http://localhost:${PORT}`}/cart/${userId}`)
       .then(async (res) => {
         const fetchedCartItems = res.data.cartItem || [];
         setCartItems(fetchedCartItems);
-        return axios.get(`${URL}/nutrients/${userId}`);
+        return axios.get(
+          `${URL || `http://localhost:${PORT}`}/nutrients/${userId}`
+        );
       })
       .then((res) => {
         const total = res.data.totalNutrition;
@@ -42,7 +44,9 @@ const Cart = ({ isChecked }) => {
     const userId = JSON.parse(storedUser).user_id;
 
     axios
-      .delete(`${URL}/cart/${userId}/${productId}`)
+      .delete(
+        `${URL || `http://localhost:${PORT}`}/cart/${userId}/${productId}`
+      )
       .then((res) => {
         console.log(res.data);
         setCartItems((prevItems) =>
