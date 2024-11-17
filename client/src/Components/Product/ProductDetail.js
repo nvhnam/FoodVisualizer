@@ -51,7 +51,7 @@ const ProductDetail = ({ isChecked }) => {
       }
 
       const response = await axios.post(
-        `${URL}/cart/add`,
+        `${URL || `http://localhost:${PORT}`}/cart/add`,
         {
           userId: userId,
           productId: product.product_id,
