@@ -29,11 +29,11 @@ const Product = ({ isChecked, isToggle }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-const [age, setAge] = useState("");
+  const [age, setAge] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
-  const [gender, setGender] = useState("");
-  const [goal, setGoal] = useState("");
+  const [gender, setGender] = useState("male");
+  const [goal, setGoal] = useState("loseWeight");
   const [kcal, setKcal] = useState("");
   const [fatFilter, setFatFilter] = useState("all");
   const [saturatesFilter, setSaturatesFilter] = useState("all");
@@ -67,10 +67,10 @@ const [age, setAge] = useState("");
       return;
     }
 
-    if (!gender || !goal) {
-      alert("Please select both gender and goal.");
-      return;
-    }
+    // if (!gender || !goal) {
+    //   alert("Please select both gender and goal.");
+    //   return;
+    // }
 
     // Create the user info object
     const userInfo = {
@@ -158,7 +158,7 @@ const [age, setAge] = useState("");
       alert("There was an error sending the request.");
     }
   };
-  
+
   useEffect(() => {
     const savedMessages = localStorage.getItem("chatMessages");
     if (savedMessages) {
@@ -942,6 +942,100 @@ const [age, setAge] = useState("");
               >
                 Remove all messages
               </Button>
+              <form className="w-100 mt-3" onSubmit={handleUserInfo}>
+                <div className="w-100 d-flex align-items-center justify-content-between gap-3">
+                  <div className="w-50">
+                    <div className="mb-3 d-flex align-items-center justify-content-between">
+                      <label for="userAge" className="form-label fs-6">
+                        Age
+                      </label>
+                      <input
+                        id="userAge"
+                        className="form-control w-50"
+                        placeholder="20"
+                        type="number"
+                        value={age}
+                        min="1"
+                        onChange={(event) => {
+                          setAge(event.target.value);
+                        }}
+                        required
+                      />
+                    </div>
+                    <div className="mb-3 d-flex align-items-center justify-content-between gap-2">
+                      <label for="userGender" className=" form-label fs-6">
+                        Gender
+                      </label>
+                      <select
+                        id="userGender"
+                        className="form-select form-select-sm w-50"
+                        required
+                        value={gender}
+                        onChange={(event) => setGender(event.target.value)}
+                      >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="w-50">
+                    <div className="w-100 mb-3 d-flex align-items-center gap-2 justify-content-between">
+                      <label for="userWeight" className="form-label fs-6">
+                        Weight (kg)
+                      </label>
+                      <input
+                        id="userWeight"
+                        className="form-control w-50"
+                        placeholder="60"
+                        type="number"
+                        min="1"
+                        value={weight}
+                        onChange={(event) => {
+                          setWeight(event.target.value);
+                        }}
+                        required
+                      />
+                    </div>
+                    <div className="w-100 mb-3 d-flex align-items-center justify-content-between gap-2">
+                      <label for="userHeight" className="form-label fs-6">
+                        Height (cm)
+                      </label>
+                      <input
+                        id="userHeight"
+                        className="form-control w-50"
+                        min="10"
+                        placeholder="170"
+                        type="number"
+                        value={height}
+                        onChange={(event) => {
+                          setHeight(event.target.value);
+                        }}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="w-100 d-flex align-items-center justify-content-between gap-2">
+                  <label for="userGoal" className=" form-label fs-6">
+                    Goal
+                  </label>
+                  <select
+                    id="userGoal"
+                    className="form-select form-select-sm w-50"
+                    required
+                    value={goal}
+                    onChange={(event) => setGoal(event.target.value)}
+                  >
+                    <option value="loseWeight">Lose weight</option>
+                    <option value="gainWeight">Gain weight</option>
+                    <option value="maintainWeight">Maintain weight</option>
+                    <option value="none">None</option>
+                  </select>
+                  <button className="btn btn-primary" type="submit">
+                    Set
+                  </button>
+                </div>
+              </form>
             </section>
 
             <section className="container p-0 w-100">
