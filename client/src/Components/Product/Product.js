@@ -53,6 +53,22 @@ const Product = ({ isChecked, isToggle }) => {
       return null;
     }
   };
+  
+   const extractFoodGroups = (response) => {
+    const foodGroupRegex = /Food-Group:\s*([\w\s,]+)\s*/;
+
+    const foodGroupMatch = response.match(foodGroupRegex);
+
+    if (foodGroupMatch) {
+      const foodGroups = foodGroupMatch[1]
+        .split(",")
+        .map((group) => group.trim());
+
+      return foodGroups;
+    }
+
+    return null;
+  };
 
   const handleUserInfo = async (e) => {
     e.preventDefault();
