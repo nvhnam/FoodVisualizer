@@ -39,6 +39,12 @@ const Product = ({ isChecked, isToggle }) => {
   const [saturatesFilter, setSaturatesFilter] = useState("all");
   const [sugarsFilter, setSugarsFilter] = useState("all");
   const [saltFilter, setSaltFilter] = useState("all");
+    const [foodGroups, setFoodGroup] = useState([]);
+  const [fatSuggest, setFatSuggest] = useState(null);
+  const [saturatesSuggest, setSaturatesSuggest] = useState(null);
+  const [sugarSuggest, setSugarSuggest] = useState(null);
+  const [saltSuggest, setSaltSuggest] = useState(null);
+  
 
   const { messages, input, setInput, append, setMessages } = useChat({
     streamProtocol: "text",
