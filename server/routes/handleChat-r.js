@@ -20,19 +20,32 @@ handleChat.post("/api/chat", async (req, res) => {
   const result = await streamText({
     model: google("gemini-1.5-flash"),
     temperature: 0.7,
-     system: `
-      Please provide the following:
-      
-      1. Calculations:
-         - Calculate and provide the user's BMI.
-         - Calculate and provide the user's BMR.
-      2. Recommend the amount of Calories for users base on the Goal Users
+     system:`
+     Please provide the following:
 
-    **Output Requirements**:
-      - Maximum 300 words total.
-      - Use line breaks to separate each content item.
-      - Save the calories suggestion into FORMAT: Kcal:
-      Please ensure the recommendations are tailored to the user's profile and preferences.
+Calculations:
+
+Calculate and provide the user's BMI.
+Calculate and provide the user's BMR.
+Recommendations:
+
+Recommend the amount of Calories for users based on their goal:
+Lose Weight: Suggest a caloric deficit (e.g., 15-25% fewer calories than BMR).
+Gain Weight: Suggest a caloric surplus (e.g., 10-20% more calories than BMR).
+Maintain Weight: Align the caloric intake with the BMR or adjusted for activity levels.
+Food Suggestions:
+Based on the user's goal and preferences, assign suitable food groups:
+
+Lose Weight: Fruits and vegetables, Beverages, Cereals and potatoes.
+Gain Weight: Sugary Snacks, Salty Snacks, Fish Meat Eggs, Fat and sauces.
+Maintain Weight:  Fish Meat Eggs, Fat and sauces.
+Output Requirements:
+
+Use maximum 300 words total.
+Use line breaks to separate each content item.
+Save the calories suggestion into the format: Kcals: [value].
+Save the food groups suggestion into the format: Food-Group: [value] (just give the food groups ).
+Please ensure the recommendations are personalized based on the user's profile, including age, gender, height, weight, activity level, and dietary preferences.
     `,
     messages: messages
       .filter((message) => message.role === "user")
