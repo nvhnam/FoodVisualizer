@@ -54,22 +54,51 @@ const Product = ({ isChecked, isToggle }) => {
     }
   };
   
-   const extractFoodGroups = (response) => {
-    const foodGroupRegex = /Food-Group:\s*([\w\s,]+)\s*/;
 
+  const extractFoodGroups = (response) => {
+    const predefinedGroups = [
+      "Cereals and potatoes",
+      "Sugary Snacks",
+      "Fish Meat Eggs",
+      "Fat and sauces",
+      "Fruits and vegetables",
+      "Beverages",
+      "Salty Snacks",
+    ];
+
+    const foodGroupRegex = new RegExp(predefinedGroups.join("|"), "i"); // Case-insensitive match
     const foodGroupMatch = response.match(foodGroupRegex);
 
     if (foodGroupMatch) {
-      const foodGroups = foodGroupMatch[1]
-        .split(",")
-        .map((group) => group.trim());
-
-      return foodGroups;
+      return foodGroupMatch[0].trim();
     }
 
     return null;
   };
+  
+  const extractFat = (response) => {
+    const fatRegex = /Fat:\s*(\d+)\s*[gG]/;
+    const fatMatch = response.match(fatRegex);
+    return fatMatch ? parseInt(fatMatch[1], 10) : null;
+  };
 
+  const extractSaturates = (response) => {
+    const saturatesRegex = /Saturates:\s*(\d+)\s*[gG]/;
+    const saturatesMatch = response.match(saturatesRegex);
+    return saturatesMatch ? parseInt(saturatesMatch[1], 10) : null;
+  };
+
+  const extractSugars = (response) => {
+    const sugarsRegex = /Sugars:\s*(\d+)\s*[gG]/;
+    const sugarsMatch = response.match(sugarsRegex);
+    return sugarsMatch ? parseInt(sugarsMatch[1], 10) : null;
+  };
+
+  const extractSalt = (response) => {
+    const saltRegex = /Salt:\s*(\d+)\s*[gG]/; // Match the number before "g" or "G"
+    const saltMatch = response.match(saltRegex);
+    return saltMatch ? parseInt(saltMatch[1], 10) : null;
+  };
   const handleUserInfo = async (e) => {
     e.preventDefault();
 
