@@ -145,21 +145,37 @@ const Product = ({ isChecked, isToggle }) => {
 
       let finalResponse = "";
       let caloriesValue = null;
+        let fat = null;
+      let sugar = null;
+      let saturates = null;
+      let salt = null;
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         finalResponse += decoder.decode(value);
-        finalResponse = finalResponse.replace(/[*#]/g, "");
-        caloriesValue = extractCalories(finalResponse);
-
-        setKcal(caloriesValue);
       }
 
-      console.log("Kcal in Suggest", kcal);
-      const assistantMessage = {
-        role: "system",
-        content: finalResponse,
-      };
+      finalResponse = finalResponse.replace(/[*#]/g, "");
+      caloriesValue = extractCalories(finalResponse);
+      foodGroups = extractFoodGroups(finalResponse);
+      fat = extractFat(finalResponse);
+      saturates = extractSaturates(finalResponse);
+      sugar = extractSugars(finalResponse);
+      salt = extractSalt(finalResponse);
+
+      setKcal(caloriesValue);
+      setFoodGroup(foodGroups);
+      setFatSuggest(fat);
+      setSaturatesSuggest(saturates);
+      setSugarSuggest(sugar);
+      setSaltSuggest(salt);
+
+      console.log("Calories value set:", caloriesValue);
+      console.log("Food groups set:", foodGroups);
+      console.log("fat", fatSuggest);
+      console.log("sugar", sugarSuggest);
+      console.log("salt", saltSuggest);
 
       const updatedMessages = [...messages, userMessage, assistantMessage];
       setMessages(updatedMessages);
