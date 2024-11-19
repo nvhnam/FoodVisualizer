@@ -270,12 +270,39 @@ const Product = ({ isChecked, isToggle }) => {
     }
   }, [setMessages]);
 
+
+    useEffect(() => {
+    if (
+      minCal &&
+      maxCal &&
+      fatSuggest &&
+      saturatesSuggest &&
+      sugarSuggest &&
+      saltSuggest
+    ) {
+      const dataNutrientSuggest = {
+        caloriesMin: minCal,
+        caloriesMax: maxCal,
+        fat: fatSuggest,
+        saturates: saturatesSuggest,
+        sugar: sugarSuggest,
+        salt: saltSuggest,
+      };
+
+      localStorage.setItem("DataNutrient", JSON.stringify(dataNutrientSuggest));
+    }
+  }, [minCal, maxCal, fatSuggest, saturatesSuggest, sugarSuggest, saltSuggest]);
+
   const deleteMessage = () => { /// When click remove the chat Message, it will delete the data products suggest by AI in same time. 
     localStorage.removeItem("chatMessages");
     localStorage.removeItem("sortedProductsSuggestion");
+    localStorage.removeItem("DataNutrient");
     setMessages([]);
     setProductsSuggestion([]);
   };
+
+
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
