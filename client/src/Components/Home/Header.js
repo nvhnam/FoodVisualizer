@@ -30,6 +30,8 @@ const Header = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("userInfo");
+    localStorage.removeItem("chatMessages");
+    localStorage.removeItem("sortedProductsSuggestion");
     setLoggedIn(false);
     setUsername(null);
     navigate("/");

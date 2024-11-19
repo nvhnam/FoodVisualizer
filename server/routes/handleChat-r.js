@@ -38,7 +38,7 @@ Food Suggestions:
 Based on the user's goal and preferences, assign suitable food groups:
 
 Lose Weight: Cereals and potatoes.
-Gain Weight: Sugary Snacks.
+Gain Weight: Sugary snacks.
 Maintain Weight: Fish Meat Eggs.
 None: Fat and sauces.
 Output Requirements:
