@@ -34,31 +34,37 @@ const Product = ({ isChecked, isToggle }) => {
   const [height, setHeight] = useState("");
   const [gender, setGender] = useState("male");
   const [goal, setGoal] = useState("loseWeight");
-  const [kcal, setKcal] = useState("");
   const [fatFilter, setFatFilter] = useState("all");
   const [saturatesFilter, setSaturatesFilter] = useState("all");
   const [sugarsFilter, setSugarsFilter] = useState("all");
   const [saltFilter, setSaltFilter] = useState("all");
-    const [foodGroups, setFoodGroup] = useState([]);
-  const [fatSuggest, setFatSuggest] = useState(null);
-  const [saturatesSuggest, setSaturatesSuggest] = useState(null);
-  const [sugarSuggest, setSugarSuggest] = useState(null);
-  const [saltSuggest, setSaltSuggest] = useState(null);
+  const [minCal, setMinCal] = useState("");
+  const [maxCal, setMaxCal] = useState("");
+
+  const [foodGroups, setFoodGroup] = useState("");
+  const [fatSuggest, setFatSuggest] = useState("");
+  const [saturatesSuggest, setSaturatesSuggest] = useState("");
+  const [sugarSuggest, setSugarSuggest] = useState("");
+  const [saltSuggest, setSaltSuggest] = useState("");
+  const [productSuggestion, setProductsSuggestion] = useState([]);
   
 
   const { messages, input, setInput, append, setMessages } = useChat({
     streamProtocol: "text",
     fetch: `${URL || `http://localhost:${PORT}`}/api/chat`,
   });
-  const extractCalories = (response) => {
-    const caloriesMatch = response.match(/Kcal:\s*(\d+)(?:\s*|\.)/);
 
-    if (caloriesMatch) {
-      return caloriesMatch[1];
-    } else {
-      return null;
-    }
+  const extractMinCalories = (response) => {
+    const caloriesMatch = response.match(/Calories Suggestion Min:\s*(\d+)/);
+    console.log(caloriesMatch);
+    return caloriesMatch ? parseInt(caloriesMatch[1], 10) : null;
   };
+  const extractMaxCalories = (response) => {
+    const caloriesMatch = response.match(/Calories Suggestion Max:\s*(\d+)/);
+    console.log(caloriesMatch);
+    return caloriesMatch ? parseInt(caloriesMatch[1], 10) : null;
+  };
+  
   
 
   const extractFoodGroups = (response) => {
@@ -82,29 +88,32 @@ const Product = ({ isChecked, isToggle }) => {
     return null;
   };
   
-  const extractFat = (response) => {
-    const fatRegex = /Fat:\s*(\d+)\s*[gG]/;
+ const extractFat = (response) => {
+    const fatRegex = /Fat Suggestion:\s*(\d+)\s*[gG]/;
     const fatMatch = response.match(fatRegex);
-    return fatMatch ? parseInt(fatMatch[1], 10) : null;
+    console.log(fatMatch);
+    return fatMatch ? parseInt(fatMatch[1], 10) : 10;
   };
 
   const extractSaturates = (response) => {
-    const saturatesRegex = /Saturates:\s*(\d+)\s*[gG]/;
+    const saturatesRegex = /Saturates Suggestion:\s*(\d+)\s*[gG]/;
     const saturatesMatch = response.match(saturatesRegex);
-    return saturatesMatch ? parseInt(saturatesMatch[1], 10) : null;
+    return saturatesMatch ? parseInt(saturatesMatch[1], 10) : 15;
   };
 
   const extractSugars = (response) => {
-    const sugarsRegex = /Sugars:\s*(\d+)\s*[gG]/;
+    const sugarsRegex = /Sugars Suggestion:\s*(\d+)\s*[gG]/;
     const sugarsMatch = response.match(sugarsRegex);
-    return sugarsMatch ? parseInt(sugarsMatch[1], 10) : null;
+    return sugarsMatch ? parseInt(sugarsMatch[1], 10) : 0.5;
   };
 
   const extractSalt = (response) => {
-    const saltRegex = /Salt:\s*(\d+)\s*[gG]/; // Match the number before "g" or "G"
+    const saltRegex = /Salt Suggestion:\s*(\d+)\s*[gG]/; // Match the number before "g" or "G"
     const saltMatch = response.match(saltRegex);
-    return saltMatch ? parseInt(saltMatch[1], 10) : null;
+    return saltMatch ? parseInt(saltMatch[1], 10) : 3;
   };
+
+  
   const handleUserInfo = async (e) => {
     e.preventDefault();
 
@@ -175,22 +184,50 @@ const Product = ({ isChecked, isToggle }) => {
       }
 
       const reader = response.body.getReader();
-
       const decoder = new TextDecoder("utf-8");
-
+      
       let finalResponse = "";
-      let caloriesValue = null;
+      let caloriesMinValue = null;
+      let caloriesMaxValue = null;
+      let foodGroups = null;
+
+      let fat = null;
+      let sugar = null;
+      let saturates = null;
+      let salt = null;
+      
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         finalResponse += decoder.decode(value);
-        finalResponse = finalResponse.replace(/[*#]/g, "");
-        caloriesValue = extractCalories(finalResponse);
+      }  
+      finalResponse = finalResponse.replace(/[*#]/, "");
+      caloriesMinValue = extractMinCalories(finalResponse);
+      caloriesMaxValue = extractMaxCalories(finalResponse);
 
-        setKcal(caloriesValue);
-      }
+      foodGroups = extractFoodGroups(finalResponse);
+      fat = extractFat(finalResponse);
+      saturates = extractSaturates(finalResponse);
+      sugar = extractSugars(finalResponse);
+      salt = extractSalt(finalResponse);
 
-      console.log("Kcal in Suggest", kcal);
+      setMinCal(caloriesMinValue);
+      setMaxCal(caloriesMaxValue);
+
+      setFoodGroup(foodGroups);
+      setFatSuggest(fat);
+      setSaturatesSuggest(saturates);
+      setSugarSuggest(sugar);
+      setSaltSuggest(salt);
+
+      console.log("Calories min value set:", caloriesMinValue);
+      console.log("Calories max value set:", caloriesMaxValue);
+      console.log("Food groups set:", foodGroups);
+      console.log("fat", fat);
+      console.log("saturates", saturates);
+      console.log("sugar", sugar);
+      console.log("salt", salt);
+
       const assistantMessage = {
         role: "system",
         content: finalResponse,
@@ -209,7 +246,23 @@ const Product = ({ isChecked, isToggle }) => {
       alert("There was an error sending the request.");
     }
   };
-
+  
+ useEffect(() => {  /// If it has already the products suggest for users base on Chatbot, it will keep all the data in local storage when they go back.
+    if (productSuggestion && productSuggestion.length > 0) {
+      try {
+        localStorage.setItem(
+          "sortedProductsSuggestion",
+          JSON.stringify(productSuggestion)
+        );
+      } catch (error) {
+        console.error(
+          "Error saving product suggestions to localStorage:",
+          error
+        );
+      }
+    }
+  }, [productSuggestion]);
+  
   useEffect(() => {
     const savedMessages = localStorage.getItem("chatMessages");
     if (savedMessages) {
@@ -217,9 +270,11 @@ const Product = ({ isChecked, isToggle }) => {
     }
   }, [setMessages]);
 
-  const deleteMessage = () => {
+  const deleteMessage = () => { /// When click remove the chat Message, it will delete the data products suggest by AI in same time. 
     localStorage.removeItem("chatMessages");
+    localStorage.removeItem("sortedProductsSuggestion");
     setMessages([]);
+    setProductsSuggestion([]);
   };
 
   const handleSubmit = async (e) => {
@@ -285,38 +340,28 @@ const Product = ({ isChecked, isToggle }) => {
     }
   }, [chatParent]);
 
-  useEffect(() => {
+ useEffect(() => { /// If users dont use chatbot, it will show  initial products, if in local storage, we have the products filter and sorted by AI, it will show
     const fetchProduct = async () => {
       try {
-        // const response = await axios.get(
-        //   `${URL || `http://localhost:${PORT}`}/product`
-        // );
-        // const productData = response.data.map((item) => ({
-        //   ...item,
-        //   img: item.img || null,
-        // }));
-        // const nutrientResponse = await axios.get(
-        //   `${URL || `http://localhost:${PORT}`}/nutrients`
-        // );
-        // const nutrientData = nutrientResponse.data;
-
-        // const productsWithNutrients = productData.map((productItem) => {
-        //   const nutrient = nutrientData.find(
-        //     (n) => n.product_id === productItem.product_id
-        //   );
-        //   return {
-        //     ...productItem,
-        //     nutrients: nutrient || {},
-        //   };
-        // });
-
-        // setProduct(productsWithNutrients);
-        // setSearchTerm("");
-
-        const response = await axios.get(
-          `${URL || `http://localhost:${PORT}`}/product-with-nutrients`
+        const sortedProductsSuggestion = localStorage.getItem(
+          "sortedProductsSuggestion"
         );
-        setProduct(response.data);
+
+        if (sortedProductsSuggestion) {
+          const productSuggestionAI = JSON.parse(sortedProductsSuggestion);
+          console.log(
+            "Loaded products from localStorage:",
+            productSuggestionAI
+          );
+          setProduct(productSuggestionAI);
+        } else {
+          const response = await axios.get(
+            `${URL || `http://localhost:${PORT}`}/product-with-nutrients`
+          );
+          console.log("Fetched products from server:", response.data);
+          setProduct(response.data);
+        }
+
         setSearchTerm("");
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -325,6 +370,7 @@ const Product = ({ isChecked, isToggle }) => {
 
     fetchProduct();
   }, []);
+  
 
   useEffect(() => {
     const filterProducts = () => {
@@ -407,6 +453,66 @@ const Product = ({ isChecked, isToggle }) => {
 
     fetchFilteredProducts();
   }, [selectedCategory, product]);
+
+
+    useEffect(() => { /// Function for filter base on food group and sort the energy base on AI suggest in calories, then show the product.
+    const fetchFilteredProductsChatBot = async () => {
+      if (foodGroups !== "") {
+        try {
+          let api = `${URL || `http://localhost:${PORT}`}/filter`;
+
+          const response = await axios.get(api, {
+            params: {
+              level0: foodGroups || null,
+            },
+          });
+
+          const filteredProducts = response.data
+            .map((filteredItem) => {
+              const productImage = product.find(
+                (item) => item.product_id === filteredItem.product_id
+              );
+              return {
+                ...filteredItem,
+                product_name: productImage ? productImage.product_name : null,
+                img: productImage ? productImage.img : null,
+                nutrients: productImage ? productImage.nutrients : null,
+              };
+            })
+            .filter((item) => {
+              const { nutrients } = item;
+
+              return (
+                nutrients &&
+                nutrients.energy < maxCal &&
+                nutrients.energy >= minCal
+              );
+            });
+          console.log("Using Filter", filteredProducts);
+          const sortedProducts = filteredProducts.sort((a, b) => {
+            const caloriesA = a.nutrients.energy || 0;
+            const caloriesB = b.nutrients.energy || 0;
+            return caloriesA - caloriesB;
+          });
+          setSearchResults(sortedProducts);
+          setProductsSuggestion(sortedProducts);
+        } catch (error) {
+          console.error("Error fetching filtered products:", error);
+        }
+      } else {
+        setSearchResults(product);
+      }
+    };
+    fetchFilteredProductsChatBot();
+  }, [
+    foodGroups,
+    product,
+    fatSuggest,
+    saltSuggest,
+    sugarSuggest,
+    minCal,
+    maxCal,
+  ]);
 
   useEffect(() => {
     const results = searchTerm
