@@ -481,14 +481,24 @@ const Product = ({ isChecked, isToggle }) => {
             })
             .filter((item) => {
               const { nutrients } = item;
-
-              return (
-                nutrients &&
-                nutrients.energy < maxCal &&
-                nutrients.energy >= minCal
-              );
+              if (maxCal === minCal) {
+                return (
+                  nutrients &&
+                  nutrients.energy < maxCal + 50 &&
+                  nutrients.energy >= minCal
+                );
+              } else {
+                return (
+                  nutrients &&
+                  nutrients.energy < maxCal &&
+                  nutrients.energy >= minCal
+                );
+              }
             });
-          console.log("Using Filter", filteredProducts);
+
+          const finalProducts =
+            filteredProducts.length > 0 ? filteredProducts : response.data;
+          
           const sortedProducts = filteredProducts.sort((a, b) => {
             const caloriesA = a.nutrients.energy || 0;
             const caloriesB = b.nutrients.energy || 0;
