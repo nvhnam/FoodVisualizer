@@ -48,7 +48,6 @@ const Product = ({ isChecked, isToggle }) => {
   const [saltSuggest, setSaltSuggest] = useState("");
   const [productSuggestion, setProductsSuggestion] = useState([]);
   const [showProductsSuggestion, setShowProductsSuggestion] = useState(true);
-  const [isReset, setReset] = useState(true);
 
   const [caloriesCurrent, setCaloriesCurrent] = useState("");
   const [caloriesMaxSuggestion, setCaloriesMaxSuggestion] = useState("");
@@ -116,9 +115,6 @@ const Product = ({ isChecked, isToggle }) => {
 
   const handleUserInfo = async (e) => {
     e.preventDefault();
-    setReset(false);
-
-    localStorage.setItem("CheckIsSubmit", JSON.stringify(false));
 
     const parsedAge = parseInt(age, 10);
     const parsedWeight = parseInt(weight, 10);
@@ -258,7 +254,6 @@ const Product = ({ isChecked, isToggle }) => {
       setHeight(parsedInfo.height || "");
       setGender(parsedInfo.gender || "");
       setGoal(parsedInfo.goal || "");
-      setReset(parsedSubmit);
     }
   }, []);
 
@@ -550,21 +545,71 @@ const Product = ({ isChecked, isToggle }) => {
   // const handleToggle = () => {
   //   setIsChecked(!isChecked);
   // };
-
-  const last = currentPage * foodPerPage;
-  const first = last - foodPerPage;
-  const currentFood = searchResults.slice(first, last);
-
   const deleteMessage = () => {
-    localStorage.removeItem("userInfo");
     localStorage.removeItem("chatMessages");
     localStorage.removeItem("sortedProductsSuggestion");
     localStorage.removeItem("DataNutrient");
     localStorage.removeItem("StatusBar");
-    localStorage.removeItem("CheckIsSubmit");
-    // setProductsSuggestion([]);
     window.location.reload();
     setMessages([]);
+    // setProductsSuggestion([]);
+  };
+
+  const last = currentPage * foodPerPage;
+  const first = last - foodPerPage;
+  const currentFood = searchResults.slice(first, last);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // await append({ role: "user", content: input });
+      const newMessage = { role: "user", content: input };
+      await append(newMessage);
+
+      const updatedMessages = [...messages, newMessage];
+      setMessages(updatedMessages);
+      localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
+      // const updatedMessages = [...messages];
+      // Send messages to backend
+      // console.log("FE: ", updatedMessages);
+      const response = await fetch(
+        `${URL || `http://localhost:${PORT}`}/api/chat`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ messages: updatedMessages }),
+        }
+      );
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      // console.log("response: ", response);
+      // console.log("reader: ", reader);
+      // console.log("decoder: ", decoder);
+
+      let finalResponse = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        finalResponse += decoder.decode(value);
+      }
+      // append({ role: "system", content: finalResponse });
+
+      const assistantMessage = { role: "system", content: finalResponse };
+      // setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+      const newMessages = [...updatedMessages, assistantMessage];
+      setMessages(newMessages);
+      localStorage.setItem("chatMessages", JSON.stringify(newMessages));
+      // setMessages([
+      //   ...newMessages,
+      //   { role: "assistant", content: finalResponse },
+      // ]);
+      setInput("");
+    } catch (error) {
+      console.error("Error fetching chat:", error);
+    }
   };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -1215,21 +1260,10 @@ const Product = ({ isChecked, isToggle }) => {
                     <option value="maintainWeight">Maintain weight</option>
                     <option value="none">None</option>
                   </select>
-                  {isReset ? (
-                    <button className="btn btn-primary" type="submit">
-                      Submit
-                    </button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      className="mt-2 w-100"
-                      size="small"
-                      color="error"
-                      onClick={deleteMessage}
-                    >
-                      Reset
-                    </Button>
-                  )}
+
+                  <button className="btn btn-primary" type="submit">
+                    Submit
+                  </button>
                 </div>
               </form>
             </section>
@@ -1262,6 +1296,31 @@ const Product = ({ isChecked, isToggle }) => {
                 ))}
               </ul>
             </section>
+            <form className="d-flex align-items-center" onSubmit={handleSubmit}>
+              <input
+                className="form-control flex-1 me-2"
+                placeholder="Type your question here..."
+                type="text"
+                value={input}
+                onChange={(event) => {
+                  setInput(event.target.value);
+                }}
+              />
+
+              <button className="btn btn-primary" type="submit">
+                Submit
+              </button>
+            </form>
+
+            <Button
+              variant="contained"
+              className="mt-2 w-100"
+              size="small"
+              color="error"
+              onClick={deleteMessage}
+            >
+              Remove all messages
+            </Button>
           </div>
         </div>
 
