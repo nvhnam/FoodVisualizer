@@ -27,7 +27,6 @@ const Product = ({ isChecked, isToggle }) => {
   const [foodPerPage] = useState(18);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [fatFilter, setFatFilter] = useState("all");
@@ -49,7 +48,7 @@ const Product = ({ isChecked, isToggle }) => {
   const [saltSuggest, setSaltSuggest] = useState("");
   const [productSuggestion, setProductsSuggestion] = useState([]);
   const [showProductsSuggestion, setShowProductsSuggestion] = useState(true);
-
+  const [errorMessage, setErrorMessage] = useState("");
   const [caloriesCurrent, setCaloriesCurrent] = useState("");
   const [caloriesMaxSuggestion, setCaloriesMaxSuggestion] = useState("");
 
@@ -57,19 +56,6 @@ const Product = ({ isChecked, isToggle }) => {
     streamProtocol: "text",
     fetch: `${URL || `http://localhost:${PORT}`}/api/chat`,
   });
-
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const token = localStorage.getItem("token");
-
-    if (storedUser && token) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  }, []);
 
   const extractMinCalories = (response) => {
     const caloriesMatch = response.match(/Calories Suggestion Min:\s*(\d+)/);
@@ -240,6 +226,16 @@ const Product = ({ isChecked, isToggle }) => {
       alert("There was an error sending the request.");
     }
   };
+  const [loggedIn, setLoggedIn] = useState(false);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    if (storedUser && token) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (productSuggestion && productSuggestion.length > 0) {
@@ -501,17 +497,20 @@ const Product = ({ isChecked, isToggle }) => {
             })
             .filter((item) => {
               const { nutrients } = item;
+              const maxCaloInEachProduct = Math.round(maxCal / 3);
+              const minCaloInEachProduct = Math.round(minCal / 3);
+              console.log("maxCalo", maxCaloInEachProduct)
               if (maxCal === minCal) {
                 return (
                   nutrients &&
-                  nutrients.energy < maxCal + 50 &&
-                  nutrients.energy >= minCal
+                  nutrients.calories < maxCaloInEachProduct + 50 &&
+                  nutrients.calories >= minCaloInEachProduct
                 );
               } else {
                 return (
                   nutrients &&
-                  nutrients.energy < maxCal &&
-                  nutrients.energy >= minCal
+                  nutrients.calories < maxCaloInEachProduct &&
+                  nutrients.calories >= minCaloInEachProduct
                 );
               }
             });
@@ -520,8 +519,8 @@ const Product = ({ isChecked, isToggle }) => {
             filteredProducts.length > 0 ? filteredProducts : response.data;
 
           const sortedProducts = finalProducts.sort((a, b) => {
-            const caloriesA = a.nutrients.energy || 0;
-            const caloriesB = b.nutrients.energy || 0;
+            const caloriesA = a.nutrients.calories || 0;
+            const caloriesB = b.nutrients.calories || 0;
             return caloriesA - caloriesB;
           });
           setSearchResults(sortedProducts);
@@ -559,6 +558,7 @@ const Product = ({ isChecked, isToggle }) => {
   // const handleToggle = () => {
   //   setIsChecked(!isChecked);
   // };
+
   const deleteMessage = () => {
     localStorage.removeItem("chatMessages");
     localStorage.removeItem("sortedProductsSuggestion");
@@ -567,6 +567,55 @@ const Product = ({ isChecked, isToggle }) => {
 
     setMessages([]);
     // setProductsSuggestion([]);
+  };
+  const handleAddToCart = async (product) => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
+      const userId = JSON.parse(storedUser)?.user_id;
+      if (!token) {
+        setErrorMessage("Please log in to add products to your cart.");
+        alert("Please log in to add products to your cart.");
+        return;
+      }
+      const response = await axios.post(
+        `${URL}/cart/add`,
+        {
+          userId: userId,
+          productId: product.product_id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.status === 200) {
+        setErrorMessage("");
+        const checkStatusBar = localStorage.getItem("StatusBar");
+        const energy = Math.round(product?.nutrients?.calories || 0);
+        if (checkStatusBar) {
+          setCaloriesCurrent((prev) => {
+            const updatedCalories = Math.round(prev) + energy;
+            const statusBar = {
+              caloriesCurrent: updatedCalories,
+              caloriesMaxSuggestions: caloriesMaxSuggestion,
+            };
+            localStorage.setItem("StatusBar", JSON.stringify(statusBar));
+            return updatedCalories;
+          });
+        }
+        alert("Product added to cart successfully!");
+      } else {
+        setErrorMessage("Failed to add product to the cart. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      setErrorMessage(
+        "An error occurred. Please log in to add products to your cart."
+      );
+    }
   };
 
   const last = currentPage * foodPerPage;
@@ -623,63 +672,6 @@ const Product = ({ isChecked, isToggle }) => {
       setInput("");
     } catch (error) {
       console.error("Error fetching chat:", error);
-    }
-  };
-
-  const handleAddToCart = async (product) => {
-    try {
-      const storedUser = localStorage.getItem("user");
-      const token = localStorage.getItem("token");
-      const userId = JSON.parse(storedUser)?.user_id;
-
-      if (!token) {
-        setErrorMessage("Please log in to add products to your cart.");
-        alert("Please log in to add products to your cart.");
-        return;
-      }
-
-      const response = await axios.post(
-        `${URL}/cart/add`,
-        {
-          userId: userId,
-          productId: product.product_id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        setErrorMessage("");
-        const checkStatusBar = localStorage.getItem("StatusBar");
-        const energy = Number(product?.nutrients?.energy || 0);
-
-        if (checkStatusBar) {
-          setCaloriesCurrent((prev) => {
-            const updatedCalories = Number(prev) + energy;
-
-            const statusBar = {
-              caloriesCurrent: updatedCalories,
-              caloriesMaxSuggestions: caloriesMaxSuggestion,
-            };
-            localStorage.setItem("StatusBar", JSON.stringify(statusBar));
-
-            return updatedCalories;
-          });
-        }
-
-        alert("Product added to cart successfully!");
-      } else {
-        setErrorMessage("Failed to add product to the cart. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error adding product to cart:", error);
-      setErrorMessage(
-        "An error occurred. Please log in to add products to your cart."
-      );
     }
   };
 
@@ -1245,13 +1237,21 @@ const Product = ({ isChecked, isToggle }) => {
                 }}
               >
                 <p style={{ margin: 0, fontWeight: "bold" }}>Max Calories:</p>
-                <span style={{ color: "#007bff" }}>{caloriesCurrent}</span>
+                <span
+                  style={{
+                    color:
+                      caloriesCurrent > caloriesMaxSuggestion
+                        ? "#dc3545"
+                        : "#007bff",
+                  }}
+                >
+                  {caloriesCurrent}
+                </span>
                 <span style={{ fontWeight: "bold", color: "#6c757d" }}>/</span>
                 <span style={{ color: "#28a745" }}>
                   {caloriesMaxSuggestion}
                 </span>
               </div>
-
               <section className="mb-4">
                 <div>
                   <h3> Products Suggestion By ChatBot AI</h3>
@@ -1345,7 +1345,6 @@ const Product = ({ isChecked, isToggle }) => {
                       <option value="maintainWeight">Maintain weight</option>
                       <option value="none">None</option>
                     </select>
-
                     <button className="btn btn-primary" type="submit">
                       Submit
                     </button>
@@ -1402,7 +1401,6 @@ const Product = ({ isChecked, isToggle }) => {
                     setInput(event.target.value);
                   }}
                 />
-
                 <button className="btn btn-primary" type="submit">
                   Submit
                 </button>
