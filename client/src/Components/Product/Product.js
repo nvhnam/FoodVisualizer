@@ -36,8 +36,8 @@ const Product = ({ isChecked, isToggle }) => {
   const [age, setAge] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
-  const [gender, setGender] = useState("male");
-  const [goal, setGoal] = useState("loseWeight");
+  const [gender, setGender] = useState("Male");
+  const [goal, setGoal] = useState("Lose weight");
   const [minCal, setMinCal] = useState("");
   const [maxCal, setMaxCal] = useState("");
 
@@ -47,6 +47,8 @@ const Product = ({ isChecked, isToggle }) => {
   const [sugarSuggest, setSugarSuggest] = useState("");
   const [saltSuggest, setSaltSuggest] = useState("");
   const [productSuggestion, setProductsSuggestion] = useState([]);
+  const [showProductsSuggestion, setShowProductsSuggestion] = useState(true);
+  const [isReset, setReset] = useState(true);
 
   const [caloriesCurrent, setCaloriesCurrent] = useState("");
   const [caloriesMaxSuggestion, setCaloriesMaxSuggestion] = useState("");
@@ -114,6 +116,9 @@ const Product = ({ isChecked, isToggle }) => {
 
   const handleUserInfo = async (e) => {
     e.preventDefault();
+    setReset(false);
+
+    localStorage.setItem("CheckIsSubmit", JSON.stringify(false));
 
     const parsedAge = parseInt(age, 10);
     const parsedWeight = parseInt(weight, 10);
@@ -244,13 +249,16 @@ const Product = ({ isChecked, isToggle }) => {
 
   useEffect(() => {
     const checkUserInfo = localStorage.getItem("userInfo");
-    if (checkUserInfo) {
+    const checkIsSubmit = localStorage.getItem("CheckIsSubmit");
+    if (checkUserInfo && checkIsSubmit) {
       const parsedInfo = JSON.parse(checkUserInfo);
+      const parsedSubmit = JSON.parse(checkIsSubmit);
       setAge(parsedInfo.age || "");
       setWeight(parsedInfo.weight || "");
       setHeight(parsedInfo.height || "");
       setGender(parsedInfo.gender || "");
       setGoal(parsedInfo.goal || "");
+      setReset(parsedSubmit);
     }
   }, []);
 
@@ -339,7 +347,7 @@ const Product = ({ isChecked, isToggle }) => {
           "sortedProductsSuggestion"
         );
 
-        if (sortedProductsSuggestion) {
+        if (sortedProductsSuggestion && showProductsSuggestion) {
           const productSuggestionAI = JSON.parse(sortedProductsSuggestion);
           console.log(
             "Loaded products from localStorage:",
@@ -361,7 +369,7 @@ const Product = ({ isChecked, isToggle }) => {
     };
 
     fetchProduct();
-  }, []);
+  }, [showProductsSuggestion]);
 
   useEffect(() => {
     const filterProducts = () => {
@@ -445,6 +453,7 @@ const Product = ({ isChecked, isToggle }) => {
               img: productImage ? productImage.img : null,
             };
           });
+          console.log(filteredProducts);
           setSearchResults(filteredProducts);
         } catch (error) {
           console.error("Error fetching filtered products:", error);
@@ -546,6 +555,18 @@ const Product = ({ isChecked, isToggle }) => {
   const first = last - foodPerPage;
   const currentFood = searchResults.slice(first, last);
 
+  const deleteMessage = () => {
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("chatMessages");
+    localStorage.removeItem("sortedProductsSuggestion");
+    localStorage.removeItem("DataNutrient");
+    localStorage.removeItem("StatusBar");
+    localStorage.removeItem("CheckIsSubmit");
+    // setProductsSuggestion([]);
+    window.location.reload();
+    setMessages([]);
+  };
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleSearchChange = (event) => {
@@ -566,6 +587,7 @@ const Product = ({ isChecked, isToggle }) => {
 
   const handleSelectedCategory = (category) => {
     setSelectedCategory(category);
+    setShowProductsSuggestion(false);
   };
 
   const truncate = (nameOfFood, maxLength) => {
@@ -1193,9 +1215,21 @@ const Product = ({ isChecked, isToggle }) => {
                     <option value="maintainWeight">Maintain weight</option>
                     <option value="none">None</option>
                   </select>
-                  <button className="btn btn-primary" type="submit">
-                    Set
-                  </button>
+                  {isReset ? (
+                    <button className="btn btn-primary" type="submit">
+                      Submit
+                    </button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      className="mt-2 w-100"
+                      size="small"
+                      color="error"
+                      onClick={deleteMessage}
+                    >
+                      Reset
+                    </Button>
+                  )}
                 </div>
               </form>
             </section>
