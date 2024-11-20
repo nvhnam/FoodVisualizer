@@ -142,8 +142,8 @@ function PolarChart({ showPerContainer }) {
         of an adult's reference intake
       </h3>
       <h3 className="inf" style={{ marginLeft: "1rem" }}>
-        Typical values (as sold) per 100{unitDisplay}: Energy {energy.Energy}J/
-        {energy.Calories}cal{" "}
+        Typical values (as sold) per 100{unitDisplay}: Energy {energy.Energy} KJ
+        / {energy.Calories} Kcal{" "}
       </h3>
     </div>
   );

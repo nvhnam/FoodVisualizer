@@ -133,8 +133,8 @@ const TrafficLight = ({
                   of an adult's reference intake
                 </h3>
                 <h3 className="inf">
-                  Typical values (as sold) per 100g: Energy {energy.Energy}J/
-                  {energy.Calories}cal{" "}
+                  Typical values (as sold) per 100g: Energy {energy.Energy} KJ /
+                  {energy.Calories} Kcal{" "}
                 </h3>
               </>
             )}

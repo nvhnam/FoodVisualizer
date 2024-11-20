@@ -138,8 +138,7 @@ function PieChart({ showPerContainer }) {
           </h3>
           <h3 className="inf" style={{ marginLeft: "1rem" }}>
             Typical values (as sold) per 100{unitDisplay}: Energy{" "}
-            {energy?.Energy}J/
-            {energy?.Calories}cal
+            {energy?.Energy} KJ / {energy?.Calories} Kcal
           </h3>
         </>
       )}
