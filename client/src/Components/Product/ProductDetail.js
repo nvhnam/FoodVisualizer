@@ -18,7 +18,7 @@ const ProductDetail = ({ isChecked }) => {
     userId: "",
     productId: "",
   });
-
+  const [loggedIn, setLoggedIn] = useState(false);
   const [caloriesCurrent, setCaloriesCurrent] = useState("");
   const [caloriesMaxSuggestion, setCaloriesMaxSuggestion] = useState("");
 
@@ -27,18 +27,6 @@ const ProductDetail = ({ isChecked }) => {
     streamProtocol: "text",
     fetch: `${URL || `http://localhost:${PORT}`}/api/chat`,
   });
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const token = localStorage.getItem("token");
-
-    if (storedUser && token) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  }, []);
   const handleNewlines = (text) => {
     return text.split("\n").map((str, index) => (
       <span key={index}>
@@ -47,6 +35,16 @@ const ProductDetail = ({ isChecked }) => {
       </span>
     ));
   };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    if (storedUser && token) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, []);
 
   useEffect(() => {
     const savedMessages = localStorage.getItem("chatMessages");
@@ -196,11 +194,11 @@ const ProductDetail = ({ isChecked }) => {
       if (response.status === 200) {
         setErrorMessage("");
         const checkStatusBar = localStorage.getItem("StatusBar");
-        const energy = Number(product?.nutrients?.energy || 0);
+        const calories = Math.round(product?.nutrients?.calories || 0);
 
         if (checkStatusBar) {
           setCaloriesCurrent((prev) => {
-            const updatedCalories = Number(prev) + energy;
+            const updatedCalories = Math.round(prev) + calories;
 
             const statusBar = {
               caloriesCurrent: updatedCalories,
@@ -391,7 +389,6 @@ const ProductDetail = ({ isChecked }) => {
                   caloriesCurrent={caloriesCurrent}
                   caloriesMaxSuggestion={caloriesMaxSuggestion}
                 />
-
                 <section className="container p-0 w-100">
                   <ul
                     ref={chatParent}
@@ -427,7 +424,6 @@ const ProductDetail = ({ isChecked }) => {
                     ))}
                   </ul>
                 </section>
-
                 <section className="mb-4">
                   <form
                     className="d-flex align-items-center"
@@ -442,7 +438,6 @@ const ProductDetail = ({ isChecked }) => {
                         setInput(event.target.value);
                       }}
                     />
-
                     <button className="btn btn-primary" type="submit">
                       Submit
                     </button>
