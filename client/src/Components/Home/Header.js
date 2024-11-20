@@ -57,7 +57,7 @@ const Header = () => {
             </Navbar.Brand>
             <Link to="/" style={{ textDecoration: "none" }}>
               {" "}
-              <h1 className="fs-3">NutrinSight</h1>
+              <h1 className="fs-3">NutriGuide </h1>
             </Link>
           </div>
 
