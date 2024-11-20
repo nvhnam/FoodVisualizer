@@ -550,7 +550,7 @@ const Product = ({ isChecked, isToggle }) => {
     localStorage.removeItem("sortedProductsSuggestion");
     localStorage.removeItem("DataNutrient");
     localStorage.removeItem("StatusBar");
-    window.location.reload();
+
     setMessages([]);
     // setProductsSuggestion([]);
   };
@@ -1274,26 +1274,33 @@ const Product = ({ isChecked, isToggle }) => {
                 className="list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
                 style={{ height: "500px" }}
               >
-                {messages.map((m, index) => (
-                  <li
-                    key={m.id || index}
-                    className={
-                      m.role === "user"
-                        ? "d-flex mb-3"
-                        : "d-flex flex-row-reverse mb-3"
-                    }
-                  >
-                    <div
-                      className={`p-3 rounded-3 shadow-sm ${
+                {messages && messages.length > 0 ? (
+                  messages.map((m, index) => (
+                    <li
+                      key={m.id || index}
+                      className={
                         m.role === "user"
-                          ? "bg-primary text-white"
-                          : "bg-secondary text-white"
-                      }`}
+                          ? "d-flex mb-3"
+                          : "d-flex flex-row-reverse mb-3"
+                      }
                     >
-                      <p className="mb-0 fs-6">{handleNewlines(m.content)}</p>
-                    </div>
-                  </li>
-                ))}
+                      <div
+                        className={`p-3 rounded-3 shadow-sm ${
+                          m.role === "user"
+                            ? "bg-primary text-white"
+                            : "bg-secondary text-white"
+                        }`}
+                      >
+                        <p className="mb-0 fs-6">{handleNewlines(m.content)}</p>
+                      </div>
+                    </li>
+                  ))
+                ) : (
+                  <p className="mb-0 fs-6">
+                    If you want me to recommend products based on your health,
+                    please fill out the form above now.
+                  </p>
+                )}
               </ul>
             </section>
             <form className="d-flex align-items-center" onSubmit={handleSubmit}>
