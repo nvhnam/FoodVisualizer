@@ -29,6 +29,7 @@ const HeaderSub = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("userInfo");
     localStorage.removeItem("chatMessages");
+    localStorage.removeItem("StatusBar");
     localStorage.removeItem("DataNutrient");
     localStorage.removeItem("sortedProductsSuggestion");
     setLoggedIn(false);
