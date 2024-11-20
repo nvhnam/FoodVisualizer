@@ -27,6 +27,7 @@ const Product = ({ isChecked, isToggle }) => {
   const [foodPerPage] = useState(18);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [fatFilter, setFatFilter] = useState("all");
@@ -56,6 +57,19 @@ const Product = ({ isChecked, isToggle }) => {
     streamProtocol: "text",
     fetch: `${URL || `http://localhost:${PORT}`}/api/chat`,
   });
+
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+
+    if (storedUser && token) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, []);
 
   const extractMinCalories = (response) => {
     const caloriesMatch = response.match(/Calories Suggestion Min:\s*(\d+)/);
@@ -612,6 +626,63 @@ const Product = ({ isChecked, isToggle }) => {
     }
   };
 
+  const handleAddToCart = async (product) => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
+      const userId = JSON.parse(storedUser)?.user_id;
+
+      if (!token) {
+        setErrorMessage("Please log in to add products to your cart.");
+        alert("Please log in to add products to your cart.");
+        return;
+      }
+
+      const response = await axios.post(
+        `${URL}/cart/add`,
+        {
+          userId: userId,
+          productId: product.product_id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setErrorMessage("");
+        const checkStatusBar = localStorage.getItem("StatusBar");
+        const energy = Number(product?.nutrients?.energy || 0);
+
+        if (checkStatusBar) {
+          setCaloriesCurrent((prev) => {
+            const updatedCalories = Number(prev) + energy;
+
+            const statusBar = {
+              caloriesCurrent: updatedCalories,
+              caloriesMaxSuggestions: caloriesMaxSuggestion,
+            };
+            localStorage.setItem("StatusBar", JSON.stringify(statusBar));
+
+            return updatedCalories;
+          });
+        }
+
+        alert("Product added to cart successfully!");
+      } else {
+        setErrorMessage("Failed to add product to the cart. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      setErrorMessage(
+        "An error occurred. Please log in to add products to your cart."
+      );
+    }
+  };
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleSearchChange = (event) => {
@@ -1124,17 +1195,28 @@ const Product = ({ isChecked, isToggle }) => {
                               theWidth=""
                             />
                           )}
-                          <Link
-                            to={`/product-detail/${productItem.product_id}`}
-                          >
-                            <Button
-                              variant="outlined"
-                              size="small"
-                              color="warning"
+                          <div className="w-100 d-flex justify-content-between align-items-center">
+                            <Link
+                              to={`/product-detail/${productItem.product_id}`}
                             >
-                              View Detail
+                              <Button
+                                variant="outlined"
+                                size="small"
+                                color="warning"
+                              >
+                                View Detail
+                              </Button>
+                            </Link>
+                            <Button
+                              variant="contained"
+                              color="success"
+                              size="medium"
+                              className="px-5 py-2 mr-3"
+                              onClick={() => handleAddToCart(productItem)}
+                            >
+                              Buy
                             </Button>
-                          </Link>
+                          </div>
                         </div>
                       </Card.Body>
                     </Card>
@@ -1144,191 +1226,198 @@ const Product = ({ isChecked, isToggle }) => {
             </Row>
           </div>
 
-          <div className="d-flex flex-column w-50 h-75 align-items-center justify-content-center">
-            <div
-              className="StatusBar d-flex align-items-center"
-              style={{
-                display: "flex",
-                width: 300,
-                alignItems: "center",
-                gap: "10px",
-                padding: "10px 15px",
-                backgroundColor: "#e9ecef",
-                borderRadius: "8px",
-                fontSize: "16px",
-                fontWeight: "500",
-                color: "#333",
-                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <p style={{ margin: 0, fontWeight: "bold" }}>Max Calories:</p>
-              <span style={{ color: "#007bff" }}>{caloriesCurrent}</span>
-              <span style={{ fontWeight: "bold", color: "#6c757d" }}>/</span>
-              <span style={{ color: "#28a745" }}>{caloriesMaxSuggestion}</span>
-            </div>
-
-            <section className="mb-4">
-              <div>
-                <h3> Products Suggestion By ChatBot AI</h3>
-              </div>
-              <form className="w-100 mt-3" onSubmit={handleUserInfo}>
-                <div className="w-100 d-flex align-items-center justify-content-between gap-3">
-                  <div className="w-50">
-                    <div className="mb-3 d-flex align-items-center justify-content-between">
-                      <label for="userAge" className="form-label fs-6">
-                        Age
-                      </label>
-                      <input
-                        id="userAge"
-                        className="form-control w-50"
-                        placeholder="20"
-                        type="number"
-                        value={age}
-                        min="1"
-                        onChange={(event) => {
-                          setAge(event.target.value);
-                        }}
-                        required
-                      />
-                    </div>
-                    <div className="mb-3 d-flex align-items-center justify-content-between gap-2">
-                      <label for="userGender" className=" form-label fs-6">
-                        Gender
-                      </label>
-                      <select
-                        id="userGender"
-                        className="form-select form-select-sm w-50"
-                        required
-                        value={gender}
-                        onChange={(event) => setGender(event.target.value)}
-                      >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="w-50">
-                    <div className="w-100 mb-3 d-flex align-items-center gap-2 justify-content-between">
-                      <label for="userWeight" className="form-label fs-6">
-                        Weight (kg)
-                      </label>
-                      <input
-                        id="userWeight"
-                        className="form-control w-50"
-                        placeholder="60"
-                        type="number"
-                        min="1"
-                        value={weight}
-                        onChange={(event) => {
-                          setWeight(event.target.value);
-                        }}
-                        required
-                      />
-                    </div>
-                    <div className="w-100 mb-3 d-flex align-items-center justify-content-between gap-2">
-                      <label for="userHeight" className="form-label fs-6">
-                        Height (cm)
-                      </label>
-                      <input
-                        id="userHeight"
-                        className="form-control w-50"
-                        min="10"
-                        placeholder="170"
-                        type="number"
-                        value={height}
-                        onChange={(event) => {
-                          setHeight(event.target.value);
-                        }}
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="w-100 d-flex align-items-center justify-content-between gap-2">
-                  <label for="userGoal" className=" form-label fs-6">
-                    Goal
-                  </label>
-                  <select
-                    id="userGoal"
-                    className="form-select form-select-sm w-50"
-                    required
-                    value={goal}
-                    onChange={(event) => setGoal(event.target.value)}
-                  >
-                    <option value="loseWeight">Lose weight</option>
-                    <option value="gainWeight">Gain weight</option>
-                    <option value="maintainWeight">Maintain weight</option>
-                    <option value="none">None</option>
-                  </select>
-
-                  <button className="btn btn-primary" type="submit">
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </section>
-
-            <section className="container p-0 w-100">
-              <ul
-                ref={chatParent}
-                className="list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
-                style={{ height: "500px" }}
-              >
-                {messages && messages.length > 0 ? (
-                  messages.map((m, index) => (
-                    <li
-                      key={m.id || index}
-                      className={
-                        m.role === "user"
-                          ? "d-flex mb-3"
-                          : "d-flex flex-row-reverse mb-3"
-                      }
-                    >
-                      <div
-                        className={`p-3 rounded-3 shadow-sm ${
-                          m.role === "user"
-                            ? "bg-primary text-white"
-                            : "bg-secondary text-white"
-                        }`}
-                      >
-                        <p className="mb-0 fs-6">{handleNewlines(m.content)}</p>
-                      </div>
-                    </li>
-                  ))
-                ) : (
-                  <p className="mb-0 fs-6">
-                    If you want me to recommend products based on your health,
-                    please fill out the form above now.
-                  </p>
-                )}
-              </ul>
-            </section>
-            <form className="d-flex align-items-center" onSubmit={handleSubmit}>
-              <input
-                className="form-control flex-1 me-2"
-                placeholder="Type your question here..."
-                type="text"
-                value={input}
-                onChange={(event) => {
-                  setInput(event.target.value);
+          {loggedIn && (
+            <div className="d-flex flex-column w-50 h-75 align-items-center justify-content-center">
+              <div
+                className="StatusBar d-flex align-items-center"
+                style={{
+                  display: "flex",
+                  width: 300,
+                  alignItems: "center",
+                  gap: "10px",
+                  padding: "10px 15px",
+                  backgroundColor: "#e9ecef",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                  fontWeight: "500",
+                  color: "#333",
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                 }}
-              />
+              >
+                <p style={{ margin: 0, fontWeight: "bold" }}>Max Calories:</p>
+                <span style={{ color: "#007bff" }}>{caloriesCurrent}</span>
+                <span style={{ fontWeight: "bold", color: "#6c757d" }}>/</span>
+                <span style={{ color: "#28a745" }}>
+                  {caloriesMaxSuggestion}
+                </span>
+              </div>
 
-              <button className="btn btn-primary" type="submit">
-                Submit
-              </button>
-            </form>
+              <section className="mb-4">
+                <div>
+                  <h3> Products Suggestion By ChatBot AI</h3>
+                </div>
+                <form className="w-100 mt-3" onSubmit={handleUserInfo}>
+                  <div className="w-100 d-flex align-items-center justify-content-between gap-3">
+                    <div className="w-50">
+                      <div className="mb-3 d-flex align-items-center justify-content-between">
+                        <label for="userAge" className="form-label fs-6">
+                          Age
+                        </label>
+                        <input
+                          id="userAge"
+                          className="form-control w-50"
+                          placeholder="20"
+                          type="number"
+                          value={age}
+                          min="1"
+                          onChange={(event) => {
+                            setAge(event.target.value);
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3 d-flex align-items-center justify-content-between gap-2">
+                        <label for="userGender" className=" form-label fs-6">
+                          Gender
+                        </label>
+                        <select
+                          id="userGender"
+                          className="form-select form-select-sm w-50"
+                          required
+                          value={gender}
+                          onChange={(event) => setGender(event.target.value)}
+                        >
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="w-50">
+                      <div className="w-100 mb-3 d-flex align-items-center gap-2 justify-content-between">
+                        <label for="userWeight" className="form-label fs-6">
+                          Weight (kg)
+                        </label>
+                        <input
+                          id="userWeight"
+                          className="form-control w-50"
+                          placeholder="60"
+                          type="number"
+                          min="1"
+                          value={weight}
+                          onChange={(event) => {
+                            setWeight(event.target.value);
+                          }}
+                          required
+                        />
+                      </div>
+                      <div className="w-100 mb-3 d-flex align-items-center justify-content-between gap-2">
+                        <label for="userHeight" className="form-label fs-6">
+                          Height (cm)
+                        </label>
+                        <input
+                          id="userHeight"
+                          className="form-control w-50"
+                          min="10"
+                          placeholder="170"
+                          type="number"
+                          value={height}
+                          onChange={(event) => {
+                            setHeight(event.target.value);
+                          }}
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-100 d-flex align-items-center justify-content-between gap-2">
+                    <label for="userGoal" className=" form-label fs-6">
+                      Goal
+                    </label>
+                    <select
+                      id="userGoal"
+                      className="form-select form-select-sm w-50"
+                      required
+                      value={goal}
+                      onChange={(event) => setGoal(event.target.value)}
+                    >
+                      <option value="loseWeight">Lose weight</option>
+                      <option value="gainWeight">Gain weight</option>
+                      <option value="maintainWeight">Maintain weight</option>
+                      <option value="none">None</option>
+                    </select>
 
-            <Button
-              variant="contained"
-              className="mt-2 w-100"
-              size="small"
-              color="error"
-              onClick={deleteMessage}
-            >
-              Remove all messages
-            </Button>
-          </div>
+                    <button className="btn btn-primary" type="submit">
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </section>
+              <section className="container p-0 w-100">
+                <ul
+                  ref={chatParent}
+                  className="list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
+                  style={{ height: "500px" }}
+                >
+                  {messages && messages.length > 0 ? (
+                    messages.map((m, index) => (
+                      <li
+                        key={m.id || index}
+                        className={
+                          m.role === "user"
+                            ? "d-flex mb-3"
+                            : "d-flex flex-row-reverse mb-3"
+                        }
+                      >
+                        <div
+                          className={`p-3 rounded-3 shadow-sm ${
+                            m.role === "user"
+                              ? "bg-primary text-white"
+                              : "bg-secondary text-white"
+                          }`}
+                        >
+                          <p className="mb-0 fs-6">
+                            {handleNewlines(m.content)}
+                          </p>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <p className="mb-0 fs-6">
+                      If you want me to recommend products based on your health,
+                      please fill out the form above now.
+                    </p>
+                  )}
+                </ul>
+              </section>
+              <form
+                className="d-flex align-items-center"
+                onSubmit={handleSubmit}
+              >
+                <input
+                  className="form-control flex-1 me-2"
+                  placeholder="Type your question here..."
+                  type="text"
+                  value={input}
+                  onChange={(event) => {
+                    setInput(event.target.value);
+                  }}
+                />
+
+                <button className="btn btn-primary" type="submit">
+                  Submit
+                </button>
+              </form>
+              <Button
+                variant="contained"
+                className="mt-2 w-100"
+                size="small"
+                color="error"
+                onClick={deleteMessage}
+              >
+                Remove all messages
+              </Button>
+            </div>
+          )}
         </div>
 
         <div style={{ marginTop: "6rem" }}>

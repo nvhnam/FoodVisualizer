@@ -27,6 +27,18 @@ const ProductDetail = ({ isChecked }) => {
     streamProtocol: "text",
     fetch: `${URL || `http://localhost:${PORT}`}/api/chat`,
   });
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+
+    if (storedUser && token) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, []);
   const handleNewlines = (text) => {
     return text.split("\n").map((str, index) => (
       <span key={index}>
@@ -372,78 +384,82 @@ const ProductDetail = ({ isChecked }) => {
             </div>
           </div>
 
-          <div className="chatbot" style={{ width: "300px", height: "100%" }}>
-            <div className="d-flex flex-column w-100 h-100 align-items-center justify-content-center">
-              <StatusBar
-                caloriesCurrent={caloriesCurrent}
-                caloriesMaxSuggestion={caloriesMaxSuggestion}
-              />
+          {loggedIn && (
+            <div className="chatbot" style={{ width: "300px", height: "100%" }}>
+              <div className="d-flex flex-column w-100 h-100 align-items-center justify-content-center">
+                <StatusBar
+                  caloriesCurrent={caloriesCurrent}
+                  caloriesMaxSuggestion={caloriesMaxSuggestion}
+                />
 
-              <section className="container p-0 w-100">
-                <ul
-                  ref={chatParent}
-                  className="list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
-                  style={{
-                    height: "400px",
-                    maxWidth: "100%",
-                    overflowY: "auto",
-                    overflowX: "hidden",
-                  }}
-                >
-                  {messages.map((m, index) => (
-                    <li
-                      key={m.id || index}
-                      className={
-                        m.role === "user"
-                          ? "d-flex mb-3"
-                          : "d-flex flex-row-reverse mb-3"
-                      }
-                    >
-                      <div
-                        className={`p-3 rounded-3 shadow-sm ${
-                          m.role === "user"
-                            ? "bg-primary text-white"
-                            : "bg-secondary text-white"
-                        }`}
-                      >
-                        <p className="mb-0 fs-6">{handleNewlines(m.content)}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-
-              <section className="mb-4">
-                <form
-                  className="d-flex align-items-center"
-                  onSubmit={handleSubmit}
-                >
-                  <input
-                    className="form-control flex-1 me-2"
-                    placeholder="Type your question here..."
-                    type="text"
-                    value={input}
-                    onChange={(event) => {
-                      setInput(event.target.value);
+                <section className="container p-0 w-100">
+                  <ul
+                    ref={chatParent}
+                    className="list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
+                    style={{
+                      height: "400px",
+                      maxWidth: "100%",
+                      overflowY: "auto",
+                      overflowX: "hidden",
                     }}
-                  />
+                  >
+                    {messages.map((m, index) => (
+                      <li
+                        key={m.id || index}
+                        className={
+                          m.role === "user"
+                            ? "d-flex mb-3"
+                            : "d-flex flex-row-reverse mb-3"
+                        }
+                      >
+                        <div
+                          className={`p-3 rounded-3 shadow-sm ${
+                            m.role === "user"
+                              ? "bg-primary text-white"
+                              : "bg-secondary text-white"
+                          }`}
+                        >
+                          <p className="mb-0 fs-6">
+                            {handleNewlines(m.content)}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
 
-                  <button className="btn btn-primary" type="submit">
-                    Submit
-                  </button>
-                </form>
-                <Button
-                  variant="contained"
-                  className="mt-2 w-100"
-                  size="small"
-                  color="error"
-                  onClick={deleteMessage}
-                >
-                  Remove all messages
-                </Button>
-              </section>
+                <section className="mb-4">
+                  <form
+                    className="d-flex align-items-center"
+                    onSubmit={handleSubmit}
+                  >
+                    <input
+                      className="form-control flex-1 me-2"
+                      placeholder="Type your question here..."
+                      type="text"
+                      value={input}
+                      onChange={(event) => {
+                        setInput(event.target.value);
+                      }}
+                    />
+
+                    <button className="btn btn-primary" type="submit">
+                      Submit
+                    </button>
+                  </form>
+                  <Button
+                    variant="contained"
+                    className="mt-2 w-100"
+                    size="small"
+                    color="error"
+                    onClick={deleteMessage}
+                  >
+                    Remove all messages
+                  </Button>
+                </section>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       <Footer />

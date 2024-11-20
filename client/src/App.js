@@ -33,7 +33,11 @@ function App() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [isChecked, setIsChecked] = useState(() => {
-    const savedState = localStorage.getItem("toggleState");
+    let savedState = localStorage.getItem("toggleState");
+    if (savedState === null) {
+      localStorage.setItem("toggleState", "true");
+      return (savedState = "true");
+    }
     return savedState === "true" ? true : false;
   });
 
