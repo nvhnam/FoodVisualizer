@@ -1,23 +1,22 @@
 /* eslint-disable no-mixed-operators */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-global-assign */
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { Card } from "react-bootstrap";
 import { Button } from "@mui/material";
-import Pagination from "react-bootstrap/Pagination";
-import "./Product.css";
-import { MDBInput } from "mdb-react-ui-kit";
-import HeaderSub from "../Home/HeaderSub";
-import "rsuite/dist/rsuite.min.css";
-import Category from "./Category";
-import TrafficLight from "../Visualization/Traffic Light System/TrafficLight.js";
-import Footer from "../Home/Footer";
 import { useChat } from "ai/react";
+import axios from "axios";
+import { MDBInput } from "mdb-react-ui-kit";
+import { useEffect, useRef, useState } from "react";
+import { Card } from "react-bootstrap";
+import Col from "react-bootstrap/Col";
+import Pagination from "react-bootstrap/Pagination";
+import Row from "react-bootstrap/Row";
+import { Link } from "react-router-dom";
+import "rsuite/dist/rsuite.min.css";
+import Footer from "../Home/Footer";
+import HeaderSub from "../Home/HeaderSub";
+import TrafficLight from "../Visualization/Traffic Light System/TrafficLight.js";
+import Category from "./Category";
+import "./Product.css";
 
 const PORT = process.env.REACT_APP_PORT;
 const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
@@ -29,15 +28,16 @@ const Product = ({ isChecked, isToggle }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [age, setAge] = useState("");
-  const [weight, setWeight] = useState("");
-  const [height, setHeight] = useState("");
-  const [gender, setGender] = useState("male");
-  const [goal, setGoal] = useState("loseWeight");
+
   const [fatFilter, setFatFilter] = useState("all");
   const [saturatesFilter, setSaturatesFilter] = useState("all");
   const [sugarsFilter, setSugarsFilter] = useState("all");
   const [saltFilter, setSaltFilter] = useState("all");
+  const [age, setAge] = useState("");
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [gender, setGender] = useState("");
+  const [goal, setGoal] = useState("");
   const [minCal, setMinCal] = useState("");
   const [maxCal, setMaxCal] = useState("");
 
@@ -47,7 +47,9 @@ const Product = ({ isChecked, isToggle }) => {
   const [sugarSuggest, setSugarSuggest] = useState("");
   const [saltSuggest, setSaltSuggest] = useState("");
   const [productSuggestion, setProductsSuggestion] = useState([]);
-  
+
+  const [caloriesCurrent, setCaloriesCurrent] = useState("");
+  const [caloriesMaxSuggestion, setCaloriesMaxSuggestion] = useState("");
 
   const { messages, input, setInput, append, setMessages } = useChat({
     streamProtocol: "text",
@@ -64,8 +66,6 @@ const Product = ({ isChecked, isToggle }) => {
     console.log(caloriesMatch);
     return caloriesMatch ? parseInt(caloriesMatch[1], 10) : null;
   };
-  
-  
 
   const extractFoodGroups = (response) => {
     const predefinedGroups = [
@@ -87,8 +87,7 @@ const Product = ({ isChecked, isToggle }) => {
 
     return null;
   };
-  
- const extractFat = (response) => {
+  const extractFat = (response) => {
     const fatRegex = /Fat Suggestion:\s*(\d+)\s*[gG]/;
     const fatMatch = response.match(fatRegex);
     console.log(fatMatch);
@@ -113,11 +112,9 @@ const Product = ({ isChecked, isToggle }) => {
     return saltMatch ? parseInt(saltMatch[1], 10) : 3;
   };
 
-  
   const handleUserInfo = async (e) => {
     e.preventDefault();
 
-    // Ensure inputs are valid before processing
     const parsedAge = parseInt(age, 10);
     const parsedWeight = parseInt(weight, 10);
     const parsedHeight = parseInt(height, 10);
@@ -127,12 +124,11 @@ const Product = ({ isChecked, isToggle }) => {
       return;
     }
 
-    // if (!gender || !goal) {
-    //   alert("Please select both gender and goal.");
-    //   return;
-    // }
+    if (!gender || !goal) {
+      alert("Please select both gender and goal.");
+      return;
+    }
 
-    // Create the user info object
     const userInfo = {
       age: parsedAge,
       weight: parsedWeight,
@@ -140,16 +136,9 @@ const Product = ({ isChecked, isToggle }) => {
       gender,
       goal,
     };
-
-    console.log("User info to be saved:", userInfo);
-
-    // Save user info to localStorage
     localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-    // Alert the user of success
     alert("User info has been saved successfully!");
 
-    // Create a message to be sent to the chatbot with the user info
     const userMessage = {
       role: "user",
       content: `
@@ -162,17 +151,12 @@ const Product = ({ isChecked, isToggle }) => {
     };
 
     try {
-      // Send the user info and the message to the backend
       const response = await fetch(
         `${URL || `http://localhost:${PORT}`}/api/chat`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            messages: [userMessage], // Send the user message to the chatbot
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: [userMessage] }),
         }
       );
 
@@ -185,7 +169,6 @@ const Product = ({ isChecked, isToggle }) => {
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
-      
       let finalResponse = "";
       let caloriesMinValue = null;
       let caloriesMaxValue = null;
@@ -195,12 +178,13 @@ const Product = ({ isChecked, isToggle }) => {
       let sugar = null;
       let saturates = null;
       let salt = null;
-      
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         finalResponse += decoder.decode(value);
-      }  
+      }
+
       finalResponse = finalResponse.replace(/[*#]/, "");
       caloriesMinValue = extractMinCalories(finalResponse);
       caloriesMaxValue = extractMaxCalories(finalResponse);
@@ -228,26 +212,21 @@ const Product = ({ isChecked, isToggle }) => {
       console.log("sugar", sugar);
       console.log("salt", salt);
 
-      const assistantMessage = {
-        role: "system",
-        content: finalResponse,
-      };
-
-      const updatedMessages = [...messages, userMessage, assistantMessage];
+      const updatedMessages = [
+        ...messages,
+        userMessage,
+        { role: "system", content: finalResponse },
+      ];
       setMessages(updatedMessages);
-
-      // Save the updated messages to localStorage
       localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
-
-      // Clear the input field
       setInput("");
     } catch (error) {
       console.error("Error fetching chat:", error);
       alert("There was an error sending the request.");
     }
   };
-  
- useEffect(() => {  /// If it has already the products suggest for users base on Chatbot, it will keep all the data in local storage when they go back.
+
+  useEffect(() => {
     if (productSuggestion && productSuggestion.length > 0) {
       try {
         localStorage.setItem(
@@ -262,7 +241,19 @@ const Product = ({ isChecked, isToggle }) => {
       }
     }
   }, [productSuggestion]);
-  
+
+  useEffect(() => {
+    const checkUserInfo = localStorage.getItem("userInfo");
+    if (checkUserInfo) {
+      const parsedInfo = JSON.parse(checkUserInfo);
+      setAge(parsedInfo.age || "");
+      setWeight(parsedInfo.weight || "");
+      setHeight(parsedInfo.height || "");
+      setGender(parsedInfo.gender || "");
+      setGoal(parsedInfo.goal || "");
+    }
+  }, []);
+
   useEffect(() => {
     const savedMessages = localStorage.getItem("chatMessages");
     if (savedMessages) {
@@ -270,8 +261,7 @@ const Product = ({ isChecked, isToggle }) => {
     }
   }, [setMessages]);
 
-
-    useEffect(() => {
+  useEffect(() => {
     if (
       minCal &&
       maxCal &&
@@ -293,70 +283,45 @@ const Product = ({ isChecked, isToggle }) => {
     }
   }, [minCal, maxCal, fatSuggest, saturatesSuggest, sugarSuggest, saltSuggest]);
 
-  const deleteMessage = () => { /// When click remove the chat Message, it will delete the data products suggest by AI in same time. 
-    localStorage.removeItem("chatMessages");
-    localStorage.removeItem("sortedProductsSuggestion");
-    localStorage.removeItem("DataNutrient");
-    setMessages([]);
-    setProductsSuggestion([]);
-  };
-
-
-  
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      // await append({ role: "user", content: input });
-      const newMessage = { role: "user", content: input };
-      await append(newMessage);
-
-      const updatedMessages = [...messages, newMessage];
-      setMessages(updatedMessages);
-      localStorage.setItem("chatMessages", JSON.stringify(updatedMessages));
-      // const updatedMessages = [...messages];
-      // Send messages to backend
-      // console.log("FE: ", updatedMessages);
-      const response = await fetch(
-        `${URL || `http://localhost:${PORT}`}/api/chat`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ messages: updatedMessages }),
+  useEffect(() => {
+    if (maxCal) {
+      const checkNutrientSuggest = localStorage.getItem("DataNutrient");
+      if (checkNutrientSuggest) {
+        const parsedInfo = JSON.parse(checkNutrientSuggest);
+        setCaloriesMaxSuggestion(parsedInfo.caloriesMax || 0);
+        try {
+          const statusBar = {
+            caloriesCurrent: caloriesCurrent,
+            caloriesMaxSuggestions: caloriesMaxSuggestion,
+          };
+          localStorage.setItem("StatusBar", JSON.stringify(statusBar));
+        } catch (error) {
+          console.error(
+            "Error saving product suggestions to localStorage:",
+            error
+          );
         }
-      );
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder("utf-8");
-      // console.log("response: ", response);
-      // console.log("reader: ", reader);
-      // console.log("decoder: ", decoder);
-
-      let finalResponse = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        finalResponse += decoder.decode(value);
       }
-      // append({ role: "system", content: finalResponse });
-
-      const assistantMessage = { role: "system", content: finalResponse };
-      // setMessages((prevMessages) => [...prevMessages, assistantMessage]);
-      const newMessages = [...updatedMessages, assistantMessage];
-      setMessages(newMessages);
-      localStorage.setItem("chatMessages", JSON.stringify(newMessages));
-      // setMessages([
-      //   ...newMessages,
-      //   { role: "assistant", content: finalResponse },
-      // ]);
-      setInput("");
-    } catch (error) {
-      console.error("Error fetching chat:", error);
     }
-  };
+  }, [caloriesMaxSuggestion, maxCal, caloriesCurrent]);
+
+  useEffect(() => {
+    const checkStatusBar = localStorage.getItem("StatusBar");
+    if (checkStatusBar) {
+      const parsedStatusBar = JSON.parse(checkStatusBar);
+      setCaloriesCurrent(parsedStatusBar.caloriesCurrent || 0);
+      setCaloriesMaxSuggestion(parsedStatusBar.caloriesMaxSuggestions || 0);
+
+      console.log(
+        "Check Calories Max in status bar is ",
+        caloriesMaxSuggestion
+      );
+      console.log("Check Calories Current in status bar is ", caloriesCurrent);
+    } else {
+      setCaloriesCurrent(0);
+      setCaloriesMaxSuggestion(0);
+    }
+  }, [caloriesMaxSuggestion, caloriesCurrent]);
 
   const chatParent = useRef(null);
 
@@ -367,7 +332,7 @@ const Product = ({ isChecked, isToggle }) => {
     }
   }, [chatParent]);
 
- useEffect(() => { /// If users dont use chatbot, it will show  initial products, if in local storage, we have the products filter and sorted by AI, it will show
+  useEffect(() => {
     const fetchProduct = async () => {
       try {
         const sortedProductsSuggestion = localStorage.getItem(
@@ -397,7 +362,6 @@ const Product = ({ isChecked, isToggle }) => {
 
     fetchProduct();
   }, []);
-  
 
   useEffect(() => {
     const filterProducts = () => {
@@ -446,6 +410,18 @@ const Product = ({ isChecked, isToggle }) => {
   }, [fatFilter, saturatesFilter, sugarsFilter, saltFilter, product]);
 
   useEffect(() => {
+    const checkUserInfo = localStorage.getItem("userInfo");
+    if (checkUserInfo) {
+      const parsedInfo = JSON.parse(checkUserInfo);
+      setAge(parsedInfo.age || "");
+      setWeight(parsedInfo.weight || "");
+      setHeight(parsedInfo.height || "");
+      setGender(parsedInfo.gender || "male");
+      setGoal(parsedInfo.goal || "none");
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchFilteredProducts = async () => {
       if (selectedCategory) {
         try {
@@ -481,8 +457,7 @@ const Product = ({ isChecked, isToggle }) => {
     fetchFilteredProducts();
   }, [selectedCategory, product]);
 
-
-    useEffect(() => { /// Function for filter base on food group and sort the energy base on AI suggest in calories, then show the product.
+  useEffect(() => {
     const fetchFilteredProductsChatBot = async () => {
       if (foodGroups !== "") {
         try {
@@ -525,8 +500,8 @@ const Product = ({ isChecked, isToggle }) => {
 
           const finalProducts =
             filteredProducts.length > 0 ? filteredProducts : response.data;
-          
-          const sortedProducts = filteredProducts.sort((a, b) => {
+
+          const sortedProducts = finalProducts.sort((a, b) => {
             const caloriesA = a.nutrients.energy || 0;
             const caloriesB = b.nutrients.energy || 0;
             return caloriesA - caloriesB;
@@ -1103,39 +1078,32 @@ const Product = ({ isChecked, isToggle }) => {
           </div>
 
           <div className="d-flex flex-column w-50 h-75 align-items-center justify-content-center">
+            <div
+              className="StatusBar d-flex align-items-center"
+              style={{
+                display: "flex",
+                width: 300,
+                alignItems: "center",
+                gap: "10px",
+                padding: "10px 15px",
+                backgroundColor: "#e9ecef",
+                borderRadius: "8px",
+                fontSize: "16px",
+                fontWeight: "500",
+                color: "#333",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <p style={{ margin: 0, fontWeight: "bold" }}>Max Calories:</p>
+              <span style={{ color: "#007bff" }}>{caloriesCurrent}</span>
+              <span style={{ fontWeight: "bold", color: "#6c757d" }}>/</span>
+              <span style={{ color: "#28a745" }}>{caloriesMaxSuggestion}</span>
+            </div>
+
             <section className="mb-4">
-              <form
-                className="d-flex align-items-center"
-                onSubmit={handleSubmit}
-              >
-                <input
-                  className="form-control flex-1 me-2"
-                  placeholder="Type your question here..."
-                  type="text"
-                  value={input}
-                  onChange={(event) => {
-                    setInput(event.target.value);
-                  }}
-                  // onKeyDown={async (event) => {
-                  //   if (event.key === "Enter") {
-                  //     append({ content: input, role: "user" });
-                  //     // setInput("");
-                  //   }
-                  // }}
-                />
-                <button className="btn btn-primary" type="submit">
-                  Submit
-                </button>
-              </form>
-              <Button
-                variant="contained"
-                className="mt-2 w-100"
-                size="small"
-                color="error"
-                onClick={deleteMessage}
-              >
-                Remove all messages
-              </Button>
+              <div>
+                <h3> Products Suggestion By ChatBot AI</h3>
+              </div>
               <form className="w-100 mt-3" onSubmit={handleUserInfo}>
                 <div className="w-100 d-flex align-items-center justify-content-between gap-3">
                   <div className="w-50">
@@ -1262,6 +1230,7 @@ const Product = ({ isChecked, isToggle }) => {
             </section>
           </div>
         </div>
+
         <div style={{ marginTop: "6rem" }}>
           <Pagination style={{ display: "flex", justifyContent: "flex-end" }}>
             <Pagination.First onClick={() => paginate(1)} />
