@@ -44,15 +44,15 @@ export default class User {
     }
   }
 
-  static async loginUser(username, password) {
+  static async loginUser(email, password) {
     const thePassword = password;
     try {
-      const query = `SELECT * FROM user WHERE username = ?`;
-      const [results] = await dbPool.query(query, [username]);
+      const query = `SELECT * FROM user WHERE email = ?`;
+      const [results] = await dbPool.query(query, [email]);
       const user = results[0];
       console.log("user: ", user);
       if (!user) {
-        return { status: "error", message: "User not found" };
+        return { status: "error", message: "Email not found" };
       }
 
       const checkPassword = await bcrypt.compare(thePassword, user.password);

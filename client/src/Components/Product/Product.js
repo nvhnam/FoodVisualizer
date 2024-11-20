@@ -36,8 +36,8 @@ const Product = ({ isChecked, isToggle }) => {
   const [age, setAge] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
-  const [gender, setGender] = useState("");
-  const [goal, setGoal] = useState("");
+  const [gender, setGender] = useState("male");
+  const [goal, setGoal] = useState("loseWeight");
   const [minCal, setMinCal] = useState("");
   const [maxCal, setMaxCal] = useState("");
 

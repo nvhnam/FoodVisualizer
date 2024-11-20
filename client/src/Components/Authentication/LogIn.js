@@ -18,7 +18,7 @@ const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 
 const Login = () => {
   const [values, setValues] = useState({
-    username: "",
+    email: "",
     password: "",
   });
   const [errors, setErrors] = useState({});
@@ -28,7 +28,7 @@ const Login = () => {
 
   const validate = () => {
     const newErrors = {};
-    if (!values.username) newErrors.username = "* Username is required";
+    if (!values.email) newErrors.email = "* Email is required";
     if (!values.password) newErrors.password = "* Password is required";
     return newErrors;
   };
@@ -43,8 +43,8 @@ const Login = () => {
     });
 
     const newErrors = { ...errors };
-    if (name === "username") {
-      newErrors.username = value ? "" : "* Username is required";
+    if (name === "email") {
+      newErrors.email = value ? "" : "* Email is required";
     }
     if (name === "password") {
       newErrors.password = value ? "" : "* Password is required";
@@ -160,15 +160,15 @@ const Login = () => {
             margin="normal"
             required
             fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
             autoFocus
-            value={values.username}
+            value={values.email}
             onChange={handleChange}
-            error={!!errors.username}
-            helperText={errors.username}
+            error={!!errors.email}
+            helperText={errors.email}
           />
           <TextField
             margin="normal"

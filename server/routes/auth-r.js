@@ -18,12 +18,18 @@ authUser.post("/login", async (req, res) => {
   try {
     // console.log(req.body);
     // const { username, password } = req.body;
-    const username = req.body.username;
+    const localPartRegex = /^[a-zA-Z0-9._%+-]+$/;
+    if (!localPartRegex.test(req.body.email)) {
+      return res
+        .status(400)
+        .json({ message: "Only enter before the @gmail.com" });
+    }
+    const email = req.body.email.toLowerCase() + "@gmail.com";
     const password = req.body.password;
-    const result = await User.loginUser(username, password);
+    const result = await User.loginUser(email, password);
     // console.log("Log in info: ", result.token);
     if (result.status === "error") {
-      return res.status(401).json({ error: "Invalid username or password" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
     res
       .cookie("access_cookie", result.token, { httpOnly: true })
