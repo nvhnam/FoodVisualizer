@@ -22,7 +22,6 @@ const Registration = () => {
     username: "",
     email: "",
     password: "",
-    age: "",
   });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
@@ -176,7 +175,7 @@ const Registration = () => {
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 autoComplete="given-name"
                 name="username"
@@ -191,7 +190,7 @@ const Registration = () => {
                 helperText={errors.username}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 id="age"
@@ -201,7 +200,7 @@ const Registration = () => {
                 value={values.age}
                 onChange={handleChange}
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
               <TextField
                 required

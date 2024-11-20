@@ -11,14 +11,13 @@ const saltRounds = 10;
 const secretKey = process.env.JWT_SECRET;
 
 export default class User {
-  constructor(username, email, password, age) {
+  constructor(username, email, password) {
     this.username = username;
     this.email = email;
     this.password = password;
-    this.age = age;
   }
 
-  static async registerUser(username, email, password, age) {
+  static async registerUser(username, email, password) {
     try {
       const checkExist = `SELECT * FROM user WHERE username = ? OR email = ?`;
       const [results] = await dbPool.query(checkExist, [username, email]);
@@ -29,12 +28,11 @@ export default class User {
       }
 
       const hashedPassword = await bcrypt.hash(password, saltRounds);
-      const sql = `INSERT INTO user (username, email, password, age) VALUES (?, ?, ?, ?)`;
+      const sql = `INSERT INTO user (username, email, password) VALUES (?, ?, ?)`;
       const [newUser] = await dbPool.query(sql, [
         username,
         email,
         hashedPassword,
-        age,
       ]);
 
       return { user: newUser };

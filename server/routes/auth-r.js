@@ -5,8 +5,8 @@ const authUser = express.Router();
 
 authUser.post("/register", async (req, res) => {
   try {
-    const { username, email, password, age } = req.body;
-    await User.registerUser(username, email, password, age);
+    const { username, email, password } = req.body;
+    await User.registerUser(username, email, password);
     res.status(200).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Error:", error);
