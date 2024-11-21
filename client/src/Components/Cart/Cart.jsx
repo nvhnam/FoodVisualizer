@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import HeaderSub from "../Home/HeaderSub";
-import axios from "axios";
 import { Button } from "@mui/material";
-import TrafficLight from "../Visualization/Traffic Light System/TrafficLight";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Footer from "../Home/Footer";
+import HeaderSub from "../Home/HeaderSub";
+import TrafficLight from "../Visualization/Traffic Light System/TrafficLight";
 
 const PORT = process.env.REACT_APP_PORT;
 const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
@@ -51,19 +51,43 @@ const Cart = ({ isChecked }) => {
 
   // console.log("Total: ", totalNutrition);
 
-  const handleRemove = (productId) => {
+  const handleRemove = (productId, productCalories, quantity) => {
     const storedUser = localStorage.getItem("user");
     const userId = JSON.parse(storedUser).user_id;
+
+    // Fetch current calories from localStorage
+    const statusBar = JSON.parse(localStorage.getItem("StatusBar"));
+    const currentCalories = statusBar?.caloriesCurrent || 0; // Default to 0 if undefined
 
     axios
       .delete(
         `${URL || `http://localhost:${PORT}`}/cart/${userId}/${productId}`
       )
       .then((res) => {
-        console.log(res.data);
+        // Update cart items
         setCartItems((prevItems) =>
           prevItems.filter((item) => item.product_id !== productId)
         );
+        const productCaloriesTotal = Math.round(productCalories) * quantity;
+        const updatedCalories = currentCalories - productCaloriesTotal;
+        console.log(
+          "current ",
+          currentCalories,
+          "product calorie",
+          Math.round(productCalories)
+        );
+
+        // Update the StatusBar in localStorage
+        const updatedStatusBar = {
+          ...statusBar, // Retain other properties (e.g., caloriesMaxSuggestions)
+          caloriesCurrent: updatedCalories,
+        };
+        localStorage.setItem("StatusBar", JSON.stringify(updatedStatusBar));
+
+        console.log("Updated StatusBar:", updatedStatusBar);
+
+        // Optional: return or log updated calories
+        return updatedCalories;
       })
       .catch((err) => {
         console.error("Error removing product: ", err);
@@ -123,7 +147,15 @@ const Cart = ({ isChecked }) => {
                     </div>
 
                     <div className="  d-flex justify-content-end w-auto">
-                      <Button onClick={() => handleRemove(item.product_id)}>
+                      <Button
+                        onClick={() =>
+                          handleRemove(
+                            item.product_id,
+                            item.calories,
+                            item.quantity
+                          )
+                        }
+                      >
                         Remove
                       </Button>
                     </div>
