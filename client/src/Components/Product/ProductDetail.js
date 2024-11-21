@@ -161,7 +161,7 @@ const ProductDetail = ({ isChecked }) => {
     localStorage.removeItem("chatMessages");
     localStorage.removeItem("sortedProductsSuggestion");
     localStorage.removeItem("DataNutrient");
-    localStorage.removeItem("StatusBar");
+
     setMessages([]);
     // setProductsSuggestion([]);
   };
