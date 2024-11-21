@@ -226,16 +226,15 @@ const ProductDetail = ({ isChecked }) => {
     const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
-      if (caloriesCurrent > caloriesMaxSuggestion && !showAlert) {
+      if (caloriesCurrent > caloriesMaxSuggestion) {
         setShowAlert(true);
-
-        const timeoutId = setTimeout(() => {
-          setShowAlert(false);
-        }, 3000);
-
-        return () => clearTimeout(timeoutId);
       }
-    }, [caloriesCurrent, caloriesMaxSuggestion, showAlert]);
+      const timeoutId = setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+
+      return () => clearTimeout(timeoutId);
+    }, [caloriesCurrent, caloriesMaxSuggestion]);
 
     const handleCloseAlert = () => {
       setShowAlert(false);
