@@ -1,4 +1,3 @@
-import mysql from "mysql2/promise";
 import { dbPool } from "../dbconfig.js";
 
 export default class Cart {
@@ -72,12 +71,24 @@ export default class Cart {
       totalNutrition.sugars = parseFloat(totalNutrition.sugars.toFixed(1));
       totalNutrition.salt = parseFloat(totalNutrition.salt.toFixed(1));
 
-      // console.log("Total: ", totalNutrition);
-      // console.log("cartItems[0]: ", cartItems[0]);
-      // console.log("totalNutrition[0]: ", totalNutrition[0]);
+      const cartWithCalories = itemNutrients[0].map((item) => {
+        const itemCalories = item.calories * item.quantity;
+        totalNutrition.energy += item.energy * item.quantity;
+        totalNutrition.calories += itemCalories;
+        totalNutrition.fat += item.fat * item.quantity;
+        totalNutrition.saturates += item.saturates * item.quantity;
+        totalNutrition.sugars += item.sugars * item.quantity;
+        totalNutrition.salt += item.salt * item.quantity;
+
+        // Add a field for calories per product
+        return {
+          ...item,
+          caloriesPerProduct: parseFloat(itemCalories.toFixed(1)), // Round to 1 decimal
+        };
+      });
       return {
         status: "success",
-        cartItems: cartItems[0],
+        cartItems: cartWithCalories,
         totalNutrition: totalNutrition,
       };
     } catch (error) {
