@@ -56,7 +56,36 @@ const Product = ({ isChecked, isToggle }) => {
     streamProtocol: "text",
     fetch: `${URL || `http://localhost:${PORT}`}/api/chat`,
   });
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const sortedProductsSuggestion = localStorage.getItem(
+          "sortedProductsSuggestion"
+        );
 
+        if (sortedProductsSuggestion && showProductsSuggestion) {
+          const productSuggestionAI = JSON.parse(sortedProductsSuggestion);
+          console.log(
+            "Loaded products from localStorage:",
+            productSuggestionAI
+          );
+          setProduct(productSuggestionAI);
+        } else {
+          const response = await axios.get(
+            `${URL || `http://localhost:${PORT}`}/product-with-nutrients`
+          );
+          console.log("Fetched products from server:", response.data);
+          setProduct(response.data);
+        }
+
+        setSearchTerm("");
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProduct();
+  }, [showProductsSuggestion]);
   const extractMinCalories = (response) => {
     const caloriesMatch = response.match(/Calories Suggestion Min:\s*(\d+)/);
     console.log(caloriesMatch);
@@ -346,37 +375,6 @@ const Product = ({ isChecked, isToggle }) => {
   }, [chatParent]);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const sortedProductsSuggestion = localStorage.getItem(
-          "sortedProductsSuggestion"
-        );
-
-        if (sortedProductsSuggestion && showProductsSuggestion) {
-          const productSuggestionAI = JSON.parse(sortedProductsSuggestion);
-          console.log(
-            "Loaded products from localStorage:",
-            productSuggestionAI
-          );
-          setProduct(productSuggestionAI);
-        } else {
-          const response = await axios.get(
-            `${URL || `http://localhost:${PORT}`}/product-with-nutrients`
-          );
-          console.log("Fetched products from server:", response.data);
-          setProduct(response.data);
-        }
-
-        setSearchTerm("");
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProduct();
-  }, [showProductsSuggestion]);
-
-  useEffect(() => {
     const filterProducts = () => {
       const filtered = product.filter((item) => {
         const { nutrients } = item;
@@ -456,9 +454,10 @@ const Product = ({ isChecked, isToggle }) => {
               ...filteredItem,
               product_name: productImage ? productImage.product_name : null,
               img: productImage ? productImage.img : null,
+              nutrients: productImage ? productImage.nutrients : null,
             };
           });
-          console.log(filteredProducts);
+          console.log("sortBy Category", filteredProducts);
           setSearchResults(filteredProducts);
         } catch (error) {
           console.error("Error fetching filtered products:", error);
@@ -517,6 +516,8 @@ const Product = ({ isChecked, isToggle }) => {
 
           const finalProducts =
             filteredProducts.length > 0 ? filteredProducts : response.data;
+
+          console.log("finalProducts", finalProducts);
 
           const sortedProducts = finalProducts.sort((a, b) => {
             const caloriesA = a.nutrients.calories || 0;
