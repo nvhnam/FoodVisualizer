@@ -499,7 +499,7 @@ const Product = ({ isChecked, isToggle }) => {
               const { nutrients } = item;
               const maxCaloInEachProduct = Math.round(maxCal / 3);
               const minCaloInEachProduct = Math.round(minCal / 3);
-              console.log("maxCalo", maxCaloInEachProduct)
+              console.log("maxCalo", maxCaloInEachProduct);
               if (maxCal === minCal) {
                 return (
                   nutrients &&
@@ -563,7 +563,6 @@ const Product = ({ isChecked, isToggle }) => {
     localStorage.removeItem("chatMessages");
     localStorage.removeItem("sortedProductsSuggestion");
     localStorage.removeItem("DataNutrient");
-    localStorage.removeItem("StatusBar");
 
     setMessages([]);
     // setProductsSuggestion([]);
@@ -591,21 +590,22 @@ const Product = ({ isChecked, isToggle }) => {
           },
         }
       );
+
       if (response.status === 200) {
         setErrorMessage("");
-        const checkStatusBar = localStorage.getItem("StatusBar");
-        const energy = Math.round(product?.nutrients?.calories || 0);
-        if (checkStatusBar) {
-          setCaloriesCurrent((prev) => {
-            const updatedCalories = Math.round(prev) + energy;
-            const statusBar = {
-              caloriesCurrent: updatedCalories,
-              caloriesMaxSuggestions: caloriesMaxSuggestion,
-            };
-            localStorage.setItem("StatusBar", JSON.stringify(statusBar));
-            return updatedCalories;
-          });
-        }
+        const energy = Math.round(product?.nutrients?.calories);
+
+        setCaloriesCurrent((prev) => {
+          const updatedCalories = Math.round(prev) + energy;
+          console.log("check status bar", energy);
+          const statusBar = {
+            caloriesCurrent: updatedCalories,
+            caloriesMaxSuggestions: caloriesMaxSuggestion,
+          };
+          localStorage.setItem("StatusBar", JSON.stringify(statusBar));
+          return updatedCalories;
+        });
+
         alert("Product added to cart successfully!");
       } else {
         setErrorMessage("Failed to add product to the cart. Please try again.");
