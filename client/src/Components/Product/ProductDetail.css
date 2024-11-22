@@ -42,6 +42,11 @@
   transition: all 0.5s;
   text-align: center;
 }
+
+.chatbot {
+  text-align: left;
+}
+
 .pd_item img {
   width: 215px;
 }

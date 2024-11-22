@@ -51,6 +51,8 @@ const Cart = ({ isChecked }) => {
 
   // console.log("Total: ", totalNutrition);
 
+  const roundedNumber = (num) => parseFloat(num).toFixed(2);
+
   const handleRemove = (productId, productCalories, quantity) => {
     const storedUser = localStorage.getItem("user");
     const userId = JSON.parse(storedUser).user_id;
@@ -183,27 +185,27 @@ const Cart = ({ isChecked }) => {
                 <h3 className="text-left">Total Nutrition (Per 100gr)</h3>
                 <p className="fs-6 mb-n2">
                   <span className="fw-bold">Energy: </span>
-                  {totalNutrition.energy} kJ
+                  {roundedNumber(totalNutrition.energy)} kJ
                 </p>
                 <p className="fs-6 mb-n2">
                   <span className="fw-bold">Calories: </span>
-                  {totalNutrition.calories} kcal
+                  {roundedNumber(totalNutrition.calories)} kcal
                 </p>
                 <p className="fs-6 mb-n2">
                   <span className="fw-bold">Fat: </span>
-                  {totalNutrition.fat} g
+                  {roundedNumber(totalNutrition.fat)} g
                 </p>
                 <p className="fs-6 mb-n2">
                   <span className="fw-bold">Saturates: </span>
-                  {totalNutrition.saturates} g
+                  {roundedNumber(totalNutrition.saturates)} g
                 </p>
                 <p className="fs-6 mb-n2">
                   <span className="fw-bold">Sugars: </span>
-                  {totalNutrition.sugars} g
+                  {roundedNumber(totalNutrition.sugars)} g
                 </p>
                 <p className="fs-6 mb-n2">
                   <span className="fw-bold">Salt: </span>
-                  {totalNutrition.salt} g
+                  {roundedNumber(totalNutrition.salt)} g
                 </p>
               </div>
             )}

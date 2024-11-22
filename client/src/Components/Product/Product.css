@@ -1,4 +1,4 @@
-@import url('../../css/index.css');
+@import url("../../css/index.css");
 
 .product {
   width: 100%;
@@ -30,7 +30,6 @@
   margin-right: 0rem;
 }
 
-
 .card-product {
   background-color: var(--color-acent-1-begie-2nd) !important;
   border-radius: 20px !important;
@@ -55,13 +54,13 @@
   margin-top: 25px;
 }
 
-@media screen and (min-width: 2601px) { 
+@media screen and (min-width: 2601px) {
   .card-product.no-traffic-light {
     height: calc(254px + 1vw) !important;
   }
 }
 
-@media screen and (min-width: 2000px) and (max-width: 2600px) { 
+@media screen and (min-width: 2000px) and (max-width: 2600px) {
   .card-product {
     height: calc(254px + 9vw) !important;
   }
@@ -75,25 +74,25 @@
   }
 }
 
-@media screen and (min-width: 1600px) and (max-width: 1999px) { 
+@media screen and (min-width: 1600px) and (max-width: 1999px) {
   .card-product {
     height: calc(254px + 10vw) !important;
   }
 }
 
-@media screen and (min-width: 1400px) and (max-width: 1599px) { 
+@media screen and (min-width: 1400px) and (max-width: 1599px) {
   .card-product {
     height: calc(254px + 11vw) !important;
   }
 }
 
-@media screen and (min-width: 1150px) and (max-width: 1399px) { 
+@media screen and (min-width: 1150px) and (max-width: 1399px) {
   .card-product {
     height: calc(254px + 12.5vw) !important;
   }
 }
 
-@media screen and (min-width: 1000px) and (max-width: 1149px) { 
+@media screen and (min-width: 1000px) and (max-width: 1149px) {
   .card-product {
     height: calc(254px + 14vw) !important;
   }
@@ -101,13 +100,13 @@
   .card-product.no-traffic-light {
     height: calc(254px + 2vw) !important;
   }
-  
+
   .card-product.no-traffic-light .card-product-container .card-product-title {
     margin-top: 30px;
   }
 }
 
-@media screen and (min-width: 600px) and (max-width: 999px) { 
+@media screen and (min-width: 600px) and (max-width: 999px) {
   .card-product {
     height: calc(254px + 14vw) !important;
   }
@@ -115,7 +114,7 @@
   .card-product.no-traffic-light {
     height: calc(254px + 1vw) !important;
   }
-  
+
   .card-product.no-traffic-light .card-product-container .card-product-title {
     margin-top: 20px;
   }
@@ -151,12 +150,10 @@
   text-align: center;
 }
 
-
 .button-add-to-cart {
   position: absolute !important;
   bottom: 10px;
 }
-
 
 /* AI CHATBOX */
 
@@ -170,13 +167,14 @@
   overflow: hidden;
   background-color: var(--color-acent-1-begie-2nd);
   position: fixed;
-  right: calc(20px + 1.5vw);
+  /* I changed to -40px for it to be closer to the right corner of the screen */
+  right: calc(-40px + 1.5vw);
   transition: bottom 0.3s ease;
   z-index: 1000;
   border: none;
 }
 
-@media screen and (min-height: 600px) and (max-height: 1200px) { 
+@media screen and (min-height: 600px) and (max-height: 1200px) {
   .AI-advisor-container {
     transform: scale(0.7) translateY(20%);
     /* transform-origin: bottom center; */
@@ -242,7 +240,7 @@
   font-size: calc(12px + 0.2vw);
   font-weight: 600;
   color: #333;
-  border: 3px solid #F19300;
+  border: 3px solid #f19300;
 }
 
 /* Change background on hover */

@@ -43,7 +43,7 @@ const Footer = () => {
             <MDBCol md="3" lg="4" xl="3" className="mx-auto mb-4">
               <h6 className="text-uppercase fw-bold mb-4">
                 <MDBIcon color="secondary" icon="gem" className="me-3" />
-                NutrinSight
+                NutriGuide
               </h6>
               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
             </MDBCol>
@@ -125,7 +125,7 @@ const Footer = () => {
       >
         © 2024 Website:
         <a className="text-reset fw-bold m-1" href="/">
-          NutrinSight.com
+          NutriGuiding.vercel.app
         </a>
       </div>
     </MDBFooter>

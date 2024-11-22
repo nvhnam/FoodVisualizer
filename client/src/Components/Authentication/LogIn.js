@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import InputAdornment from "@mui/material/InputAdornment";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -169,7 +170,26 @@ const Login = () => {
             onChange={handleChange}
             error={!!errors.email}
             helperText={errors.email}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">@gmail.com</InputAdornment>
+              ),
+            }}
+            aria-describedby="email-helper-text"
           />
+          <Typography
+            id="email-helper-text"
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              mt: 0.5,
+              fontSize: "0.75rem",
+              fontStyle: "italic",
+            }}
+          >
+            Enter your email without "@gmail.com"
+          </Typography>
+
           <TextField
             margin="normal"
             required

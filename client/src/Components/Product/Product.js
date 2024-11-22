@@ -54,12 +54,11 @@ const Product = ({ isChecked, isToggle }) => {
 
   // open AI ChatBox
   const [isOpenAIChatBox, setIsOpenAIChatBox] = useState(false);
-  
+
   // Toggle AI ChatBox dropdown
   const toggleAIChatBox = () => {
     setIsOpenAIChatBox(!isOpenAIChatBox);
-  }
-
+  };
 
   const { messages, input, setInput, append, setMessages } = useChat({
     streamProtocol: "text",
@@ -508,7 +507,7 @@ const Product = ({ isChecked, isToggle }) => {
               const { nutrients } = item;
               const maxCaloInEachProduct = Math.round(maxCal / 3);
               const minCaloInEachProduct = Math.round(minCal / 3);
-              console.log("maxCalo", maxCaloInEachProduct)
+              console.log("maxCalo", maxCaloInEachProduct);
               if (maxCal === minCal) {
                 return (
                   nutrients &&
@@ -578,7 +577,7 @@ const Product = ({ isChecked, isToggle }) => {
     // setProductsSuggestion([]);
   };
 
-   const StatusBar = ({ caloriesCurrent, caloriesMaxSuggestion }) => {
+  const StatusBar = ({ caloriesCurrent, caloriesMaxSuggestion }) => {
     const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
@@ -587,7 +586,7 @@ const Product = ({ isChecked, isToggle }) => {
       }
       const timeoutId = setTimeout(() => {
         setShowAlert(false);
-      }, 3000);
+      }, 2500);
 
       return () => clearTimeout(timeoutId);
     }, [caloriesCurrent, caloriesMaxSuggestion]);
@@ -601,9 +600,9 @@ const Product = ({ isChecked, isToggle }) => {
         {showAlert && (
           <div
             style={{
-              position: "fixed",
-              top: "20px",
-              right: "20px",
+              position: "absolute",
+              top: "-7px",
+              right: "0px",
               padding: "10px 20px",
               backgroundColor: "#f8d7da", // Red color
               color: "#721c24",
@@ -633,22 +632,22 @@ const Product = ({ isChecked, isToggle }) => {
         )}
 
         <div
-          className="StatusBar d-flex align-items-center"
-          style={{
-            display: "flex",
-            width: 300,
-            alignItems: "center",
-            gap: "10px",
-            padding: "10px 15px",
-            backgroundColor: "#e9ecef",
-            borderRadius: "8px",
-            fontSize: "16px",
-            fontWeight: "500",
-            color: "#333",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-          }}
+          className="AI-advisor-status"
+          // style={{
+          //   display: "flex",
+          //   width: 300,
+          //   alignItems: "center",
+          //   gap: "10px",
+          //   padding: "10px 15px",
+          //   backgroundColor: "#e9ecef",
+          //   borderRadius: "8px",
+          //   fontSize: "16px",
+          //   fontWeight: "500",
+          //   color: "#333",
+          //   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          // }}
         >
-          <p style={{ margin: 0, fontWeight: "bold" }}>Max Calories:</p>
+          <p style={{ margin: 0, fontWeight: "400" }}>Max Calories:</p>
           <span
             style={{
               color:
@@ -663,7 +662,7 @@ const Product = ({ isChecked, isToggle }) => {
       </div>
     );
   };
-  
+
   const handleAddToCart = async (product) => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -1232,19 +1231,23 @@ const Product = ({ isChecked, isToggle }) => {
                     // key={productItem.product_id}
                     // xs={12}
                     // sm={6}
-                    // md={4}
+                    md={4}
                     // lg={3}
                     // className="w-auto h-auto mx-auto"
                   >
                     <Card
-                      style={{
-                        // width: "18rem",
-                        // maxHeight: "27.5rem",
-                        // minHeight: "20rem",
-                        // height: "100%",
-                        // overflow: "hidden",
-                      }}
-                      className={`card-product ${!isChecked ? "no-traffic-light" : ""}`}
+                      style={
+                        {
+                          // width: "18rem",
+                          // maxHeight: "27.5rem",
+                          // minHeight: "20rem",
+                          // height: "100%",
+                          // overflow: "hidden",
+                        }
+                      }
+                      className={`card-product ${
+                        !isChecked ? "no-traffic-light" : ""
+                      }`}
                     >
                       <Link to={`/product-detail/${productItem.product_id}`}>
                         {productItem.img ? (
@@ -1274,12 +1277,13 @@ const Product = ({ isChecked, isToggle }) => {
                           style={{ padding: "0" }}
                           className="card-product-container"
                         >
-                          <div 
-                            // className="w-100 h-100 d-flex flex-column  align-items-center gap-2"
+                          <div
+                          // className="w-100 h-100 d-flex flex-column  align-items-center gap-2"
                           >
-                            <Card.Title 
-                              className="card-product-title" 
-                              title={productItem.product_name}>
+                            <Card.Title
+                              className="card-product-title"
+                              title={productItem.product_name}
+                            >
                               {truncate(productItem.product_name, 21)}
                             </Card.Title>
                             {isChecked && (
@@ -1294,10 +1298,9 @@ const Product = ({ isChecked, isToggle }) => {
                           </div>
                         </Card.Body>
                       </Link>
-                            <div 
-                              className="d-flex justify-content-center">
-                              {/* // className="d-flex justify-content-between align-items-center"> */}
-                              {/* <Link
+                      <div className="d-flex justify-content-center">
+                        {/* // className="d-flex justify-content-between align-items-center"> */}
+                        {/* <Link
                                 to={`/product-detail/${productItem.product_id}`}
                               >
                                 <Button
@@ -1308,17 +1311,17 @@ const Product = ({ isChecked, isToggle }) => {
                                   View Detail
                                 </Button>
                               </Link> */}
-                              <Button
-                                // variant="contained"
-                                // color="success"
-                                // size="medium"
-                                // className="px-5 py-2 mr-3"
-                                className="button-primary button-add-to-cart"
-                                onClick={() => handleAddToCart(productItem)}
-                              >
-                                Buy
-                              </Button>
-                            </div>
+                        <Button
+                          // variant="contained"
+                          // color="success"
+                          // size="medium"
+                          // className="px-5 py-2 mr-3"
+                          className="button-primary button-add-to-cart"
+                          onClick={() => handleAddToCart(productItem)}
+                        >
+                          Buy
+                        </Button>
+                      </div>
                     </Card>
                   </Col>
                 );
@@ -1329,23 +1332,28 @@ const Product = ({ isChecked, isToggle }) => {
           {/* AI CHATBOX */}
           {loggedIn && (
             <div
-              className= {`AI-advisor-container ${isOpenAIChatBox ? "open" : "closed"}`}
+              className={`AI-advisor-container ${
+                isOpenAIChatBox ? "open" : "closed"
+              }`}
               // className="d-flex flex-column w-50 h-75 align-items-center justify-content-center"
             >
-              <StatusBar
-                caloriesCurrent={caloriesCurrent}
-                caloriesMaxSuggestion={caloriesMaxSuggestion}
-              />
-              
               <div className="AI-advisor-header" onClick={toggleAIChatBox}>
                 <div className="AI-advisor-header-title">
                   AI Product Advisor
-                  <span className={`AI-toggle-icon ${isOpenAIChatBox ? "open" : ""}`}>
+                  <span
+                    className={`AI-toggle-icon ${
+                      isOpenAIChatBox ? "open" : ""
+                    }`}
+                  >
                     {isOpenAIChatBox ? "▲" : "▼"}
                   </span>
                 </div>
                 <hr className="AI-header-divider" />
-                <div
+                <StatusBar
+                  caloriesCurrent={caloriesCurrent}
+                  caloriesMaxSuggestion={caloriesMaxSuggestion}
+                />
+                {/* <div
                   className="AI-advisor-status"
                   // className="StatusBar d-flex align-items-center"
                   // style={{
@@ -1373,11 +1381,13 @@ const Product = ({ isChecked, isToggle }) => {
                   >
                     {caloriesCurrent}
                   </span>
-                  <span style={{ fontWeight: "bold", color: "#6c757d" }}>/</span>
+                  <span style={{ fontWeight: "bold", color: "#6c757d" }}>
+                    /
+                  </span>
                   <span style={{ color: "#28a745" }}>
                     {caloriesMaxSuggestion}
                   </span>
-                </div>
+                </div> */}
               </div>
 
               {/* Dropdown content */}
@@ -1410,7 +1420,10 @@ const Product = ({ isChecked, isToggle }) => {
                             />
                           </div>
                           <div className="mb-3 d-flex align-items-center justify-content-between gap-2">
-                            <label for="userGender" className=" form-label fs-6">
+                            <label
+                              for="userGender"
+                              className=" form-label fs-6"
+                            >
                               Gender
                             </label>
                             <select
@@ -1418,7 +1431,9 @@ const Product = ({ isChecked, isToggle }) => {
                               className="form-select form-select-sm w-50"
                               required
                               value={gender}
-                              onChange={(event) => setGender(event.target.value)}
+                              onChange={(event) =>
+                                setGender(event.target.value)
+                              }
                             >
                               <option value="male">Male</option>
                               <option value="female">Female</option>
@@ -1468,14 +1483,16 @@ const Product = ({ isChecked, isToggle }) => {
                         </label>
                         <select
                           id="userGoal"
-                          className="form-select form-select-sm w-50"
+                          className="form-select form-select w-50"
                           required
                           value={goal}
                           onChange={(event) => setGoal(event.target.value)}
                         >
                           <option value="loseWeight">Lose weight</option>
                           <option value="gainWeight">Gain weight</option>
-                          <option value="maintainWeight">Maintain weight</option>
+                          <option value="maintainWeight">
+                            Maintain weight
+                          </option>
                           <option value="none">None</option>
                         </select>
                         <button className="btn btn-primary" type="submit">
@@ -1518,8 +1535,8 @@ const Product = ({ isChecked, isToggle }) => {
                         ))
                       ) : (
                         <p className="mb-0 fs-6">
-                          If you want me to recommend products based on your health,
-                          please fill out the form above now.
+                          If you want me to recommend products based on your
+                          health, please fill out the form above now.
                         </p>
                       )}
                     </ul>
@@ -1552,7 +1569,7 @@ const Product = ({ isChecked, isToggle }) => {
                   </Button>
                 </div>
               )}
-              
+
               {/* END DROPDOWN CONTENT */}
             </div>
             // END AI CHATBOX
