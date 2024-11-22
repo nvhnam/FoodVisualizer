@@ -572,11 +572,98 @@ const Product = ({ isChecked, isToggle }) => {
     localStorage.removeItem("chatMessages");
     localStorage.removeItem("sortedProductsSuggestion");
     localStorage.removeItem("DataNutrient");
-    localStorage.removeItem("StatusBar");
+    // localStorage.removeItem("StatusBar");
 
     setMessages([]);
     // setProductsSuggestion([]);
   };
+
+   const StatusBar = ({ caloriesCurrent, caloriesMaxSuggestion }) => {
+    const [showAlert, setShowAlert] = useState(false);
+
+    useEffect(() => {
+      if (caloriesCurrent > caloriesMaxSuggestion) {
+        setShowAlert(true);
+      }
+      const timeoutId = setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+
+      return () => clearTimeout(timeoutId);
+    }, [caloriesCurrent, caloriesMaxSuggestion]);
+
+    const handleCloseAlert = () => {
+      setShowAlert(false);
+    };
+
+    return (
+      <div>
+        {showAlert && (
+          <div
+            style={{
+              position: "fixed",
+              top: "20px",
+              right: "20px",
+              padding: "10px 20px",
+              backgroundColor: "#f8d7da", // Red color
+              color: "#721c24",
+              borderRadius: "5px",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+              zIndex: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "300px",
+            }}
+          >
+            <span>Your cart exceeds the recommended calorie limit!</span>
+            <button
+              onClick={handleCloseAlert}
+              style={{
+                background: "transparent",
+                border: "none",
+                fontSize: "18px",
+                cursor: "pointer",
+                color: "#721c24",
+              }}
+            >
+              &times;
+            </button>
+          </div>
+        )}
+
+        <div
+          className="StatusBar d-flex align-items-center"
+          style={{
+            display: "flex",
+            width: 300,
+            alignItems: "center",
+            gap: "10px",
+            padding: "10px 15px",
+            backgroundColor: "#e9ecef",
+            borderRadius: "8px",
+            fontSize: "16px",
+            fontWeight: "500",
+            color: "#333",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <p style={{ margin: 0, fontWeight: "bold" }}>Max Calories:</p>
+          <span
+            style={{
+              color:
+                caloriesCurrent > caloriesMaxSuggestion ? "#dc3545" : "#007bff", // Red if exceeds, blue otherwise
+            }}
+          >
+            {caloriesCurrent}
+          </span>
+          <span style={{ fontWeight: "bold", color: "#6c757d" }}>/</span>
+          <span style={{ color: "#28a745" }}>{caloriesMaxSuggestion}</span>
+        </div>
+      </div>
+    );
+  };
+  
   const handleAddToCart = async (product) => {
     try {
       const storedUser = localStorage.getItem("user");
@@ -600,21 +687,22 @@ const Product = ({ isChecked, isToggle }) => {
           },
         }
       );
+
       if (response.status === 200) {
         setErrorMessage("");
-        const checkStatusBar = localStorage.getItem("StatusBar");
-        const energy = Math.round(product?.nutrients?.calories || 0);
-        if (checkStatusBar) {
-          setCaloriesCurrent((prev) => {
-            const updatedCalories = Math.round(prev) + energy;
-            const statusBar = {
-              caloriesCurrent: updatedCalories,
-              caloriesMaxSuggestions: caloriesMaxSuggestion,
-            };
-            localStorage.setItem("StatusBar", JSON.stringify(statusBar));
-            return updatedCalories;
-          });
-        }
+        const energy = Math.round(product?.nutrients?.calories);
+
+        setCaloriesCurrent((prev) => {
+          const updatedCalories = Math.round(prev) + energy;
+          console.log("check status bar", energy);
+          const statusBar = {
+            caloriesCurrent: updatedCalories,
+            caloriesMaxSuggestions: caloriesMaxSuggestion,
+          };
+          localStorage.setItem("StatusBar", JSON.stringify(statusBar));
+          return updatedCalories;
+        });
+
         alert("Product added to cart successfully!");
       } else {
         setErrorMessage("Failed to add product to the cart. Please try again.");
