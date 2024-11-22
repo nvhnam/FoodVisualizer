@@ -1218,6 +1218,7 @@ const Product = ({ isChecked, isToggle }) => {
             </Row>
           </div>
 
+          {/* AI CHATBOX */}
           {loggedIn && (
             <div className="d-flex flex-column w-50 h-75 align-items-center justify-content-center">
               <div
@@ -1415,6 +1416,11 @@ const Product = ({ isChecked, isToggle }) => {
                 Remove all messages
               </Button>
             </div>
+              )}
+              
+              {/* END DROPDOWN CONTENT */}
+            </div>
+            // END AI CHATBOX
           )}
         </div>
 
