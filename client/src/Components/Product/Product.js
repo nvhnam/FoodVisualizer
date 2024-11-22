@@ -1244,6 +1244,11 @@ const Product = ({ isChecked, isToggle }) => {
               className= {`AI-advisor-container ${isOpenAIChatBox ? "open" : "closed"}`}
               // className="d-flex flex-column w-50 h-75 align-items-center justify-content-center"
             >
+              <StatusBar
+                caloriesCurrent={caloriesCurrent}
+                caloriesMaxSuggestion={caloriesMaxSuggestion}
+              />
+              
               <div className="AI-advisor-header" onClick={toggleAIChatBox}>
                 <div className="AI-advisor-header-title">
                   AI Product Advisor

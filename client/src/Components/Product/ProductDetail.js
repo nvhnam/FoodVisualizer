@@ -161,7 +161,7 @@ const ProductDetail = ({ isChecked }) => {
     localStorage.removeItem("chatMessages");
     localStorage.removeItem("sortedProductsSuggestion");
     localStorage.removeItem("DataNutrient");
-    localStorage.removeItem("StatusBar");
+
     setMessages([]);
     // setProductsSuggestion([]);
   };
@@ -226,16 +226,15 @@ const ProductDetail = ({ isChecked }) => {
     const [showAlert, setShowAlert] = useState(false);
 
     useEffect(() => {
-      if (caloriesCurrent > caloriesMaxSuggestion && !showAlert) {
+      if (caloriesCurrent > caloriesMaxSuggestion) {
         setShowAlert(true);
-
-        const timeoutId = setTimeout(() => {
-          setShowAlert(false);
-        }, 3000);
-
-        return () => clearTimeout(timeoutId);
       }
-    }, [caloriesCurrent, caloriesMaxSuggestion, showAlert]);
+      const timeoutId = setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+
+      return () => clearTimeout(timeoutId);
+    }, [caloriesCurrent, caloriesMaxSuggestion]);
 
     const handleCloseAlert = () => {
       setShowAlert(false);
