@@ -1,0 +1,22 @@
+@import url('./variable.css');
+
+/* Desktop screen */
+@media screen and (min-width: 1024px) { 
+    html {
+        font-size: 100%;
+    }
+}
+
+/* Tablet screen */
+@media screen and (min-width: 600px) and (max-width: 1023px) { 
+    html {
+        font-size: 90%;
+    }
+}
+
+/* Mobile screen */
+@media screen and (min-width: 350px) and (max-width: 599px) { 
+    html {
+        font-size: 70%;
+    }
+}

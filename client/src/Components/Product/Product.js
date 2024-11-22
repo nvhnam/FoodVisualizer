@@ -52,6 +52,15 @@ const Product = ({ isChecked, isToggle }) => {
   const [caloriesCurrent, setCaloriesCurrent] = useState("");
   const [caloriesMaxSuggestion, setCaloriesMaxSuggestion] = useState("");
 
+  // open AI ChatBox
+  const [isOpenAIChatBox, setIsOpenAIChatBox] = useState(false);
+  
+  // Toggle AI ChatBox dropdown
+  const toggleAIChatBox = () => {
+    setIsOpenAIChatBox(!isOpenAIChatBox);
+  }
+
+
   const { messages, input, setInput, append, setMessages } = useChat({
     streamProtocol: "text",
     fetch: `${URL || `http://localhost:${PORT}`}/api/chat`,
@@ -1131,86 +1140,97 @@ const Product = ({ isChecked, isToggle }) => {
               {currentFood.map((productItem, index) => {
                 return (
                   <Col
-                    style={{ marginTop: "1rem" }}
-                    key={productItem.product_id}
-                    xs={12}
-                    sm={6}
-                    md={4}
-                    lg={3}
-                    className="w-auto h-auto mx-auto"
+                    // style={{ marginTop: "1rem" }}
+                    // key={productItem.product_id}
+                    // xs={12}
+                    // sm={6}
+                    // md={4}
+                    // lg={3}
+                    // className="w-auto h-auto mx-auto"
                   >
                     <Card
                       style={{
-                        width: "18rem",
-                        maxHeight: "27.5rem",
-                        minHeight: "20rem",
-                        height: "100%",
+                        // width: "18rem",
+                        // maxHeight: "27.5rem",
+                        // minHeight: "20rem",
+                        // height: "100%",
                         // overflow: "hidden",
                       }}
-                      // className="w-75 h-75"
+                      className={`card-product ${!isChecked ? "no-traffic-light" : ""}`}
                     >
-                      {productItem.img ? (
-                        <Card.Img
-                          variant="top"
-                          src={productItem.img}
-                          style={{ minHeight: "12rem" }}
-                          className="w-100 h-100 overflow-hidden rounded-top"
-                        />
-                      ) : (
-                        <div
-                          style={{
-                            width: "17rem",
-                            height: "12rem",
-                            backgroundColor: "#e0e0e0",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <span>No Image Available</span>
-                        </div>
-                      )}
-                      <Card.Body
-                        className="w-100 h-auto d-flex justify-content-center align-items-center"
-                        style={{ padding: "1rem" }}
-                      >
-                        <div className="w-100 h-100 d-flex flex-column  align-items-center gap-2">
-                          <Card.Title title={productItem.product_name}>
-                            {truncate(productItem.product_name, 21)}
-                          </Card.Title>
-                          {isChecked && (
-                            <TrafficLight
-                              productId={productItem.product_id}
-                              showText={false}
-                              mainPage={true}
-                              showPerContainer={true}
-                              theWidth=""
-                            />
-                          )}
-                          <div className="w-100 d-flex justify-content-between align-items-center">
-                            <Link
-                              to={`/product-detail/${productItem.product_id}`}
-                            >
-                              <Button
-                                variant="outlined"
-                                size="small"
-                                color="warning"
-                              >
-                                View Detail
-                              </Button>
-                            </Link>
-                            <Button
-                              variant="contained"
-                              color="success"
-                              size="medium"
-                              className="px-5 py-2 mr-3"
-                              onClick={() => handleAddToCart(productItem)}
-                            >
-                              Buy
-                            </Button>
+                      <Link to={`/product-detail/${productItem.product_id}`}>
+                        {productItem.img ? (
+                          <Card.Img
+                            variant="top"
+                            src={productItem.img}
+                            style={{ minHeight: "12rem" }}
+                            // className="w-100 h-100 overflow-hidden rounded-top"
+                            className="card-product-img"
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: "17rem",
+                              height: "12rem",
+                              backgroundColor: "#e0e0e0",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <span>No Image Available</span>
                           </div>
-                        </div>
-                      </Card.Body>
+                        )}
+                        <Card.Body
+                          // className="w-100 h-auto d-flex justify-content-center align-items-center"
+                          style={{ padding: "0" }}
+                          className="card-product-container"
+                        >
+                          <div 
+                            // className="w-100 h-100 d-flex flex-column  align-items-center gap-2"
+                          >
+                            <Card.Title 
+                              className="card-product-title" 
+                              title={productItem.product_name}>
+                              {truncate(productItem.product_name, 21)}
+                            </Card.Title>
+                            {isChecked && (
+                              <TrafficLight
+                                productId={productItem.product_id}
+                                showText={false}
+                                mainPage={true}
+                                showPerContainer={true}
+                                theWidth="calc(203px + 3vw)"
+                              />
+                            )}
+                          </div>
+                        </Card.Body>
+                      </Link>
+                            <div 
+                              className="d-flex justify-content-center">
+                              {/* // className="d-flex justify-content-between align-items-center"> */}
+                              {/* <Link
+                                to={`/product-detail/${productItem.product_id}`}
+                              >
+                                <Button
+                                  variant="outlined"
+                                  size="small"
+                                  color="warning"
+                                >
+                                  View Detail
+                                </Button>
+                              </Link> */}
+                              <Button
+                                // variant="contained"
+                                // color="success"
+                                // size="medium"
+                                // className="px-5 py-2 mr-3"
+                                className="button-primary button-add-to-cart"
+                                onClick={() => handleAddToCart(productItem)}
+                              >
+                                Buy
+                              </Button>
+                            </div>
                     </Card>
                   </Col>
                 );
@@ -1220,202 +1240,224 @@ const Product = ({ isChecked, isToggle }) => {
 
           {/* AI CHATBOX */}
           {loggedIn && (
-            <div className="d-flex flex-column w-50 h-75 align-items-center justify-content-center">
-              <div
-                className="StatusBar d-flex align-items-center"
-                style={{
-                  display: "flex",
-                  width: 300,
-                  alignItems: "center",
-                  gap: "10px",
-                  padding: "10px 15px",
-                  backgroundColor: "#e9ecef",
-                  borderRadius: "8px",
-                  fontSize: "16px",
-                  fontWeight: "500",
-                  color: "#333",
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <p style={{ margin: 0, fontWeight: "bold" }}>Max Calories:</p>
-                <span
-                  style={{
-                    color:
-                      caloriesCurrent > caloriesMaxSuggestion
-                        ? "#dc3545"
-                        : "#007bff",
-                  }}
-                >
-                  {caloriesCurrent}
-                </span>
-                <span style={{ fontWeight: "bold", color: "#6c757d" }}>/</span>
-                <span style={{ color: "#28a745" }}>
-                  {caloriesMaxSuggestion}
-                </span>
-              </div>
-              <section className="mb-4">
-                <div>
-                  <h3> Products Suggestion By ChatBot AI</h3>
+            <div
+              className= {`AI-advisor-container ${isOpenAIChatBox ? "open" : "closed"}`}
+              // className="d-flex flex-column w-50 h-75 align-items-center justify-content-center"
+            >
+              <div className="AI-advisor-header" onClick={toggleAIChatBox}>
+                <div className="AI-advisor-header-title">
+                  AI Product Advisor
+                  <span className={`AI-toggle-icon ${isOpenAIChatBox ? "open" : ""}`}>
+                    {isOpenAIChatBox ? "▲" : "▼"}
+                  </span>
                 </div>
-                <form className="w-100 mt-3" onSubmit={handleUserInfo}>
-                  <div className="w-100 d-flex align-items-center justify-content-between gap-3">
-                    <div className="w-50">
-                      <div className="mb-3 d-flex align-items-center justify-content-between">
-                        <label for="userAge" className="form-label fs-6">
-                          Age
-                        </label>
-                        <input
-                          id="userAge"
-                          className="form-control w-50"
-                          placeholder="20"
-                          type="number"
-                          value={age}
-                          min="1"
-                          onChange={(event) => {
-                            setAge(event.target.value);
-                          }}
-                          required
-                        />
+                <hr className="AI-header-divider" />
+                <div
+                  className="AI-advisor-status"
+                  // className="StatusBar d-flex align-items-center"
+                  // style={{
+                  //   display: "flex",
+                  //   width: 300,
+                  //   alignItems: "center",
+                  //   gap: "10px",
+                  //   padding: "10px 15px",
+                  //   backgroundColor: "#e9ecef",
+                  //   borderRadius: "8px",
+                  //   fontSize: "16px",
+                  //   fontWeight: "500",
+                  //   color: "#333",
+                  //   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                  // }}
+                >
+                  <p style={{ margin: 0, fontWeight: "400" }}>Max Calories:</p>
+                  <span
+                    style={{
+                      color:
+                        caloriesCurrent > caloriesMaxSuggestion
+                          ? "#dc3545"
+                          : "#007bff",
+                    }}
+                  >
+                    {caloriesCurrent}
+                  </span>
+                  <span style={{ fontWeight: "bold", color: "#6c757d" }}>/</span>
+                  <span style={{ color: "#28a745" }}>
+                    {caloriesMaxSuggestion}
+                  </span>
+                </div>
+              </div>
+
+              {/* Dropdown content */}
+              {isOpenAIChatBox && (
+                <div className="AI-advisor-content">
+                  <section className="mb-4">
+                    <p className="title-filter-chatbox">Profile</p>
+                    <hr className="divider" />
+                    {/* <div>
+                      <h3> Products Suggestion By ChatBot AI</h3>
+                    </div> */}
+                    <form className="w-100 mt-3" onSubmit={handleUserInfo}>
+                      <div className="w-100 d-flex align-items-center justify-content-between gap-3">
+                        <div className="w-50">
+                          <div className="mb-3 d-flex align-items-center justify-content-between">
+                            <label for="userAge" className="form-label fs-6">
+                              Age
+                            </label>
+                            <input
+                              id="userAge"
+                              className="form-control w-50"
+                              placeholder="20"
+                              type="number"
+                              value={age}
+                              min="1"
+                              onChange={(event) => {
+                                setAge(event.target.value);
+                              }}
+                              required
+                            />
+                          </div>
+                          <div className="mb-3 d-flex align-items-center justify-content-between gap-2">
+                            <label for="userGender" className=" form-label fs-6">
+                              Gender
+                            </label>
+                            <select
+                              id="userGender"
+                              className="form-select form-select-sm w-50"
+                              required
+                              value={gender}
+                              onChange={(event) => setGender(event.target.value)}
+                            >
+                              <option value="male">Male</option>
+                              <option value="female">Female</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="w-50">
+                          <div className="w-100 mb-3 d-flex align-items-center gap-2 justify-content-between">
+                            <label for="userWeight" className="form-label fs-6">
+                              Weight (kg)
+                            </label>
+                            <input
+                              id="userWeight"
+                              className="form-control w-50"
+                              placeholder="60"
+                              type="number"
+                              min="1"
+                              value={weight}
+                              onChange={(event) => {
+                                setWeight(event.target.value);
+                              }}
+                              required
+                            />
+                          </div>
+                          <div className="w-100 mb-3 d-flex align-items-center justify-content-between gap-2">
+                            <label for="userHeight" className="form-label fs-6">
+                              Height (cm)
+                            </label>
+                            <input
+                              id="userHeight"
+                              className="form-control w-50"
+                              min="10"
+                              placeholder="170"
+                              type="number"
+                              value={height}
+                              onChange={(event) => {
+                                setHeight(event.target.value);
+                              }}
+                              required
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className="mb-3 d-flex align-items-center justify-content-between gap-2">
-                        <label for="userGender" className=" form-label fs-6">
-                          Gender
+                      <div className="w-100 d-flex align-items-center justify-content-between gap-2">
+                        <label for="userGoal" className=" form-label fs-6">
+                          Goal
                         </label>
                         <select
-                          id="userGender"
+                          id="userGoal"
                           className="form-select form-select-sm w-50"
                           required
-                          value={gender}
-                          onChange={(event) => setGender(event.target.value)}
+                          value={goal}
+                          onChange={(event) => setGoal(event.target.value)}
                         >
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
+                          <option value="loseWeight">Lose weight</option>
+                          <option value="gainWeight">Gain weight</option>
+                          <option value="maintainWeight">Maintain weight</option>
+                          <option value="none">None</option>
                         </select>
+                        <button className="btn btn-primary" type="submit">
+                          Submit
+                        </button>
                       </div>
-                    </div>
-                    <div className="w-50">
-                      <div className="w-100 mb-3 d-flex align-items-center gap-2 justify-content-between">
-                        <label for="userWeight" className="form-label fs-6">
-                          Weight (kg)
-                        </label>
-                        <input
-                          id="userWeight"
-                          className="form-control w-50"
-                          placeholder="60"
-                          type="number"
-                          min="1"
-                          value={weight}
-                          onChange={(event) => {
-                            setWeight(event.target.value);
-                          }}
-                          required
-                        />
-                      </div>
-                      <div className="w-100 mb-3 d-flex align-items-center justify-content-between gap-2">
-                        <label for="userHeight" className="form-label fs-6">
-                          Height (cm)
-                        </label>
-                        <input
-                          id="userHeight"
-                          className="form-control w-50"
-                          min="10"
-                          placeholder="170"
-                          type="number"
-                          value={height}
-                          onChange={(event) => {
-                            setHeight(event.target.value);
-                          }}
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-100 d-flex align-items-center justify-content-between gap-2">
-                    <label for="userGoal" className=" form-label fs-6">
-                      Goal
-                    </label>
-                    <select
-                      id="userGoal"
-                      className="form-select form-select-sm w-50"
-                      required
-                      value={goal}
-                      onChange={(event) => setGoal(event.target.value)}
+                    </form>
+                  </section>
+                  <section className="container p-0 w-100">
+                    <p className="title-filter-chatbox">ChatBox</p>
+                    <hr className="divider" />
+
+                    <ul
+                      ref={chatParent}
+                      className="list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
+                      style={{ height: "500px" }}
                     >
-                      <option value="loseWeight">Lose weight</option>
-                      <option value="gainWeight">Gain weight</option>
-                      <option value="maintainWeight">Maintain weight</option>
-                      <option value="none">None</option>
-                    </select>
+                      {messages && messages.length > 0 ? (
+                        messages.map((m, index) => (
+                          <li
+                            key={m.id || index}
+                            className={
+                              m.role === "user"
+                                ? "d-flex mb-3"
+                                : "d-flex flex-row-reverse mb-3"
+                            }
+                          >
+                            <div
+                              className={`p-3 rounded-3 shadow-sm ${
+                                m.role === "user"
+                                  ? "bg-primary text-white"
+                                  : "bg-secondary text-white"
+                              }`}
+                            >
+                              <p className="mb-0 fs-6">
+                                {handleNewlines(m.content)}
+                              </p>
+                            </div>
+                          </li>
+                        ))
+                      ) : (
+                        <p className="mb-0 fs-6">
+                          If you want me to recommend products based on your health,
+                          please fill out the form above now.
+                        </p>
+                      )}
+                    </ul>
+                  </section>
+                  <form
+                    className="d-flex align-items-center"
+                    onSubmit={handleSubmit}
+                  >
+                    <input
+                      className="form-control flex-1 me-2"
+                      placeholder="Type your question here..."
+                      type="text"
+                      value={input}
+                      onChange={(event) => {
+                        setInput(event.target.value);
+                      }}
+                    />
                     <button className="btn btn-primary" type="submit">
                       Submit
                     </button>
-                  </div>
-                </form>
-              </section>
-              <section className="container p-0 w-100">
-                <ul
-                  ref={chatParent}
-                  className="list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
-                  style={{ height: "500px" }}
-                >
-                  {messages && messages.length > 0 ? (
-                    messages.map((m, index) => (
-                      <li
-                        key={m.id || index}
-                        className={
-                          m.role === "user"
-                            ? "d-flex mb-3"
-                            : "d-flex flex-row-reverse mb-3"
-                        }
-                      >
-                        <div
-                          className={`p-3 rounded-3 shadow-sm ${
-                            m.role === "user"
-                              ? "bg-primary text-white"
-                              : "bg-secondary text-white"
-                          }`}
-                        >
-                          <p className="mb-0 fs-6">
-                            {handleNewlines(m.content)}
-                          </p>
-                        </div>
-                      </li>
-                    ))
-                  ) : (
-                    <p className="mb-0 fs-6">
-                      If you want me to recommend products based on your health,
-                      please fill out the form above now.
-                    </p>
-                  )}
-                </ul>
-              </section>
-              <form
-                className="d-flex align-items-center"
-                onSubmit={handleSubmit}
-              >
-                <input
-                  className="form-control flex-1 me-2"
-                  placeholder="Type your question here..."
-                  type="text"
-                  value={input}
-                  onChange={(event) => {
-                    setInput(event.target.value);
-                  }}
-                />
-                <button className="btn btn-primary" type="submit">
-                  Submit
-                </button>
-              </form>
-              <Button
-                variant="contained"
-                className="mt-2 w-100"
-                size="small"
-                color="error"
-                onClick={deleteMessage}
-              >
-                Remove all messages
-              </Button>
-            </div>
+                  </form>
+                  <Button
+                    variant="contained"
+                    className="mt-2 w-100"
+                    size="small"
+                    color="error"
+                    onClick={deleteMessage}
+                  >
+                    Remove all messages
+                  </Button>
+                </div>
               )}
               
               {/* END DROPDOWN CONTENT */}

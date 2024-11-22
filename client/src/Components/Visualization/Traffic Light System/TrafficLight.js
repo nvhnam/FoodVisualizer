@@ -10,7 +10,7 @@ const TrafficLight = ({
   productId = null,
   showText = true,
   mainPage = false,
-  theWidth = "36rem",
+  theWidth = "",
 }) => {
   if (!productId) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -55,13 +55,15 @@ const TrafficLight = ({
               <ListGroup
                 horizontal
                 // style={{ height: "10rem", marginLeft: "2rem" }}
-                className="mb-3 d-flex gap-2"
+                // className="mb-3 d-flex gap-1"
+                className="nutrition-list"
               >
                 {Object.entries(perDisplay).map(
                   ([label, percentage], index) => (
                     <ListGroup.Item
                       key={label}
-                      className="item-color p-1 rounded px-1 py-1"
+                      // className="item-color p-1 rounded px-1 py-1"
+                      className="nutrition-item"
                       style={{
                         backgroundColor: getColor(
                           label,
@@ -72,19 +74,26 @@ const TrafficLight = ({
                         ),
                       }}
                     >
-                      <h5 className="text-dark fs-6 text-center">{label}</h5>
-                      <h4
+                      <h6
+                        // className="text-dark fs-6 text-center"
+                        className="nutrition-name"
+                      >{label}</h6>
+                      <h6
                         // style={{
                         //   marginTop: "1rem",
                         // }}
-                        className="text-dark fs-6 text-center"
+                        // className="text-dark fs-6 text-center"
+                        className="nutrition-amount"
                       >
                         {wDisplay[label]}g
-                      </h4>
-                      <hr className="my-2 w-100"></hr>
-                      <h4 className="text-dark fs-6 text-center">
+                      </h6>
+                      {/* <hr className="my-2 w-100"></hr> */}
+                      <h6 
+                        className="nutrition-percentage"
+                        // className="text-dark fs-6 text-center"
+                      >
                         {percentage}%
-                      </h4>
+                      </h6>
                     </ListGroup.Item>
                   )
                 )}

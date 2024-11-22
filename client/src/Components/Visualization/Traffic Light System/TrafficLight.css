@@ -34,3 +34,64 @@
   color: black;
   text-align: center;
 }
+
+.traf-lgt {
+  overflow: hidden;
+  width: 100%;
+}
+
+.nutrition-list {
+  /* align-items: center; */
+  justify-content: space-between;
+  display: flex;
+  /* gap: 5px; */
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  
+}
+
+.nutrition-item {
+  font-family: 'Montserrat', sans-serif !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  position: relative !important;
+  padding: 6px 0 !important;
+  width: 24%;
+  border-radius: calc(10px + 0.3vw) !important;
+}
+
+.traf-lgt .nutrition-name {
+  color: var(--color-black-1-1st);
+  font-size: calc(7px + 0.15vw);
+  font-weight: 400;
+  align-items: center;
+  margin-bottom: 5px;
+} 
+
+.traf-lgt .nutrition-amount {
+  color: var(--color-black-1-1st);
+  font-size: calc(7px + 0.4vw);
+  font-weight: 500;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.traf-lgt .nutrition-percentage {
+  color: var(--color-black-1-1st);
+  background-color: var(--color-acent-1-begie-1st);
+  font-size: calc(7px + 0.2vw);
+  font-weight: 400;
+  padding: calc(2px + 0.1vw) 0rem;
+  border-radius: calc(10px + 0.5vw);
+  width: 80%;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+} 
+

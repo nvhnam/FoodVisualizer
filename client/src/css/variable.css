@@ -1,0 +1,22 @@
+:root {
+    /* COLOR */
+    --color-primary-1-green-1st: #B3CC57;
+    --color-primary-1-green-2nd: #7D9F00;
+    --color-primary-1-green-3rd: #D2E296;
+    --color-secondary-1-orange-1st: #D89834;
+    --color-acent-1-begie-1st: #FBF4EA;
+    --color-acent-1-begie-2nd: #FDEED8;
+    --color-grey-1-1st: #857D72;
+    --color-grey-1-2nd: #72706C;
+    --color-grey-1-3rd: #CDCDCD;
+    --color-black-1-1st: #000000;
+    --color-black-1-2nd: #494949;
+    --color-NutriColor-Green: #89C22E;
+    --color-NutriColor-Yellow: #FECB02;
+    --color-NutriColor-Red: #E63E11;
+
+    /* EFFECT */
+    --effect-textEffect-shadow: 0px 4px 10px rgba(0, 0, 0, 0.80);
+    --effect-imgEffect-shadow: 2px 3px 9px rgba(0, 0, 0, 0.50);
+    --effect-cardProduct-shadow: 1px 1px 6px rgba(0, 0, 0, 0.25);
+}

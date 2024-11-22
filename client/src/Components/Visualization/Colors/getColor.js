@@ -24,7 +24,7 @@ const getColor = (
   //  || thresholds.g;
 
   let nutrient = label.toLowerCase();
-  let color = "#7BC35F";
+  let color = "#89C22E";
 
   // console.log(
   //   `Nutrient: ${nutrient}, ValuePer100g: ${valuePer100g}, Thresholds:`,
@@ -38,7 +38,7 @@ const getColor = (
     if (valuePer100g > unitThresholds[nutrient]["HIGH_100G"] || isHighPortion) {
       color = "#F15829";
     } else if (valuePer100g > unitThresholds[nutrient]["LOW"]) {
-      color = "#FBAF3E";
+      color = "#FECB02";
     }
   }
 
