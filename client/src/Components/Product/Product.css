@@ -163,6 +163,8 @@
 /* General container styling */
 .AI-advisor-container {
   width: calc(450px + 2vw);
+  max-width: 100%;
+  height: auto;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -172,6 +174,19 @@
   transition: bottom 0.3s ease;
   z-index: 1000;
   border: none;
+}
+
+@media screen and (min-height: 600px) and (max-height: 1200px) { 
+  .AI-advisor-container {
+    transform: scale(0.7) translateY(20%);
+    /* transform-origin: bottom center; */
+    will-change: transform;
+  }
+
+  .chat-box-frame {
+    height: 400px !important;
+    will-change: height;
+  }
 }
 
 /* Default position when closed */
@@ -243,9 +258,12 @@
 
 /* Content (Dropdown) styling */
 .AI-advisor-content {
+  flex: 1;
+  overflow-y: auto;
   background-color: var(--color-acent-1-begie-2nd); /* Light beige background */
   padding: 15px;
   animation: slideDown 0.3s ease-out;
+  box-sizing: border-box;
 }
 
 .title-filter-chatbox {

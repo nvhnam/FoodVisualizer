@@ -1490,7 +1490,7 @@ const Product = ({ isChecked, isToggle }) => {
 
                     <ul
                       ref={chatParent}
-                      className="list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
+                      className="chat-box-frame list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
                       style={{ height: "500px" }}
                     >
                       {messages && messages.length > 0 ? (
