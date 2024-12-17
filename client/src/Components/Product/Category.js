@@ -115,6 +115,11 @@ const Category = ({ onSelectCategory }) => {
       <Dropdown.Item
         key={index}
         onClick={() => handleCategorySelect(category.level_0)}
+        style={
+          {
+            // backgroundColor: "#FDEED8",
+          }
+        }
       >
         {category.level_0}
       </Dropdown.Item>
@@ -122,7 +127,11 @@ const Category = ({ onSelectCategory }) => {
   };
 
   return (
-    <Dropdown title="Categories" trigger="hover">
+    <Dropdown
+      title="Categories"
+      trigger="hover"
+      // style={{ backgroundColor: "#FDEED8" }}
+    >
       {renderLevel0Dropdowns(categories)}
     </Dropdown>
   );

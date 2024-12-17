@@ -1,37 +1,48 @@
 import React from "react";
 import "./MainHome.css";
 import foodparamid from "../../asset/pyramid.png";
+import trafficLight from "../../asset/trafficLight.png";
 import { Link } from "react-router-dom";
 
 const Carousel = () => {
   return (
     <div className="main-home">
       <div className="left_main-home">
-        <h3 className="animate__animated animate__fadeInUp">
-          Discover Key Nutrients
+        <h3
+          className="animate__animated animate__fadeInUp"
+          style={{ color: "#D89834" }}
+        >
+          Explore the Power of Nutrition
         </h3>
         <h1 className="animate__animated animate__fadeInUp animate__delay-1s">
-          Empowering Health
+          Make Smarter Food Choices with
         </h1>
         <h1 className="animate__animated animate__fadeInUp animate__delay-1s">
-          through
-        </h1>
-        <h1 className="animate__animated animate__fadeInUp animate__delay-1s">
-          Nutrient Awareness
+          <span style={{ color: "#D89834" }}>Nutri</span>
+          <span style={{ color: "black" }}>Guide</span>
         </h1>
         <div className="desciption_main-home">
           <ul className="animate__animated animate__fadeInUp animate__delay-2s">
             <li>
-              <i className="las la-check" />
-              Navigate Your Way to Healthier Eating Habits
+              <i
+                className="las la-check"
+                style={{ backgroundColor: "#D89834" }}
+              />
+              Identify Healthier Options at a Glance
             </li>
             <li>
-              <i className="las la-check" />
-              Enhancing Your Food Choices with Our Color-Coded System
+              <i
+                className="las la-check"
+                style={{ backgroundColor: "#D89834" }}
+              />
+              Take Control of Your Diet and Well-Being
             </li>
           </ul>
           <Link to="/product-list">
-            <button className="btn-quote animate__animated animate__fadeInUp animate__delay-3s">
+            <button
+              className="btn-quote animate__animated animate__fadeInUp animate__delay-3s"
+              style={{ backgroundColor: "#D89834" }}
+            >
               GET STARTED
             </button>
           </Link>
@@ -39,7 +50,7 @@ const Carousel = () => {
       </div>
       <div className="right_main-home">
         <div className="main-home__img animate__animated animate__fadeInUp animate__delay-2s">
-          <img src={foodparamid} alt="Food Healthy Paramid" />
+          <img src={trafficLight} alt="Food Healthy Paramid" />
         </div>
       </div>
     </div>

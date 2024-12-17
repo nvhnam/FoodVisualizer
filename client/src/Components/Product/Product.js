@@ -1168,7 +1168,10 @@ const Product = ({ isChecked, isToggle }) => {
 
           <div className="container-fluid">
             <div className="d-flex justify-content-between align-items-center">
-              <div className="nav-search">
+              <div
+                className="nav-search"
+                style={{ outlineColor: "#7D9F00", borderColor: "#7D9F00" }}
+              >
                 <div className="form-outline" data-mdb-input-init>
                   <MDBInput
                     type="text"
@@ -1179,6 +1182,7 @@ const Product = ({ isChecked, isToggle }) => {
                     value={searchTerm}
                     onChange={handleSearchChange}
                     onKeyDown={handleKeyDown}
+                    style={{ outlineColor: "#7D9F00", borderColor: "#7D9F00" }}
                   />
                   {searchTerm !== "" && (
                     <div style={{ maxHeight: "160px", overflowY: "auto" }}>
@@ -1213,6 +1217,11 @@ const Product = ({ isChecked, isToggle }) => {
                   id="flexSwitchCheckChecked"
                   checked={isChecked}
                   onChange={isToggle}
+                  style={{
+                    backgroundColor: isChecked ? "#D89834" : "",
+                    borderColor: isChecked ? "#D89834" : "",
+                    color: isChecked ? "#D89834" : "",
+                  }}
                 />
                 <label
                   className="form-check-label"
@@ -1316,10 +1325,17 @@ const Product = ({ isChecked, isToggle }) => {
                           // color="success"
                           // size="medium"
                           // className="px-5 py-2 mr-3"
-                          className="button-primary button-add-to-cart"
+                          className="button-primary button-add-to-cart text-center d-flex align-items-center justify-content-center"
                           onClick={() => handleAddToCart(productItem)}
                         >
-                          Buy
+                          <span>
+                            <i
+                              style={{
+                                fontSize: "17px",
+                              }}
+                              className="fa-solid fa-cart-shopping"
+                            ></i>
+                          </span>
                         </Button>
                       </div>
                     </Card>
@@ -1417,6 +1433,10 @@ const Product = ({ isChecked, isToggle }) => {
                                 setAge(event.target.value);
                               }}
                               required
+                              style={{
+                                backgroundColor: "#FBF4EA",
+                                borderColor: "#7D9F00",
+                              }}
                             />
                           </div>
                           <div className="mb-3 d-flex align-items-center justify-content-between gap-2">
@@ -1434,6 +1454,10 @@ const Product = ({ isChecked, isToggle }) => {
                               onChange={(event) =>
                                 setGender(event.target.value)
                               }
+                              style={{
+                                backgroundColor: "#FBF4EA",
+                                borderColor: "#7D9F00",
+                              }}
                             >
                               <option value="male">Male</option>
                               <option value="female">Female</option>
@@ -1456,6 +1480,10 @@ const Product = ({ isChecked, isToggle }) => {
                                 setWeight(event.target.value);
                               }}
                               required
+                              style={{
+                                backgroundColor: "#FBF4EA",
+                                borderColor: "#7D9F00",
+                              }}
                             />
                           </div>
                           <div className="w-100 mb-3 d-flex align-items-center justify-content-between gap-2">
@@ -1472,6 +1500,10 @@ const Product = ({ isChecked, isToggle }) => {
                               onChange={(event) => {
                                 setHeight(event.target.value);
                               }}
+                              style={{
+                                backgroundColor: "#FBF4EA",
+                                borderColor: "#7D9F00",
+                              }}
                               required
                             />
                           </div>
@@ -1487,6 +1519,10 @@ const Product = ({ isChecked, isToggle }) => {
                           required
                           value={goal}
                           onChange={(event) => setGoal(event.target.value)}
+                          style={{
+                            backgroundColor: "#FBF4EA",
+                            borderColor: "#7D9F00",
+                          }}
                         >
                           <option value="loseWeight">Lose weight</option>
                           <option value="gainWeight">Gain weight</option>
@@ -1495,8 +1531,15 @@ const Product = ({ isChecked, isToggle }) => {
                           </option>
                           <option value="none">None</option>
                         </select>
-                        <button className="btn btn-primary" type="submit">
-                          Submit
+                        <button
+                          className="btn btn-primary"
+                          type="submit"
+                          style={{
+                            backgroundColor: "#D89834",
+                            fontSize: "15px",
+                          }}
+                        >
+                          Set
                         </button>
                       </div>
                     </form>
@@ -1507,8 +1550,8 @@ const Product = ({ isChecked, isToggle }) => {
 
                     <ul
                       ref={chatParent}
-                      className="chat-box-frame list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
-                      style={{ height: "500px" }}
+                      className="chat-box-frame list-unstyled p-3 rounded-3 border-none outline-none shadow-none shadow-sm overflow-auto"
+                      style={{ height: "500px", backgroundColor: "#FDEED8" }}
                     >
                       {messages && messages.length > 0 ? (
                         messages.map((m, index) => (
@@ -1521,11 +1564,11 @@ const Product = ({ isChecked, isToggle }) => {
                             }
                           >
                             <div
-                              className={`p-3 rounded-3 shadow-sm ${
-                                m.role === "user"
-                                  ? "bg-primary text-white"
-                                  : "bg-secondary text-white"
-                              }`}
+                              className={`p-3 rounded-3 shadow-sm`}
+                              style={{
+                                backgroundColor:
+                                  m.role === "user" ? "#D2E296" : "#FBF4EA",
+                              }}
                             >
                               <p className="mb-0 fs-6">
                                 {handleNewlines(m.content)}
@@ -1554,8 +1597,15 @@ const Product = ({ isChecked, isToggle }) => {
                         setInput(event.target.value);
                       }}
                     />
-                    <button className="btn btn-primary" type="submit">
-                      Submit
+                    <button
+                      className="btn btn-primary"
+                      type="submit"
+                      style={{ backgroundColor: "#D89834" }}
+                    >
+                      <i
+                        style={{ fontSize: "14px" }}
+                        class="fa-solid fa-paper-plane"
+                      ></i>
                     </button>
                   </form>
                   <Button

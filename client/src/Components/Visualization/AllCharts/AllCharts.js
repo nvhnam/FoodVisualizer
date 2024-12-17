@@ -136,22 +136,21 @@ export const AllCharts = () => {
           />
         </Col>
         <Col>
-          <PolarChart
+          {/* <PolarChart
+            productId={productId}
+            showPerContainer={showPerContainer}
+          /> */}
+          <TrafficLight
             productId={productId}
             showPerContainer={showPerContainer}
           />
         </Col>
       </Row>
       <Row className="mt-4">
-        <Col>
-          <PieChart productId={productId} showPerContainer={showPerContainer} />
-        </Col>
-        <Col>
-          <TrafficLight
-            productId={productId}
-            showPerContainer={showPerContainer}
-          />
-        </Col>
+        {/* <Col> */}
+        <PieChart productId={productId} showPerContainer={showPerContainer} />
+        {/* </Col>
+        <Col></Col> */}
       </Row>
       <Row className="mt-3">
         <Col>

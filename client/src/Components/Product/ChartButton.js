@@ -57,28 +57,31 @@ const ChartButton = ({ productId }) => {
     <div>
       <Stack direction="row" spacing={2}>
         <IconButton
-          color="warning"
+          style={{ color: "#7D9F00" }}
+          // color="warning"
           size="large"
           onClick={() => handleShow("bar")}
         >
           <BarChartTwoToneIcon fontSize="large" />
         </IconButton>
         <IconButton
-          color="warning"
+          // color="warning"
+          style={{ color: "#7D9F00" }}
           size="large"
           onClick={() => handleShow("pie")}
         >
           <PieChartOutlineTwoToneIcon fontSize="large" />
         </IconButton>
-        <IconButton
+        {/* <IconButton
           color="warning"
           size="large"
           onClick={() => handleShow("polar")}
         >
           <TrackChangesSharpIcon fontSize="large" />
-        </IconButton>
+        </IconButton> */}
         <IconButton
-          color="warning"
+          // color="warning"
+          style={{ color: "#7D9F00" }}
           size="large"
           onClick={() => handleShow("traffic")}
         >
@@ -87,7 +90,8 @@ const ChartButton = ({ productId }) => {
         <Link to={`/dv/${productId}`} style={{ marginTop: "0.5rem" }}>
           <Button
             size="large"
-            color="warning"
+            style={{ borderColor: "#7D9F00", color: "#7D9F00" }}
+            // color="warning"
             variant="outlined"
             onClick={handleAllClick}
           >

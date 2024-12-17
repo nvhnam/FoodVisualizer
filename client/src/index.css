@@ -1,4 +1,4 @@
-@import url('./css/index.css');
+@import url("./css/index.css");
 
 /* body {
   margin: 0;
@@ -18,11 +18,16 @@ code {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif ;
+  font-family: "Poppins", sans-serif;
 }
 
-h1, h2, h3, h4, h5, button {
-  font-family: 'Poppins', sans-serif !important;
+h1,
+h2,
+h3,
+h4,
+h5,
+button {
+  font-family: "Poppins", sans-serif !important;
 }
 
 body {

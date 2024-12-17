@@ -317,20 +317,25 @@ const ProductDetail = ({ isChecked }) => {
       >
         {isChecked ? (
           <>
-            <h3>How much nutrition is in this food?</h3>
+            <h3 style={{ color: "#D89834" }}>
+              How much nutrition is in this food?
+            </h3>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <ChartButton productId={product.product_id} />
             </div>
           </>
         ) : (
-          <h3>Our Digital Services</h3>
+          <h3 style={{ color: "#D89834" }}>Our Digital Services</h3>
         )}
 
         <div
           className="pd_content d-md-flex d-sm-block align-items-start flex-row justify-content-center w-100"
           style={{ maxWidth: "1300px", height: "480px" }}
         >
-          <div className="pd_item w-25 p-0 rounded">
+          <div
+            style={{ backgroundColor: "#FDEED8" }}
+            className="pd_item w-25 p-0 rounded"
+          >
             <img
               src={product.img}
               className="rounded-top w-100 h-100px mb-3"
@@ -358,12 +363,15 @@ const ProductDetail = ({ isChecked }) => {
               <div className="d-flex w-50 pr-2 justify-content-center">
                 <Button
                   variant="contained"
-                  color="success"
+                  // color="success"
                   size="medium"
-                  className="px-5 py-2 mr-3"
+                  className="px-5 text-center py-2 mr-3"
                   onClick={handleAddToCart}
+                  style={{ backgroundColor: "#D89834" }}
                 >
-                  Buy
+                  <span className="text-center mx-auto">
+                    <i className="fa-solid fa-cart-shopping text-center"></i>
+                  </span>
                 </Button>
               </div>
             </div>
@@ -374,7 +382,7 @@ const ProductDetail = ({ isChecked }) => {
             )}
           </div>
 
-          <div className="pd_item">
+          <div style={{ backgroundColor: "#FDEED8" }} className="pd_item">
             <h3 className="text-center">Ingredients:</h3>
             <div className="w-100 h-75 d-flex flex-column justify-content-between">
               <p>{product.ingredients}</p>
@@ -391,12 +399,13 @@ const ProductDetail = ({ isChecked }) => {
                 <section className="container p-0 w-100">
                   <ul
                     ref={chatParent}
-                    className="list-unstyled p-3 bg-light rounded-3 shadow-sm overflow-auto"
+                    className="list-unstyled p-3 rounded-3 shadow-sm overflow-auto"
                     style={{
                       height: "400px",
                       maxWidth: "100%",
                       overflowY: "auto",
                       overflowX: "hidden",
+                      backgroundColor: "#FDEED8",
                     }}
                   >
                     {messages.map((m, index) => (
@@ -409,11 +418,11 @@ const ProductDetail = ({ isChecked }) => {
                         }
                       >
                         <div
-                          className={`p-3 rounded-3 shadow-sm ${
-                            m.role === "user"
-                              ? "bg-primary text-white"
-                              : "bg-secondary text-white"
-                          }`}
+                          className={`p-3 rounded-3 shadow-sm`}
+                          style={{
+                            backgroundColor:
+                              m.role === "user" ? "#D2E296" : "#FBF4EA",
+                          }}
                         >
                           <p className="mb-0 fs-6">
                             {handleNewlines(m.content)}
@@ -437,8 +446,15 @@ const ProductDetail = ({ isChecked }) => {
                         setInput(event.target.value);
                       }}
                     />
-                    <button className="btn btn-primary" type="submit">
-                      Submit
+                    <button
+                      style={{ backgroundColor: "#D89834" }}
+                      className="btn btn-primary"
+                      type="submit"
+                    >
+                      <i
+                        style={{ fontSize: "14px" }}
+                        class="fa-solid fa-paper-plane"
+                      ></i>
                     </button>
                   </form>
                   <Button

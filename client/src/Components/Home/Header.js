@@ -43,7 +43,7 @@ const Header = () => {
     <div className="header-container">
       <Navbar
         fixed="top"
-        style={{ padding: "0.8rem", background: "white" }}
+        style={{ padding: "0.8rem", background: "#FBF4EA" }}
         collapseOnSelect
         expand="lg"
       >
@@ -58,14 +58,17 @@ const Header = () => {
             </Navbar.Brand>
             <Link to="/" style={{ textDecoration: "none" }}>
               {" "}
-              <h1 className="fs-3">NutriGuide </h1>
+              <h1 className="fs-3">
+                <span style={{ color: "#D89834" }}>Nutri</span>
+                <span style={{ color: "black" }}>Guide</span>
+              </h1>
             </Link>
           </div>
 
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse
             id="responsive-navbar-nav"
-            style={{ marginLeft: "2rem" }}
+            style={{ marginLeft: "8rem" }}
           >
             <Nav className="me-auto">
               <Nav.Link href="#about" onClick={scrollToAbout}>
@@ -77,12 +80,12 @@ const Header = () => {
 
             <Nav className={`right-navbar ${loggedIn && "w-25"}`}>
               {loggedIn ? (
-                <div className="d-flex h-100 w-100 justify-content-between align-items-center gap-1">
+                <div className="d-flex h-100 w-100 justify-content-between align-items-center gap-2">
                   <Nav.Link className="d-flex gap-1" href="/cart">
                     <span>
                       <i className="fa-solid fa-cart-shopping"></i>
                     </span>
-                    Cart
+                    {/* Cart */}
                   </Nav.Link>
                   <Nav.Link
                     style={{ pointerEvents: "none" }}
@@ -96,8 +99,9 @@ const Header = () => {
 
                   <Button
                     onClick={handleLogout}
-                    className="px-4 py-n2 "
+                    className="px-5 py-n1 "
                     size="small"
+                    style={{ backgroundColor: "#D89834", color: "black" }}
                     variant="contained"
                   >
                     Logout
