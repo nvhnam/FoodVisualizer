@@ -445,6 +445,10 @@ const ProductDetail = ({ isChecked }) => {
                       onChange={(event) => {
                         setInput(event.target.value);
                       }}
+                      style={{
+                        backgroundColor: "#FBF4EA",
+                        borderColor: "#7D9F00",
+                      }}
                     />
                     <button
                       style={{ backgroundColor: "#D89834" }}

@@ -1596,6 +1596,10 @@ const Product = ({ isChecked, isToggle }) => {
                       onChange={(event) => {
                         setInput(event.target.value);
                       }}
+                      style={{
+                        backgroundColor: "#FBF4EA",
+                        borderColor: "#7D9F00",
+                      }}
                     />
                     <button
                       className="btn btn-primary"
