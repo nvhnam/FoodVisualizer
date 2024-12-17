@@ -2,6 +2,7 @@ import React from "react";
 import "./About.css";
 import myCheck from "../../asset/check-mark.png";
 import myAbout from "../../asset/aboutUs.png";
+import systemFlow from "../../asset/SystemFlow.jpg";
 import { useScroll } from "./ScrollContext";
 import { Link } from "react-router-dom";
 
@@ -23,7 +24,7 @@ const About = () => {
           }}
         >
           <div className="img-about">
-            <img src={myAbout} alt="imgAbout" />
+            <img src={systemFlow} alt="imgAbout" />
             <div className="about_overlay"></div>
           </div>
         </div>

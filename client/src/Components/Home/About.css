@@ -9,15 +9,17 @@
 }
 .about_content {
   display: flex;
+  align-items: center;
 }
 .left_about {
   width: 50%;
   position: absolute;
-  left: -8%;
+  /* left: -8%; */
+  margin-left: 50px;
 }
 .img-about img {
-  width: 100%;
-  border-radius: 0 100px 100px 0;
+  width: 80%;
+  border-radius: 7px;
   margin-top: 60px;
 }
 .right_about {
