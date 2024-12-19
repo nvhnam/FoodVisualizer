@@ -46,7 +46,7 @@ function PolarChart({ showPerContainer }) {
   const unitDisplay = showPerContainer ? packUnit : servingUnit;
 
   return (
-    <div style={{ width: "38rem" }}>
+    <div style={{ width: "38rem", backgroundColor: "#FBF4EA" }}>
       <h3 className="inf" style={{ textAlign: "center" }}>
         Each {textDisplay} ({sizeDisplay} {unitDisplay}) contains
       </h3>

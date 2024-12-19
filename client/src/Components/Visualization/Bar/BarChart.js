@@ -72,7 +72,7 @@ function BarChart({ showPerContainer }) {
   const unitDisplay = showPerContainer ? packUnit : servingUnit;
 
   return (
-    <div style={{ width: "36rem" }}>
+    <div style={{ width: "36rem", backgroundColor: "#FBF4EA" }}>
       <h3 className="inf" style={{ textAlign: "center" }}>
         Each {textDisplay} ({sizeDisplay} {unitDisplay}) contains
       </h3>

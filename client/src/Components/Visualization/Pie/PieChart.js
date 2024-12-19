@@ -29,7 +29,7 @@ function PieChart({ showPerContainer }) {
   const unitDisplay = showPerContainer ? packUnit : servingUnit;
 
   return (
-    <div className="" style={{ width: "36rem" }}>
+    <div className="" style={{ width: "36rem", backgroundColor: "#FBF4EA" }}>
       {perDisplay && wOneHundredGram && wDisplay && unitDisplay && (
         <>
           <h3 className="inf" style={{ textAlign: "center" }}>

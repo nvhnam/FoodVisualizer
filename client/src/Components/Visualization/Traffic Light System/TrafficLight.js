@@ -38,7 +38,10 @@ const TrafficLight = ({
   const unitDisplay = showPerContainer ? packUnit : servingUnit;
 
   return (
-    <div className="traf-lgt" style={{ width: theWidth }}>
+    <div
+      className="traf-lgt"
+      style={{ width: theWidth, backgroundColor: "#FBF4EA" }}
+    >
       {perDisplay &&
         wOneHundredGram &&
         textDisplay &&
@@ -77,7 +80,9 @@ const TrafficLight = ({
                       <h6
                         // className="text-dark fs-6 text-center"
                         className="nutrition-name"
-                      >{label}</h6>
+                      >
+                        {label}
+                      </h6>
                       <h6
                         // style={{
                         //   marginTop: "1rem",
@@ -88,7 +93,7 @@ const TrafficLight = ({
                         {wDisplay[label]}g
                       </h6>
                       {/* <hr className="my-2 w-100"></hr> */}
-                      <h6 
+                      <h6
                         className="nutrition-percentage"
                         // className="text-dark fs-6 text-center"
                       >

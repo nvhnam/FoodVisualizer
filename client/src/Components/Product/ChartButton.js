@@ -72,13 +72,14 @@ const ChartButton = ({ productId }) => {
         >
           <PieChartOutlineTwoToneIcon fontSize="large" />
         </IconButton>
-        {/* <IconButton
-          color="warning"
+        <IconButton
+          // color="warning"
+          style={{ color: "#7D9F00" }}
           size="large"
           onClick={() => handleShow("polar")}
         >
           <TrackChangesSharpIcon fontSize="large" />
-        </IconButton> */}
+        </IconButton>
         <IconButton
           // color="warning"
           style={{ color: "#7D9F00" }}
@@ -107,10 +108,10 @@ const ChartButton = ({ productId }) => {
         dialogClassName={getModalClassName()}
         aria-labelledby="example-custom-modal-styling-title"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton style={{ backgroundColor: "#FBF4EA" }}>
           <Modal.Title id="example-custom-modal-styling-title"></Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ backgroundColor: "#FBF4EA" }}>
           <Row>
             <Col className="chart-container">
               {chartType === "bar" && (
