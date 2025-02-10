@@ -12,16 +12,16 @@ getProduct.get("/product", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-getProduct.get("/product-with-nutrients", async (req, res) => {
-  try {
-    const results = await Product.getAllProductsWithNutrients();
-    // console.log("Test results: ", results);
-    res.json(results);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).send(error.message);
-  }
-});
+// getProduct.get("/product-with-nutrients", async (req, res) => {
+//   try {
+//     const results = await Product.getAllProductsWithNutrients();
+//     // console.log("Test results: ", results);
+//     res.json(results);
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).send(error.message);
+//   }
+// });
 getProduct.get("/product-detail/:productId", async (req, res) => {
   try {
     const { productId } = req.params;
@@ -31,6 +31,27 @@ getProduct.get("/product-detail/:productId", async (req, res) => {
   } catch (error) {
     console.error("Error", error);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+getProduct.get("/product-with-nutrients", async (req, res) => {
+  try {
+    const { fat, saturates, sugars, salt, category } = req.query;
+
+    const filteredProductNutrients = await Product.getFilteredProductNutrients(
+      fat,
+      saturates,
+      sugars,
+      salt,
+      category
+    );
+    // console.log("Filtered product nutrients: ", filteredProductNutrients);
+    res.status(200).json(filteredProductNutrients);
+  } catch (error) {
+    console.error("Can't filter product nutrients", error);
+    res
+      .status(500)
+      .send("Internal Server Error when filtering product nutrients");
   }
 });
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Dropdown } from "rsuite";
@@ -5,7 +6,7 @@ import { Dropdown } from "rsuite";
 const PORT = process.env.REACT_APP_PORT;
 const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 
-const Category = ({ onSelectCategory }) => {
+const Category = ({ onSelectCategory, selectedCategory }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -15,7 +16,7 @@ const Category = ({ onSelectCategory }) => {
           `${URL || `http://localhost:${PORT}`}/categories`
         );
         const uniqueCategories = getUniqueCategories(response.data);
-        // console.log("Filtered products:", response.data);
+        // console.log("Filtered products:", uniqueCategories);
         setCategories(uniqueCategories);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -97,13 +98,17 @@ const Category = ({ onSelectCategory }) => {
 
   const getUniqueCategories = (data) => {
     const uniqueCategorySet = new Set();
-    return data.filter((item) => {
+    const uniqueCategories = data.filter((item) => {
       if (!uniqueCategorySet.has(item.level_0)) {
         uniqueCategorySet.add(item.level_0);
+        // console.log(item.level_0);
+        // setCategories(uniqueCategorySet);
         return true;
       }
       return false;
     });
+
+    return [{ level_0: "All" }, ...uniqueCategories];
   };
 
   const renderLevel0Dropdowns = (categories) => {
@@ -121,6 +126,7 @@ const Category = ({ onSelectCategory }) => {
           }
         }
       >
+        {/* {console.log(category)} */}
         {category.level_0}
       </Dropdown.Item>
     ));
@@ -128,7 +134,7 @@ const Category = ({ onSelectCategory }) => {
 
   return (
     <Dropdown
-      title="Categories"
+      title={selectedCategory}
       trigger="hover"
       // style={{ backgroundColor: "#FDEED8" }}
     >

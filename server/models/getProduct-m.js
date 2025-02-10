@@ -50,7 +50,7 @@ export default class Product {
 
   static async getCategory() {
     try {
-      const query = `SELECT * FROM category`;
+      const query = `SELECT DISTINCT level_0 FROM category`;
       const [results] = await dbPool.query(query);
 
       return results;
@@ -60,46 +60,81 @@ export default class Product {
     }
   }
 
-  static async getProductByIdOrCategory(id, level0) {
-    try {
-      let query = `SELECT * FROM category WHERE 1=1`;
-      const params = [];
+  static async getFilteredProductNutrients(
+    fat,
+    saturates,
+    sugars,
+    salt,
+    category
+  ) {
+    let query = `SELECT product.product_id, product_name, img 
+      FROM product 
+      JOIN nutrient ON product.product_id = nutrient.product_id
+      JOIN category ON product.product_id = category.product_id
+      WHERE 1=1`;
 
-      if (id) {
-        query += ` AND product_id = ?`;
-        params.push(id);
-      } else if (level0) {
-        query += ` AND level_0 = ?`;
-        params.push(level0);
+    const params = [];
+
+    if (fat && fat !== "all") {
+      if (fat === "low") {
+        query += " AND fat < ?";
+        params.push(3);
+      } else if (fat === "medium") {
+        query += " AND fat BETWEEN ? AND ?";
+        params.push(3, 17.5);
+      } else {
+        query += " AND fat >= ?";
+        params.push(17.5);
       }
-
-      console.log("Query:", query);
-      console.log("Params:", params);
-
-      const [results] = await dbPool.query(query, params);
-      return results;
-    } catch (error) {
-      console.error("Error:", error);
-      throw error;
     }
-  }
 
-  static async getAllProductsWithNutrients() {
+    if (saturates && saturates !== "all") {
+      if (saturates === "low") {
+        query += " AND saturates < ?";
+        params.push(1.5);
+      } else if (saturates === "medium") {
+        query += " AND saturates BETWEEN ? AND ?";
+        params.push(1.5, 5);
+      } else {
+        query += " AND saturates >= ?";
+        params.push(5);
+      }
+    }
+
+    if (sugars && sugars !== "all") {
+      if (sugars === "low") {
+        query += " AND sugars < ?";
+        params.push(5);
+      } else if (sugars === "medium") {
+        query += " AND sugars BETWEEN ? AND ?";
+        params.push(5, 22.5);
+      } else {
+        query += " AND sugars >= ?";
+        params.push(22.5);
+      }
+    }
+
+    if (salt && salt !== "all") {
+      if (salt === "low") {
+        query += " AND salt < ?";
+        params.push(0.3);
+      } else if (salt === "medium") {
+        query += " AND salt BETWEEN ? AND ?";
+        params.push(0.3, 1.5);
+      } else {
+        query += " AND salt >= ?";
+        params.push(1.5);
+      }
+    }
+
+    if (category !== "All" && category !== "Category") {
+      query += ` AND category.level_0 = ?`;
+      params.push(category);
+    }
     try {
-      const [products, nutrients] = await Promise.all([
-        dbPool.query("SELECT * FROM product"),
-        dbPool.query("SELECT * FROM nutrient"),
-      ]);
-
-      return products[0].map((product) => {
-        const nutrient = nutrients[0].find(
-          (n) => n.product_id === product.product_id
-        );
-        return {
-          ...product,
-          nutrients: nutrient || {},
-        };
-      });
+      const [results] = await dbPool.query(query, params);
+      // console.log(results);
+      return results;
     } catch (error) {
       console.error("Error:", error);
       throw error;

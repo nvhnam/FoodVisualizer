@@ -27,7 +27,7 @@ const Product = ({ isChecked, isToggle }) => {
   const [foodPerPage] = useState(18);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("Category");
 
   const [fatFilter, setFatFilter] = useState("all");
   const [saturatesFilter, setSaturatesFilter] = useState("all");
@@ -369,9 +369,20 @@ const Product = ({ isChecked, isToggle }) => {
           setProduct(productSuggestionAI);
         } else {
           const response = await axios.get(
-            `${URL || `http://localhost:${PORT}`}/product-with-nutrients`
+            `${URL || `http://localhost:${PORT}`}/product-with-nutrients`,
+            {
+              params: {
+                fat: fatFilter,
+                saturates: saturatesFilter,
+                sugars: sugarsFilter,
+                salt: saltFilter,
+                category: selectedCategory,
+              },
+            }
           );
+
           console.log("Fetched products from server:", response.data);
+          setSearchResults(response.data);
           setProduct(response.data);
         }
 
@@ -382,53 +393,14 @@ const Product = ({ isChecked, isToggle }) => {
     };
 
     fetchProduct();
-  }, [showProductsSuggestion]);
-
-  useEffect(() => {
-    const filterProducts = () => {
-      const filtered = product.filter((item) => {
-        const { nutrients } = item;
-        if (!nutrients) return true;
-        const matchesFat =
-          fatFilter === "all" ||
-          (fatFilter === "low" && nutrients.fat < 3) ||
-          (fatFilter === "medium" &&
-            nutrients.fat >= 3 &&
-            nutrients.fat < 17.5) ||
-          (fatFilter === "high" && nutrients.fat >= 17.5);
-
-        const matchesSaturates =
-          saturatesFilter === "all" ||
-          (saturatesFilter === "low" && nutrients.saturates < 1.5) ||
-          (saturatesFilter === "medium" &&
-            nutrients.saturates >= 1.5 &&
-            nutrients.saturates < 5) ||
-          (saturatesFilter === "high" && nutrients.saturates >= 5);
-
-        const matchesSugars =
-          sugarsFilter === "all" ||
-          (sugarsFilter === "low" && nutrients.sugars < 5) ||
-          (sugarsFilter === "medium" &&
-            nutrients.sugars >= 5 &&
-            nutrients.sugars < 22.5) ||
-          (sugarsFilter === "high" && nutrients.sugars >= 22.5);
-
-        const matchesSalt =
-          saltFilter === "all" ||
-          (saltFilter === "low" && nutrients.salt < 0.3) ||
-          (saltFilter === "medium" &&
-            nutrients.salt >= 0.3 &&
-            nutrients.salt < 1.5) ||
-          (saltFilter === "high" && nutrients.salt >= 1.5);
-
-        return matchesFat && matchesSaturates && matchesSugars && matchesSalt;
-      });
-
-      setSearchResults(filtered);
-    };
-
-    filterProducts();
-  }, [fatFilter, saturatesFilter, sugarsFilter, saltFilter, product]);
+  }, [
+    fatFilter,
+    saltFilter,
+    saturatesFilter,
+    showProductsSuggestion,
+    sugarsFilter,
+    selectedCategory,
+  ]);
 
   useEffect(() => {
     const checkUserInfo = localStorage.getItem("userInfo");
@@ -441,43 +413,6 @@ const Product = ({ isChecked, isToggle }) => {
       setGoal(parsedInfo.goal || "none");
     }
   }, []);
-
-  useEffect(() => {
-    const fetchFilteredProducts = async () => {
-      if (selectedCategory) {
-        try {
-          let api = `${URL || `http://localhost:${PORT}`}/filter`;
-
-          const response = await axios.get(api, {
-            params: {
-              level0: selectedCategory || null,
-            },
-          });
-
-          // console.log("Filtered Response:", response.data);
-
-          const filteredProducts = response.data.map((filteredItem) => {
-            const productImage = product.find(
-              (item) => item.product_id === filteredItem.product_id
-            );
-            return {
-              ...filteredItem,
-              product_name: productImage ? productImage.product_name : null,
-              img: productImage ? productImage.img : null,
-            };
-          });
-          console.log(filteredProducts);
-          setSearchResults(filteredProducts);
-        } catch (error) {
-          console.error("Error fetching filtered products:", error);
-        }
-      } else {
-        setSearchResults([]);
-      }
-    };
-
-    fetchFilteredProducts();
-  }, [selectedCategory, product]);
 
   useEffect(() => {
     const fetchFilteredProductsChatBot = async () => {
@@ -868,7 +803,10 @@ const Product = ({ isChecked, isToggle }) => {
           style={{ marginTop: "7rem" }}
         >
           <div className="select-items w-25">
-            <Category onSelectCategory={handleSelectedCategory} />
+            <Category
+              onSelectCategory={handleSelectedCategory}
+              selectedCategory={selectedCategory}
+            />
             <div style={{ marginBottom: "3.2rem" }}></div>
             {isChecked && (
               <div className="w-100 h-100">
