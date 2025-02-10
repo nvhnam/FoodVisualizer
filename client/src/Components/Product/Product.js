@@ -706,7 +706,10 @@ const Product = ({ isChecked, isToggle }) => {
     }
   };
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleSearchChange = (event) => {
     const term = event.target.value;
