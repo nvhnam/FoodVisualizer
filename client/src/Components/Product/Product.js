@@ -17,6 +17,7 @@ import HeaderSub from "../Home/HeaderSub";
 import TrafficLight from "../Visualization/Traffic Light System/TrafficLight.js";
 import Category from "./Category";
 import "./Product.css";
+import LoadingIndicator from "../Loading/LoadingIndicator";
 
 const PORT = process.env.REACT_APP_PORT;
 const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
@@ -26,6 +27,7 @@ const Product = ({ isChecked, isToggle }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);
   const [foodPerPage] = useState(18);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Category");
@@ -357,6 +359,8 @@ const Product = ({ isChecked, isToggle }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        setLoading(true);
+
         const sortedProductsSuggestion = localStorage.getItem(
           "sortedProductsSuggestion"
         );
@@ -393,6 +397,8 @@ const Product = ({ isChecked, isToggle }) => {
         setSearchTerm("");
       } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -799,6 +805,10 @@ const Product = ({ isChecked, isToggle }) => {
     ));
   };
 
+  // if (loading) {
+  //   return <LoadingIndicator />;
+  // }
+
   return (
     <>
       <div className="product d-flex flex-column align-items-center w-100 h-100 mb-5">
@@ -1176,84 +1186,87 @@ const Product = ({ isChecked, isToggle }) => {
               </div>
             </div>
 
-            <Row className="d-flex  gap-3 mt-2">
-              {currentFood.map((productItem, index) => {
-                return (
-                  <Col
-                    // style={{ marginTop: "1rem" }}
-                    // key={productItem.product_id}
-                    // xs={12}
-                    // sm={6}
-                    md={4}
-                    // lg={3}
-                    // className="w-auto h-auto mx-auto"
-                  >
-                    <Card
-                      style={
-                        {
-                          // width: "18rem",
-                          // maxHeight: "27.5rem",
-                          // minHeight: "20rem",
-                          // height: "100%",
-                          // overflow: "hidden",
-                        }
-                      }
-                      className={`card-product ${
-                        !isChecked ? "no-traffic-light" : ""
-                      }`}
+            {loading ? (
+              <LoadingIndicator />
+            ) : (
+              <Row className="d-flex  gap-3 mt-2">
+                {currentFood.map((productItem, index) => {
+                  return (
+                    <Col
+                      // style={{ marginTop: "1rem" }}
+                      key={productItem.product_id}
+                      // xs={12}
+                      // sm={6}
+                      md={4}
+                      // lg={3}
+                      // className="w-auto h-auto mx-auto"
                     >
-                      <Link to={`/product-detail/${productItem.product_id}`}>
-                        {productItem.img ? (
-                          <Card.Img
-                            variant="top"
-                            src={productItem.img}
-                            style={{ minHeight: "12rem" }}
-                            // className="w-100 h-100 overflow-hidden rounded-top"
-                            className="card-product-img"
-                          />
-                        ) : (
-                          <div
-                            style={{
-                              width: "17rem",
-                              height: "12rem",
-                              backgroundColor: "#e0e0e0",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <span>No Image Available</span>
-                          </div>
-                        )}
-                        <Card.Body
-                          // className="w-100 h-auto d-flex justify-content-center align-items-center"
-                          style={{ padding: "0" }}
-                          className="card-product-container"
-                        >
-                          <div
-                          // className="w-100 h-100 d-flex flex-column  align-items-center gap-2"
-                          >
-                            <Card.Title
-                              className="card-product-title"
-                              title={productItem.product_name}
+                      <Card
+                        style={
+                          {
+                            // width: "18rem",
+                            // maxHeight: "27.5rem",
+                            // minHeight: "20rem",
+                            // height: "100%",
+                            // overflow: "hidden",
+                          }
+                        }
+                        className={`card-product ${
+                          !isChecked ? "no-traffic-light" : ""
+                        }`}
+                      >
+                        <Link to={`/product-detail/${productItem.product_id}`}>
+                          {productItem.img ? (
+                            <Card.Img
+                              variant="top"
+                              src={productItem.img}
+                              style={{ minHeight: "12rem" }}
+                              // className="w-100 h-100 overflow-hidden rounded-top"
+                              className="card-product-img"
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: "17rem",
+                                height: "12rem",
+                                backgroundColor: "#e0e0e0",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
                             >
-                              {truncate(productItem.product_name, 21)}
-                            </Card.Title>
-                            {isChecked && (
-                              <TrafficLight
-                                productId={productItem.product_id}
-                                showText={false}
-                                mainPage={true}
-                                showPerContainer={true}
-                                theWidth="calc(203px + 3vw)"
-                              />
-                            )}
-                          </div>
-                        </Card.Body>
-                      </Link>
-                      <div className="d-flex justify-content-center">
-                        {/* // className="d-flex justify-content-between align-items-center"> */}
-                        {/* <Link
+                              <span>No Image Available</span>
+                            </div>
+                          )}
+                          <Card.Body
+                            // className="w-100 h-auto d-flex justify-content-center align-items-center"
+                            style={{ padding: "0" }}
+                            className="card-product-container"
+                          >
+                            <div
+                            // className="w-100 h-100 d-flex flex-column  align-items-center gap-2"
+                            >
+                              <Card.Title
+                                className="card-product-title"
+                                title={productItem.product_name}
+                              >
+                                {truncate(productItem.product_name, 21)}
+                              </Card.Title>
+                              {isChecked && (
+                                <TrafficLight
+                                  productId={productItem.product_id}
+                                  showText={false}
+                                  mainPage={true}
+                                  showPerContainer={true}
+                                  theWidth="calc(203px + 3vw)"
+                                />
+                              )}
+                            </div>
+                          </Card.Body>
+                        </Link>
+                        <div className="d-flex justify-content-center">
+                          {/* // className="d-flex justify-content-between align-items-center"> */}
+                          {/* <Link
                                 to={`/product-detail/${productItem.product_id}`}
                               >
                                 <Button
@@ -1264,29 +1277,30 @@ const Product = ({ isChecked, isToggle }) => {
                                   View Detail
                                 </Button>
                               </Link> */}
-                        <Button
-                          // variant="contained"
-                          // color="success"
-                          // size="medium"
-                          // className="px-5 py-2 mr-3"
-                          className="button-primary button-add-to-cart text-center d-flex align-items-center justify-content-center"
-                          onClick={() => handleAddToCart(productItem)}
-                        >
-                          <span>
-                            <i
-                              style={{
-                                fontSize: "17px",
-                              }}
-                              className="fa-solid fa-cart-shopping"
-                            ></i>
-                          </span>
-                        </Button>
-                      </div>
-                    </Card>
-                  </Col>
-                );
-              })}
-            </Row>
+                          <Button
+                            // variant="contained"
+                            // color="success"
+                            // size="medium"
+                            // className="px-5 py-2 mr-3"
+                            className="button-primary button-add-to-cart text-center d-flex align-items-center justify-content-center"
+                            onClick={() => handleAddToCart(productItem)}
+                          >
+                            <span>
+                              <i
+                                style={{
+                                  fontSize: "17px",
+                                }}
+                                className="fa-solid fa-cart-shopping"
+                              ></i>
+                            </span>
+                          </Button>
+                        </div>
+                      </Card>
+                    </Col>
+                  );
+                })}
+              </Row>
+            )}
           </div>
 
           {/* AI CHATBOX */}

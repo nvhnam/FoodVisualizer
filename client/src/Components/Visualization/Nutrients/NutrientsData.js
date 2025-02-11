@@ -47,10 +47,10 @@ export const NutrientsData = (productId) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${URL || `http://localhost:${PORT}`}/product-nutrients/${productId}`
+          `${URL || `http://localhost:${PORT}`}/products-nutrients/${productId}`
         );
         const nutrition_data = response.data;
-        // console.log("Fecth single Data: ", nutrition_data);
+        console.log("Fecth single Data: ", nutrition_data);
 
         const packSizeData = split(nutrition_data.pack_size);
         const servingSizeData = split(nutrition_data.serving_size);

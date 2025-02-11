@@ -13,22 +13,10 @@ import DataV from "./Components/Visualization/AllCharts/AllCharts";
 import ProductDetail from "./Components/Product/ProductDetail";
 import Registration from "./Components/Authentication/Registration";
 import LogIn from "./Components/Authentication/LogIn";
-import Loading from "./Components/Loading/Loading";
 import ManagePage from "./Components/Admin/ManagePage";
 import Cart from "./Components/Cart/Cart";
+import LoadingIndicator from "./Components/Loading/LoadingIndicator";
 
-const LoadingIndicator = () => (
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100vh",
-    }}
-  >
-    <Loading />
-  </div>
-);
 function App() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);

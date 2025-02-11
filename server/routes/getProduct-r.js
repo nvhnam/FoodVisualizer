@@ -65,12 +65,29 @@ getProduct.get("/product-nutrients/:productId", async (req, res) => {
     // console.log(productId);
 
     const product = await Product.getProductNutrients(productId);
+    // console.log(`Retrieving product details of ${productId}: `, product);
     res.json(product);
   } catch (error) {
     console.error("Error", error);
     res.status(500).send("Internal Server Error");
   }
 });
+
+getProduct.get("/products-nutrients/:productId", async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    // console.log(productId);
+
+    const product = await Product.getProductsNutrients(productId);
+    // console.log(`Retrieving product details of ${productId}: `, product);
+    res.json(product);
+  } catch (error) {
+    console.error("Error", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 getProduct.get("/categories", async (req, res) => {
   try {
     const categories = await Product.getCategory();

@@ -38,8 +38,23 @@ export default class Product {
   }
   static async getProductNutrients(id) {
     try {
-      const query = `SELECT * FROM nutrient WHERE product_id = ${id}`;
-      const [results] = await dbPool.query(query);
+      const query = `SELECT product.*, nutrient.* FROM product
+      JOIN nutrient ON product.product_id = nutrient.product_id
+      WHERE product.product_id = ?`;
+      const [results] = await dbPool.query(query, [id]);
+
+      return results[0];
+    } catch (error) {
+      console.error("Error:", error);
+      throw error;
+    }
+  }
+
+  static async getProductsNutrients(id) {
+    try {
+      const query = `SELECT nutrient.* FROM nutrient
+      WHERE nutrient.product_id = ?`;
+      const [results] = await dbPool.query(query, [id]);
 
       return results[0];
     } catch (error) {

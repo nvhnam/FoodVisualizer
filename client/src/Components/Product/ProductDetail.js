@@ -7,6 +7,7 @@ import Footer from "../Home/Footer.js";
 import HeaderSub from "../Home/HeaderSub.js";
 import ChartButton from "./ChartButton.js";
 import "./ProductDetail.css";
+import LoadingIndicator from "../Loading/LoadingIndicator.js";
 
 const PORT = process.env.REACT_APP_PORT;
 const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
@@ -19,6 +20,7 @@ const ProductDetail = ({ isChecked }) => {
     productId: "",
   });
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [caloriesCurrent, setCaloriesCurrent] = useState("");
   const [caloriesMaxSuggestion, setCaloriesMaxSuggestion] = useState("");
 
@@ -70,11 +72,12 @@ const ProductDetail = ({ isChecked }) => {
 
   useEffect(() => {
     const fetchProductAndNutrients = async () => {
+      setLoading(true);
       try {
-        // Fetch product details
-        const productResponse = await axios.get(
-          `${URL || `http://localhost:${PORT}`}/product-detail/${productId}`
-        );
+        // // Fetch product details
+        // const productResponse = await axios.get(
+        //   `${URL || `http://localhost:${PORT}`}/product-detail/${productId}`
+        // );
 
         // Fetch product nutrients
         const nutrientResponse = await axios.get(
@@ -82,15 +85,14 @@ const ProductDetail = ({ isChecked }) => {
         );
 
         // Combine product and nutrient data
-        const productData = {
-          ...productResponse.data,
-          nutrients: nutrientResponse.data, // Add nutrients to the product
-        };
+        // const productData = nutrientResponse.data, // Add nutrients to the product
 
-        setProduct(productData);
-        console.log("Combined Data:", productData);
+        setProduct(nutrientResponse.data);
+        console.log("Combined Data:", nutrientResponse.data);
       } catch (error) {
         console.error("Error fetching product and nutrients:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -100,7 +102,7 @@ const ProductDetail = ({ isChecked }) => {
   }, [productId]);
 
   if (product === null) {
-    return <p>Loading...</p>;
+    return <LoadingIndicator />;
   }
 
   const handleSubmit = async (e) => {
@@ -194,7 +196,7 @@ const ProductDetail = ({ isChecked }) => {
       if (response.status === 200) {
         setErrorMessage("");
         const checkStatusBar = localStorage.getItem("StatusBar");
-        const calories = Math.round(product?.nutrients?.calories || 0);
+        const calories = Math.round(product?.calories || 0);
 
         if (checkStatusBar) {
           setCaloriesCurrent((prev) => {
@@ -311,171 +313,178 @@ const ProductDetail = ({ isChecked }) => {
   return (
     <>
       <HeaderSub />
-      <div
-        className="pd w-100 mt-4 d-flex flex-column align-items-center"
-        key={product.product_id}
-      >
-        {isChecked ? (
-          <>
-            <h3 style={{ color: "#D89834" }}>
-              How much nutrition is in this food?
-            </h3>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <ChartButton productId={product.product_id} />
-            </div>
-          </>
-        ) : (
-          <h3 style={{ color: "#D89834" }}>Our Digital Services</h3>
-        )}
-
+      {loading ? (
+        <LoadingIndicator />
+      ) : (
         <div
-          className="pd_content d-md-flex d-sm-block align-items-start flex-row justify-content-center w-100"
-          style={{ maxWidth: "1300px", height: "480px" }}
+          className="pd w-100 mt-4 d-flex flex-column align-items-center"
+          key={product.product_id}
         >
-          <div
-            style={{ backgroundColor: "#FDEED8" }}
-            className="pd_item w-25 p-0 rounded"
-          >
-            <img
-              src={product.img}
-              className="rounded-top w-100 h-100px mb-3"
-              style={{ objectFit: "contain", height: "300px" }}
-              alt={product.name}
-            />
-            <h3 className="text-center">{product.product_name}</h3>
-
-            <p className="mt-3" style={{ textAlign: "left" }}>
-              <span>Brand:</span> {product.brand}
-            </p>
-            <div className="d-flex justify-content-between align-items-center w-100 mt-n2">
-              <p
-                className="my-auto w-50 text-break"
-                style={{
-                  textAlign: "left",
-                  wordBreak: "break-word",
-                  height: "1.4rem",
-                  overflow: "hidden",
-                }}
-              >
-                <span>Origin:</span> {product.origin}
-              </p>
-
-              <div className="d-flex w-50 pr-2 justify-content-center">
-                <Button
-                  variant="contained"
-                  // color="success"
-                  size="medium"
-                  className="px-5 text-center py-2 mr-3"
-                  onClick={handleAddToCart}
-                  style={{ backgroundColor: "#D89834" }}
-                >
-                  <span className="text-center mx-auto">
-                    <i className="fa-solid fa-cart-shopping text-center"></i>
-                  </span>
-                </Button>
+          {isChecked ? (
+            <>
+              <h3 style={{ color: "#D89834" }}>
+                How much nutrition is in this food?
+              </h3>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <ChartButton productId={product.product_id} />
               </div>
-            </div>
-            {errorMessage && (
-              <p className="text-center fs-6 mt-1" style={{ color: "red" }}>
-                {errorMessage}
+            </>
+          ) : (
+            <h3 style={{ color: "#D89834" }}>Our Digital Services</h3>
+          )}
+
+          <div
+            className="pd_content d-md-flex d-sm-block align-items-start flex-row justify-content-center w-100"
+            style={{ maxWidth: "1300px", height: "480px" }}
+          >
+            <div
+              style={{ backgroundColor: "#FDEED8" }}
+              className="pd_item w-25 p-0 rounded"
+            >
+              <img
+                src={product.img}
+                className="rounded-top w-100 h-100px mb-3"
+                style={{ objectFit: "contain", height: "300px" }}
+                alt={product.name}
+              />
+              <h3 className="text-center">{product.product_name}</h3>
+
+              <p className="mt-3" style={{ textAlign: "left" }}>
+                <span>Brand:</span> {product.brand}
               </p>
-            )}
-          </div>
+              <div className="d-flex justify-content-between align-items-center w-100 mt-n2">
+                <p
+                  className="my-auto w-50 text-break"
+                  style={{
+                    textAlign: "left",
+                    wordBreak: "break-word",
+                    height: "1.4rem",
+                    overflow: "hidden",
+                  }}
+                >
+                  <span>Origin:</span> {product.origin}
+                </p>
 
-          <div style={{ backgroundColor: "#FDEED8" }} className="pd_item">
-            <h3 className="text-center">Ingredients:</h3>
-            <div className="w-100 h-75 d-flex flex-column justify-content-between">
-              <p>{product.ingredients}</p>
-            </div>
-          </div>
-
-          {loggedIn && (
-            <div className="chatbot" style={{ width: "300px", height: "100%" }}>
-              <div className="d-flex flex-column w-100 h-100 align-items-center justify-content-center">
-                <StatusBar
-                  caloriesCurrent={caloriesCurrent}
-                  caloriesMaxSuggestion={caloriesMaxSuggestion}
-                />
-                <section className="container p-0 w-100">
-                  <ul
-                    ref={chatParent}
-                    className="list-unstyled p-3 rounded-3 shadow-sm overflow-auto"
-                    style={{
-                      height: "400px",
-                      maxWidth: "100%",
-                      overflowY: "auto",
-                      overflowX: "hidden",
-                      backgroundColor: "#FDEED8",
-                    }}
-                  >
-                    {messages.map((m, index) => (
-                      <li
-                        key={m.id || index}
-                        className={
-                          m.role === "user"
-                            ? "d-flex mb-3"
-                            : "d-flex flex-row-reverse mb-3"
-                        }
-                      >
-                        <div
-                          className={`p-3 rounded-3 shadow-sm`}
-                          style={{
-                            backgroundColor:
-                              m.role === "user" ? "#D2E296" : "#FBF4EA",
-                          }}
-                        >
-                          <p className="mb-0 fs-6">
-                            {handleNewlines(m.content)}
-                          </p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-                <section className="mb-4">
-                  <form
-                    className="d-flex align-items-center"
-                    onSubmit={handleSubmit}
-                  >
-                    <input
-                      className="form-control flex-1 me-2"
-                      placeholder="Type your question here..."
-                      type="text"
-                      value={input}
-                      onChange={(event) => {
-                        setInput(event.target.value);
-                      }}
-                      style={{
-                        backgroundColor: "#FBF4EA",
-                        borderColor: "#7D9F00",
-                      }}
-                    />
-                    <button
-                      style={{ backgroundColor: "#D89834" }}
-                      className="btn btn-primary"
-                      type="submit"
-                    >
-                      <i
-                        style={{ fontSize: "14px" }}
-                        class="fa-solid fa-paper-plane"
-                      ></i>
-                    </button>
-                  </form>
+                <div className="d-flex w-50 pr-2 justify-content-center">
                   <Button
                     variant="contained"
-                    className="mt-2 w-100"
-                    size="small"
-                    color="error"
-                    onClick={deleteMessage}
+                    // color="success"
+                    size="medium"
+                    className="px-5 text-center py-2 mr-3"
+                    onClick={handleAddToCart}
+                    style={{ backgroundColor: "#D89834" }}
                   >
-                    Remove all messages
+                    <span className="text-center mx-auto">
+                      <i className="fa-solid fa-cart-shopping text-center"></i>
+                    </span>
                   </Button>
-                </section>
+                </div>
+              </div>
+              {errorMessage && (
+                <p className="text-center fs-6 mt-1" style={{ color: "red" }}>
+                  {errorMessage}
+                </p>
+              )}
+            </div>
+
+            <div style={{ backgroundColor: "#FDEED8" }} className="pd_item">
+              <h3 className="text-center">Ingredients:</h3>
+              <div className="w-100 h-75 d-flex flex-column justify-content-between">
+                <p>{product.ingredients}</p>
               </div>
             </div>
-          )}
+
+            {loggedIn && (
+              <div
+                className="chatbot"
+                style={{ width: "300px", height: "100%" }}
+              >
+                <div className="d-flex flex-column w-100 h-100 align-items-center justify-content-center">
+                  <StatusBar
+                    caloriesCurrent={caloriesCurrent}
+                    caloriesMaxSuggestion={caloriesMaxSuggestion}
+                  />
+                  <section className="container p-0 w-100">
+                    <ul
+                      ref={chatParent}
+                      className="list-unstyled p-3 rounded-3 shadow-sm overflow-auto"
+                      style={{
+                        height: "400px",
+                        maxWidth: "100%",
+                        overflowY: "auto",
+                        overflowX: "hidden",
+                        backgroundColor: "#FDEED8",
+                      }}
+                    >
+                      {messages.map((m, index) => (
+                        <li
+                          key={m.id || index}
+                          className={
+                            m.role === "user"
+                              ? "d-flex mb-3"
+                              : "d-flex flex-row-reverse mb-3"
+                          }
+                        >
+                          <div
+                            className={`p-3 rounded-3 shadow-sm`}
+                            style={{
+                              backgroundColor:
+                                m.role === "user" ? "#D2E296" : "#FBF4EA",
+                            }}
+                          >
+                            <p className="mb-0 fs-6">
+                              {handleNewlines(m.content)}
+                            </p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                  <section className="mb-4">
+                    <form
+                      className="d-flex align-items-center"
+                      onSubmit={handleSubmit}
+                    >
+                      <input
+                        className="form-control flex-1 me-2"
+                        placeholder="Type your question here..."
+                        type="text"
+                        value={input}
+                        onChange={(event) => {
+                          setInput(event.target.value);
+                        }}
+                        style={{
+                          backgroundColor: "#FBF4EA",
+                          borderColor: "#7D9F00",
+                        }}
+                      />
+                      <button
+                        style={{ backgroundColor: "#D89834" }}
+                        className="btn btn-primary"
+                        type="submit"
+                      >
+                        <i
+                          style={{ fontSize: "14px" }}
+                          class="fa-solid fa-paper-plane"
+                        ></i>
+                      </button>
+                    </form>
+                    <Button
+                      variant="contained"
+                      className="mt-2 w-100"
+                      size="small"
+                      color="error"
+                      onClick={deleteMessage}
+                    >
+                      Remove all messages
+                    </Button>
+                  </section>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       <Footer />
     </>
   );
