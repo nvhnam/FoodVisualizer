@@ -36,14 +36,17 @@ getProduct.get("/product-detail/:productId", async (req, res) => {
 
 getProduct.get("/product-with-nutrients", async (req, res) => {
   try {
-    const { fat, saturates, sugars, salt, category } = req.query;
+    const { fat, saturates, sugars, salt, category, currentPage, limit } =
+      req.query;
 
     const filteredProductNutrients = await Product.getFilteredProductNutrients(
       fat,
       saturates,
       sugars,
       salt,
-      category
+      category,
+      currentPage,
+      limit
     );
     // console.log("Filtered product nutrients: ", filteredProductNutrients);
     res.status(200).json(filteredProductNutrients);

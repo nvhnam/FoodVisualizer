@@ -24,6 +24,7 @@ const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 const Product = ({ isChecked, isToggle }) => {
   const [product, setProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
   const [foodPerPage] = useState(18);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -377,13 +378,16 @@ const Product = ({ isChecked, isToggle }) => {
                 sugars: sugarsFilter,
                 salt: saltFilter,
                 category: selectedCategory,
+                currentPage: currentPage,
+                limit: foodPerPage,
               },
             }
           );
 
           console.log("Fetched products from server:", response.data);
-          setSearchResults(response.data);
-          setProduct(response.data);
+          setSearchResults(response.data.results);
+          setProduct(response.data.results);
+          setTotalPages(response.data.totalPages);
         }
 
         setSearchTerm("");
@@ -400,6 +404,8 @@ const Product = ({ isChecked, isToggle }) => {
     showProductsSuggestion,
     sugarsFilter,
     selectedCategory,
+    currentPage,
+    foodPerPage,
   ]);
 
   useEffect(() => {
@@ -650,8 +656,7 @@ const Product = ({ isChecked, isToggle }) => {
   };
 
   const last = currentPage * foodPerPage;
-  const first = last - foodPerPage;
-  const currentFood = searchResults.slice(first, last);
+  const currentFood = searchResults;
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -741,8 +746,6 @@ const Product = ({ isChecked, isToggle }) => {
     }
     return nameOfFood.substr(0, maxLength) + "...";
   };
-
-  const totalPages = Math.ceil(searchResults.length / foodPerPage);
 
   const renderPaginationItems = () => {
     const maxPagesToShow = 5;

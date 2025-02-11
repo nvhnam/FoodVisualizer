@@ -65,8 +65,17 @@ export default class Product {
     saturates,
     sugars,
     salt,
-    category
+    category,
+    currentPage,
+    limit
   ) {
+    const offset = (currentPage - 1) * limit;
+
+    const totalQuery = `SELECT COUNT(*) as total FROM product`;
+    const [totalResult] = await dbPool.query(totalQuery);
+    const totalProducts = totalResult[0].total;
+    const totalPages = Math.ceil(totalProducts / limit);
+
     let query = `SELECT product.product_id, product_name, img 
       FROM product 
       JOIN nutrient ON product.product_id = nutrient.product_id
@@ -131,10 +140,15 @@ export default class Product {
       query += ` AND category.level_0 = ?`;
       params.push(category);
     }
+
+    if (currentPage && limit) {
+      query += ` LIMIT ? OFFSET ?`;
+      params.push(parseInt(limit, 10), offset);
+    }
     try {
       const [results] = await dbPool.query(query, params);
       // console.log(results);
-      return results;
+      return { results, totalPages };
     } catch (error) {
       console.error("Error:", error);
       throw error;
