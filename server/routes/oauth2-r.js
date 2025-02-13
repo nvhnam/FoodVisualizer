@@ -1,14 +1,14 @@
-import cookieSession from "cookie-session";
 import express from "express";
 import passport from "passport";
 import session from "express-session";
 import cors from "cors";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { prisma } from "../prisma/auth.js";
+import { dbPool } from "../dbconfig.js";
 
 const CLIENT_PORT = process.env.CLIENT_PORT;
 const CLIENT_URL = process.env.CLIENT_URL || `http://localhost:${CLIENT_PORT}`;
 const SERVER_PORT = process.env.PORT;
+const SERVER_URL = process.env.BACKEND_URL || `http://localhost:${SERVER_PORT}`;
 const USER_PROFILE_URL = process.env.USER_PROFILE_URL;
 
 const oauth2User = express.Router();
@@ -17,17 +17,24 @@ oauth2User.use(
   cors({
     origin: `${CLIENT_URL || `http://localhost:${CLIENT_PORT}`}`,
     credentials: true,
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    allowedHeaders: "Content-Type, Authorization",
   })
 );
 
-oauth2User.use(
-  session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false },
-  })
-);
+// oauth2User.use(
+//   session({
+//     secret: "secret",
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       secure: process.env.NODE_ENV === "production",
+//       httpOnly: true,
+//       sameSite: "none",
+//       // maxAge: 24 * 60 * 60 * 1000,
+//     },
+//   })
+// );
 
 oauth2User.use(passport.initialize());
 oauth2User.use(passport.session());
@@ -37,26 +44,35 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `http://localhost:${SERVER_PORT}/auth/google/callback`,
+      callbackURL: `/auth/google/callback`,
+      // callbackURL: `${
+      //   SERVER_URL || `http://localhost:${SERVER_PORT}`
+      // }/auth/google/callback`,
       userProfileURL: USER_PROFILE_URL,
+      state: true,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        let user = await prisma.user.findUnique({
-          where: { googleId: profile.id },
-        });
+        const checkExist = "SELECT * FROM user WHERE google_id = ? LIMIT 1";
+        const [results] = await dbPool.query(checkExist, profile.id);
+        const user = results[0];
 
-        if (!user) {
-          user = await prisma.user.create({
-            data: {
-              username: profile.displayName,
-              email: profile.emails[0].value,
-              googleId: profile.id,
-            },
-          });
+        if (user) {
+          return done(null, user);
         }
 
-        return done(null, user);
+        if (!user) {
+          const sql =
+            "INSERT INTO user (username, email, google_id) VALUES (?, ?, ?)";
+          const [result] = await dbPool.query(sql, [
+            profile.displayName,
+            profile.emails[0].value,
+            profile.id,
+          ]);
+          const user = result[0];
+
+          return done(null, user);
+        }
       } catch (error) {
         return done(error, null);
       }
@@ -83,7 +99,7 @@ oauth2User.get(
   "/auth/google/callback",
   passport.authenticate("google", {
     successRedirect: `${CLIENT_URL || `http://localhost:${CLIENT_PORT}`}`,
-    failureRedirect: `${CLIENT_URL || `http://localhost:${CLIENT_PORT}/login`}`,
+    failureRedirect: `${CLIENT_URL || `http://localhost:${CLIENT_PORT}`}/login`,
   })
   // ,
   // (req, res) => {
@@ -92,6 +108,21 @@ oauth2User.get(
 );
 
 oauth2User.get("/profile", (req, res) => {
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    `${CLIENT_URL || `http://localhost:${CLIENT_PORT}`}`
+  );
+  // another common pattern
+  res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+  );
   if (req.user) {
     const user = {
       id: req.user.userId,

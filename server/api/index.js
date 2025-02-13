@@ -1,16 +1,43 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import cookieSession from "express-session";
 import { config as dotenvConfig } from "dotenv";
 
 dotenvConfig();
 
 const PORT = process.env.PORT;
+const CLIENT_PORT = process.env.CLIENT_PORT;
+const CLIENT_URL = process.env.CLIENT_URL || `http://localhost:${CLIENT_PORT}`;
 
 const app = express();
 
+if (CLIENT_URL) {
+  app.set("trust proxy", 1);
+}
+
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: `${CLIENT_URL || `http://localhost:${CLIENT_PORT}`}`,
+    credentials: true,
+    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    allowedHeaders: "Content-Type, Authorization",
+  })
+);
+
+app.use(
+  cookieSession({
+    secret: "secret",
+    name: "session",
+    keys: [process.env.SESSION_SECRET || "default_secret"],
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: "none", // Allow cross-origin cookies
+    secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
+    httpOnly: true,
+  })
+);
+
 app.use(cookieParser());
 
 // Get all products in "product" table for UI

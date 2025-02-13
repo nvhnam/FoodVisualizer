@@ -1,8 +1,5 @@
 import express from "express";
 import User from "../models/auth-m.js";
-import { prisma } from "../prisma/auth.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 const authUser = express.Router();
 
@@ -30,27 +27,12 @@ authUser.post("/login", async (req, res) => {
     const email = req.body.email.toLowerCase() + "@gmail.com";
     const password = req.body.password;
     // console.log("email + password: ", email, password);
-    // const result = await User.loginUser(email, password);
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (
-      !user ||
-      !user.password ||
-      !(await bcrypt.compare(password, user.password))
-    ) {
-      return res.status(401).json("Invalid credentials");
+    const result = await User.loginUser(email, password);
+
+    // console.log("Log in info: ", result.token, result.other);
+    if (result.status === "error") {
+      return res.status(401).json({ error: "Invalid email or password" });
     }
-    const token = jwt.sign(
-      { id: user.userId, email: user.email },
-      "jwt_secret",
-      {
-        expiresIn: "1h",
-      }
-    );
-    const result = { other: user, token: token };
-    console.log("Log in info: ", result.token, result.other);
-    // if (result.status === "error") {
-    //   return res.status(401).json({ error: "Invalid email or password" });
-    // }
     res
       .cookie("access_cookie", result.token, { httpOnly: true })
       .status(200)
