@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import cookieSession from "express-session";
+import cookieSession from "cookie-session";
 import { config as dotenvConfig } from "dotenv";
 
 dotenvConfig();

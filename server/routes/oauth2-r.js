@@ -1,9 +1,9 @@
 import express from "express";
 import passport from "passport";
-import session from "express-session";
 import cors from "cors";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { dbPool } from "../dbconfig.js";
+import cookieSession from "cookie-session";
 
 const CLIENT_PORT = process.env.CLIENT_PORT;
 const CLIENT_URL = process.env.CLIENT_URL || `http://localhost:${CLIENT_PORT}`;
@@ -22,19 +22,32 @@ oauth2User.use(
   })
 );
 
-// oauth2User.use(
-//   session({
-//     secret: "secret",
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//       secure: process.env.NODE_ENV === "production",
-//       httpOnly: true,
-//       sameSite: "none",
-//       // maxAge: 24 * 60 * 60 * 1000,
-//     },
-//   })
-// );
+oauth2User.use(
+  cookieSession({
+    name: "session",
+    keys: [process.env.SESSION_SECRET || "default_secret"],
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: "none",
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+  })
+);
+
+oauth2User.use((req, res, next) => {
+  if (req.session) {
+    if (typeof req.session.regenerate !== "function") {
+      req.session.regenerate = (callback) => {
+        if (typeof callback === "function") callback();
+      };
+    }
+    if (typeof req.session.save !== "function") {
+      req.session.save = (callback) => {
+        if (typeof callback === "function") callback();
+      };
+    }
+  }
+  next();
+});
 
 oauth2User.use(passport.initialize());
 oauth2User.use(passport.session());
@@ -134,22 +147,9 @@ oauth2User.get("/profile", (req, res) => {
 });
 
 oauth2User.post("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      console.error("Logout error:", err);
-      return res.status(500).json({ message: "Logout failed", error: err });
-    }
-    req.session.destroy((err) => {
-      if (err) {
-        console.error("Session destruction error:", err);
-        return res
-          .status(500)
-          .json({ message: "Session destruction failed", error: err });
-      }
-      res.clearCookie("connect.sid");
-      return res.json({ message: "Logout successful" });
-    });
-  });
+  req.session = null;
+  res.clearCookie("session");
+  res.json({ message: "Logout successful" });
 });
 
 export default oauth2User;

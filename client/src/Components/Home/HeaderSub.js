@@ -19,6 +19,7 @@ const HeaderSub = () => {
     fetch(`${URL || `http://localhost:${PORT}`}/profile`, {
       method: "GET",
       credentials: "include",
+      mode: "cors",
     })
       .then((res) => res.json())
       .then((data) => {
