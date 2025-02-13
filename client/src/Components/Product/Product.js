@@ -388,7 +388,7 @@ const Product = ({ isChecked, isToggle }) => {
             }
           );
 
-          console.log("Fetched products from server:", response.data);
+          // console.log("Fetched products from server:", response.data);
           setSearchResults(response.data.results);
           setProduct(response.data.results);
           setTotalPages(response.data.totalPages);
@@ -661,7 +661,6 @@ const Product = ({ isChecked, isToggle }) => {
     }
   };
 
-  const last = currentPage * foodPerPage;
   const currentFood = searchResults;
   const handleSubmit = async (e) => {
     e.preventDefault();

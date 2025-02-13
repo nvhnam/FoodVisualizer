@@ -14,6 +14,7 @@ import { createTheme } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./authContext";
+import GoogleButton from "react-google-button";
 const PORT = process.env.REACT_APP_PORT;
 const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
 
@@ -86,7 +87,7 @@ const Login = () => {
             setLoginError("");
             // window.alert("Login successful! Redirecting...");
             localStorage.setItem("token", token);
-            setTimeout(() => navigate("/"), 1000);
+            setTimeout(() => navigate("/"), 100);
           } else {
             setLoginError(res.data.message);
             setSuccess(false);
@@ -103,6 +104,10 @@ const Login = () => {
       setErrors(formErrors);
       window.alert("Please fill out all required fields.");
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${URL || `http://localhost:${PORT}`}/auth/google`;
   };
 
   // const { login } = useContext(AuthContext);
@@ -131,7 +136,7 @@ const Login = () => {
       >
         {"Copyright © "}
         <Link color="inherit" href="/">
-          NutrinSight
+          NutriGuide
         </Link>{" "}
         {new Date().getFullYear()}
         {"."}
@@ -156,7 +161,22 @@ const Login = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        <div className="mt-5 mb-2 w-100 d-flex justify-content-center align-items-center">
+          <GoogleButton onClick={handleGoogleLogin} />
+        </div>
+        <div className="w-75 d-flex align-items-center my-3">
+          <hr
+            className="flex-grow-1 w-50 align-items-center d-flex border-2 border-dark"
+            style={{ height: "1px", padding: "2px" }}
+          />
+          <span className="mx-2 text-muted fw-bold">OR</span>
+          <hr
+            className="flex-grow-1 w-50 border-2 border-dark"
+            style={{ height: "1px", padding: "2px" }}
+          />
+        </div>
+
+        <Box component="form" onSubmit={handleSubmit}>
           <TextField
             margin="normal"
             required

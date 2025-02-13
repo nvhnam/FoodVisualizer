@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { config as dotenvConfig } from "dotenv";
-import axios from "axios";
+
 dotenvConfig();
 
 const PORT = process.env.PORT;
@@ -29,6 +29,9 @@ app.use("/", getCart);
 // User
 import authUser from "../routes/auth-r.js";
 app.use("/auth", authUser);
+
+import oauth2User from "../routes/oauth2-r.js";
+app.use("/", oauth2User);
 
 // Admin
 import handleProduct from "../routes/manageProduct-r.js";

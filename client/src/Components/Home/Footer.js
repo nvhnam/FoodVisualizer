@@ -129,7 +129,7 @@ const Footer = () => {
         className="text-center p-4"
         style={{ backgroundColor: "#B3CC57", color: "black" }}
       >
-        © 2024 Website:
+        © {new Date().getFullYear()} Website:
         <a className="text-reset fw-bold m-1" href="/">
           NutriGuiding.vercel.app
         </a>

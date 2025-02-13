@@ -8,6 +8,9 @@ import { useScroll } from "./ScrollContext";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 
+const PORT = process.env.REACT_APP_PORT;
+const URL = process.env.REACT_APP_URL || `http://localhost:${PORT}`;
+
 const Header = () => {
   const { scrollToAbout } = useScroll();
   const [loggedIn, setLoggedIn] = useState(false);
@@ -15,18 +18,37 @@ const Header = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetch(`${URL || `http://localhost:${PORT}`}/profile`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          console.log("profile data: ", data);
+          localStorage.setItem("user", JSON.stringify(data));
+        }
+      });
+
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
 
-    if (storedUser && token) {
-      setLoggedIn(true);
-      setUsername(JSON.parse(storedUser).username);
+    if (storedUser) {
+      if (JSON.parse(storedUser)) {
+        setLoggedIn(true);
+        setUsername(JSON.parse(storedUser).username);
+      }
     } else {
       setLoggedIn(false);
     }
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await fetch(`${URL || `http://localhost:${PORT}`}/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("userInfo");
@@ -78,7 +100,7 @@ const Header = () => {
               <Nav.Link href="/product-list">Product</Nav.Link>
             </Nav>
 
-            <Nav className={`right-navbar ${loggedIn && "w-25"}`}>
+            <Nav className={`right-navbar ${loggedIn && "w-auto mw-75"}`}>
               {loggedIn ? (
                 <div className="d-flex h-100 w-100 justify-content-between align-items-center gap-2">
                   <Nav.Link className="d-flex gap-1" href="/cart">
@@ -94,7 +116,9 @@ const Header = () => {
                     <span className="">
                       <i className="fa-solid fa-user"></i>
                     </span>
-                    {username}
+                    {username.length >= 10
+                      ? username.substr(0, 10) + "..."
+                      : username}
                   </Nav.Link>
 
                   <Button
