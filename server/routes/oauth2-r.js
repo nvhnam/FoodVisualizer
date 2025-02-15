@@ -67,14 +67,12 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const checkExist = "SELECT * FROM user WHERE google_id = ? LIMIT 1";
-        const [results] = await dbPool.query(checkExist, profile.id);
-        const user = results[0];
+        const [results] = await dbPool.query(checkExist, [profile.id]);
+        // const user = results[0];
 
-        if (user) {
-          return done(null, user);
-        }
-
-        if (!user) {
+        if (results.length > 0) {
+          return done(null, results[0]);
+        } else {
           const sql =
             "INSERT INTO user (username, email, google_id) VALUES (?, ?, ?)";
           const [result] = await dbPool.query(sql, [
@@ -82,9 +80,10 @@ passport.use(
             profile.emails[0].value,
             profile.id,
           ]);
-          const user = result[0];
+          // const user = result[0];
 
-          return done(null, user);
+          const [newUser] = await dbPool.query(checkExist, [profile.id]);
+          return done(null, newUser[0]);
         }
       } catch (error) {
         return done(error, null);
