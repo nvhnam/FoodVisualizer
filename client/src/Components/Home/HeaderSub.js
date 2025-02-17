@@ -68,32 +68,32 @@ const HeaderSub = () => {
         fixed="top"
         style={{ padding: "0.8rem", background: "#FBF4EA" }}
         collapseOnSelect
-        expand="lg"
-        // className="bg-body-tertiary"
+        expand="md"
       >
-        <Container>
-          <div className="header-brand">
+        <Container fluid>
+          <div className="header-brand" style={{ marginRight: "8rem" }}>
             <Navbar.Brand href="#home">
               <img
                 src={myBrandIcon}
                 style={{ width: "2rem" }}
                 alt="Icon Visualization"
               />
-            </Navbar.Brand>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              {" "}
+              {/* <Link to="/" style={{ textDecoration: "none" }}> */}{" "}
               <h1 className="fs-3">
                 <span style={{ color: "#D89834" }}>Nutri</span>
                 <span style={{ color: "black" }}>Guide</span>
               </h1>
-            </Link>
+              {/* </Link> */}
+            </Navbar.Brand>
           </div>
 
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse
-            style={{ marginLeft: "8rem" }}
-            id="responsive-navbar-nav"
+          <Navbar.Toggle
+            className="bg-warning px-3 py-2"
+            aria-controls="responsive-navbar-nav"
           >
+            &#9776;
+          </Navbar.Toggle>
+          <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="/about-us-more">About Us</Nav.Link>
 

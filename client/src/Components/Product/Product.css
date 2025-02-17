@@ -189,6 +189,7 @@
 
 /* Default position when closed */
 .AI-advisor-container.closed {
+  width: 300px;
   bottom: 20px;
 }
 

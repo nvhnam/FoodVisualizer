@@ -237,16 +237,16 @@ const Product = ({ isChecked, isToggle }) => {
       alert("There was an error sending the request.");
     }
   };
-  const [loggedIn, setLoggedIn] = useState(false);
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const token = localStorage.getItem("token");
-    if (storedUser && token) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  }, []);
+  const [loggedIn, setLoggedIn] = useState(true);
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem("user");
+  //   const token = localStorage.getItem("token");
+  //   if (storedUser || token) {
+  //     setLoggedIn(true);
+  //   } else {
+  //     setLoggedIn(false);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (productSuggestion && productSuggestion.length > 0) {
@@ -1188,7 +1188,7 @@ const Product = ({ isChecked, isToggle }) => {
             {loading ? (
               <LoadingIndicator />
             ) : (
-              <Row className="d-flex  gap-3 mt-2">
+              <Row className="d-flex gap-3 mt-2">
                 {currentFood.map((productItem, index) => {
                   return (
                     <Col
@@ -1197,8 +1197,8 @@ const Product = ({ isChecked, isToggle }) => {
                       // xs={12}
                       // sm={6}
                       md={4}
-                      // lg={3}
-                      // className="w-auto h-auto mx-auto"
+                      lg={3}
+                      className={isOpenAIChatBox ? `` : `w-auto h-auto mx-auto`}
                     >
                       <Card
                         style={
