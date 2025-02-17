@@ -12,7 +12,7 @@ const CLIENT_URL = process.env.CLIENT_URL || `http://localhost:${CLIENT_PORT}`;
 
 const app = express();
 
-if (CLIENT_URL) {
+if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
 }
 
@@ -31,9 +31,9 @@ app.use(
     secret: "secret",
     name: "session",
     keys: [process.env.SESSION_SECRET || "default_secret"],
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: "none", // Allow cross-origin cookies
-    secure: process.env.NODE_ENV === "production", // true in production (HTTPS)
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    secure: process.env.NODE_ENV === "production" ? true : false,
     httpOnly: true,
   })
 );

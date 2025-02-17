@@ -27,8 +27,8 @@ oauth2User.use(
     name: "session",
     keys: [process.env.SESSION_SECRET || "default_secret"],
     maxAge: 24 * 60 * 60 * 1000,
-    sameSite: "none",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    secure: process.env.NODE_ENV === "production" ? true : false,
     httpOnly: true,
   })
 );

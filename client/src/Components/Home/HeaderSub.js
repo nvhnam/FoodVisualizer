@@ -16,31 +16,33 @@ const HeaderSub = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${URL || `http://localhost:${PORT}`}/profile`, {
-      method: "GET",
-      credentials: "include",
-      mode: "cors",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          console.log("profile data: ", data);
-          localStorage.setItem("user", JSON.stringify(data));
+    if (username === null) {
+      fetch(`${URL || `http://localhost:${PORT}`}/profile`, {
+        method: "GET",
+        credentials: "include",
+        mode: "cors",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data) {
+            console.log("profile data: ", data);
+            localStorage.setItem("user", JSON.stringify(data));
+          }
+        });
+
+      const storedUser = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
+
+      if (storedUser) {
+        if (JSON.parse(storedUser)) {
+          setLoggedIn(true);
+          setUsername(JSON.parse(storedUser).username);
         }
-      });
-
-    const storedUser = localStorage.getItem("user");
-    const token = localStorage.getItem("token");
-
-    if (storedUser) {
-      if (JSON.parse(storedUser)) {
-        setLoggedIn(true);
-        setUsername(JSON.parse(storedUser).username);
+      } else {
+        setLoggedIn(false);
       }
-    } else {
-      setLoggedIn(false);
     }
-  }, []);
+  }, [username]);
 
   const handleLogout = async () => {
     await fetch(`${URL || `http://localhost:${PORT}`}/logout`, {
