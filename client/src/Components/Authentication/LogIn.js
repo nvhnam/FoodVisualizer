@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme } from "@mui/material/styles";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "./authContext";
 import GoogleButton from "react-google-button";
 const PORT = process.env.REACT_APP_PORT;
@@ -27,6 +27,7 @@ const Login = () => {
   const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
+  const location = useLocation();
 
   const validate = () => {
     const newErrors = {};
@@ -58,6 +59,22 @@ const Login = () => {
     JSON.parse(localStorage.getItem("user") || null)
   );
 
+  const hasAlerted = useRef(false);
+
+  useEffect(() => {
+    if (hasAlerted.current) return;
+
+    const queryParameter = new URLSearchParams(location.search);
+
+    if (queryParameter.get("error") === "invalid_token") {
+      window.alert("Verification failed!");
+    } else if (queryParameter.get("success") === "valid_token") {
+      window.alert("Verification success!");
+    }
+
+    hasAlerted.current = true;
+  }, [location]);
+
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUser));
   }, [currentUser]);
@@ -77,8 +94,8 @@ const Login = () => {
           }
         )
         .then((res) => {
-          console.log(res);
-          if (res.data.status === 200) {
+          console.log("res: ", res);
+          if (res.status === 200) {
             setCurrentUser(res.data.user);
             console.log("User: ", res.data.user);
             const token = res.data.token;
@@ -96,9 +113,17 @@ const Login = () => {
         })
         .catch((err) => {
           console.error("Error:", err);
-          setLoginError("Login failed. Please try again.");
+          if (err.response.status === 403) {
+            window.alert(err.response.data.error);
+          } else if (err.response.status === 401) {
+            window.alert(err.response.data.error);
+          } else if (err.response.status === 302) {
+            window.alert(err.response.data.error);
+          } else {
+            setLoginError("Login failed. Please try again.");
+            window.alert("Login failed. Please try again.");
+          }
           setSuccess(false);
-          window.alert("Login failed. Please try again.");
         });
     } else {
       setErrors(formErrors);
@@ -190,25 +215,7 @@ const Login = () => {
             onChange={handleChange}
             error={!!errors.email}
             helperText={errors.email}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">@gmail.com</InputAdornment>
-              ),
-            }}
-            aria-describedby="email-helper-text"
           />
-          <Typography
-            id="email-helper-text"
-            variant="body2"
-            sx={{
-              color: "text.secondary",
-              mt: 0.5,
-              fontSize: "0.75rem",
-              fontStyle: "italic",
-            }}
-          >
-            Enter your email without "@gmail.com"
-          </Typography>
 
           <TextField
             margin="normal"

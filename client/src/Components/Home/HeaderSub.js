@@ -72,7 +72,7 @@ const HeaderSub = () => {
       >
         <Container fluid>
           <div className="header-brand" style={{ marginRight: "8rem" }}>
-            <Navbar.Brand href="#home">
+            <Navbar.Brand href="/">
               <img
                 src={myBrandIcon}
                 style={{ width: "2rem" }}

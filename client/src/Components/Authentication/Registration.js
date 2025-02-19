@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme } from "@mui/material/styles";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./Registration.css";
 
 const PORT = process.env.REACT_APP_PORT;
@@ -42,17 +42,10 @@ const Registration = () => {
       }
     }
 
-    // Check email
     if (!values.email) {
       newErrors.email = "* Email is required";
-    } else {
-      const regex = /@gmail\.com/;
-      if (!regex.test(values.email)) {
-        newErrors.email = "* Please use a Gmail address";
-      }
     }
 
-    // Check password
     if (!values.password) {
       newErrors.password = "* Password is required";
     } else if (values.password.length < 6) {
@@ -71,7 +64,6 @@ const Registration = () => {
 
     const newErrors = { ...errors };
 
-    // Update specific field error
     if (name === "username") {
       const usernameRegex = /^[a-zA-Z0-9]+$/;
       newErrors.username = !value
@@ -82,12 +74,7 @@ const Registration = () => {
     }
 
     if (name === "email") {
-      const emailRegex = /@gmail\.com/;
-      newErrors.email = !value
-        ? "* Email is required"
-        : emailRegex.test(value)
-        ? ""
-        : errors.email;
+      newErrors.email = !value && "* Email is required" ? "" : errors.email;
     }
 
     if (name === "password") {
@@ -117,12 +104,13 @@ const Registration = () => {
         )
         .then((res) => {
           console.log(res.data);
-          if (res.data.message === "User registered successfully") {
+          if (res.data.status === 200) {
             setSuccess(true);
             setErrorExist("");
-            setTimeout(() => navigate("/login"), 2000);
+            window.alert(res.data.message);
+            // setTimeout(() => navigate("/login"), 1000);
           } else {
-            setErrors({ general: res.data.message });
+            setErrors({ general: res.data.error });
             setSuccess(false);
           }
         })
