@@ -54,6 +54,46 @@
   margin-top: 25px;
 }
 
+.product-col {
+  display: flex;
+  justify-content: center;
+}
+
+.card-product-img {
+  min-height: 12rem;
+  width: 100%;
+  object-fit: cover;
+}
+
+.no-image-placeholder {
+  width: 100%;
+  height: 12rem;
+  background-color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .product-col {
+    width: 100%;
+  }
+
+  .card-product-img {
+    min-height: 10rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-product-img {
+    min-height: 8rem;
+  }
+
+  .no-image-placeholder {
+    height: 8rem;
+  }
+}
+
 @media screen and (min-width: 2601px) {
   .card-product.no-traffic-light {
     height: calc(254px + 1vw) !important;
@@ -137,7 +177,7 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 37%;
+  height: 41%;
 }
 
 .card-product-container .card-product-title {
@@ -276,6 +316,84 @@
   opacity: 1;
   border-radius: 1px;
   margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+  .select-items {
+    width: 100% !important;
+  }
+}
+
+.search-container {
+  gap: 1rem;
+}
+
+.nav-search {
+  flex: 1;
+  min-width: 250px;
+}
+
+.search-results {
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.search-item {
+  margin-bottom: 10px;
+}
+
+.search-link {
+  text-decoration: none;
+}
+
+.switch-input {
+  background-color: #d89834;
+  border-color: #d89834;
+}
+
+.product-col {
+  display: flex;
+  justify-content: center;
+}
+
+.card-product-img {
+  min-height: 12rem;
+  width: 100%;
+  object-fit: cover;
+}
+
+.no-image-placeholder {
+  width: 100%;
+  height: 12rem;
+  background-color: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .product-col {
+    width: 100%;
+  }
+
+  .card-product-img {
+    min-height: 10rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-product-img {
+    min-height: 8rem;
+  }
+
+  .no-image-placeholder {
+    height: 8rem;
+  }
 }
 
 /* Animation for dropdown */

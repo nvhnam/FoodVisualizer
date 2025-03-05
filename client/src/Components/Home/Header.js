@@ -68,83 +68,57 @@ const Header = () => {
     <div className="header-container">
       <Navbar
         fixed="top"
-        style={{ padding: "0.8rem", background: "#FBF4EA" }}
-        // style={{ background: "#FBF4EA" }}
+        className="header-navbar"
         collapseOnSelect
         expand="md"
       >
-        <Container fluid>
-          <div className="header-brand" style={{ marginRight: "8rem" }}>
+        <Container fluid="md">
+          <div className="header-brand">
             <Navbar.Brand href="#home">
               <img
                 src={myBrandIcon}
-                style={{ width: "2rem" }}
+                className="brand-icon"
                 alt="Icon Visualization"
               />
-              {/* <Link to="/" style={{ textDecoration: "none" }}> */}{" "}
-              <h1 className="fs-3">
-                <span style={{ color: "#D89834" }}>Nutri</span>
-                <span style={{ color: "black" }}>Guide</span>
+              <h1 className="brand-title">
+                <span className="nutri">Nutri</span>
+                <span className="guide">Guide</span>
               </h1>
-              {/* </Link> */}
             </Navbar.Brand>
           </div>
 
-          <Navbar.Toggle
-            className="bg-warning px-3 py-2"
-            aria-controls="responsive-navbar-nav"
-          >
-            &#9776;
-          </Navbar.Toggle>
-          <Navbar.Collapse
-            id="responsive-navbar-nav"
-            // style={{ marginLeft: "8rem" }}
-          >
+          <Navbar.Toggle className="menu-toggle">&#9776;</Navbar.Toggle>
+          <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="#about" onClick={scrollToAbout}>
                 About Us
               </Nav.Link>
-
               <Nav.Link href="/product-list">Product</Nav.Link>
             </Nav>
 
-            <Nav className={`right-navbar ${loggedIn && "w-auto mw-75"}`}>
+            <Nav className={`right-navbar ${loggedIn ? "w-auto mw-75" : ""}`}>
               {loggedIn ? (
-                <div className="d-flex h-100 w-100 justify-content-between align-items-center gap-2">
-                  <Nav.Link className="d-flex gap-1" href="/cart">
-                    <span>
-                      <i className="fa-solid fa-cart-shopping"></i>
-                    </span>
-                    {/* Cart */}
+                <div className="user-section">
+                  <Nav.Link className="cart-icon" href="/cart">
+                    <i className="fa-solid fa-cart-shopping"></i>
                   </Nav.Link>
                   <Nav.Link
+                    className="user-info"
                     style={{ pointerEvents: "none" }}
-                    className="gap-1 d-flex"
                   >
-                    <span className="">
-                      <i className="fa-solid fa-user"></i>
-                    </span>
+                    <i className="fa-solid fa-user"></i>
                     {username.length >= 10
                       ? username.substr(0, 10) + "..."
                       : username}
                   </Nav.Link>
-
-                  <Button
-                    onClick={handleLogout}
-                    className="px-5 py-n1 "
-                    size="small"
-                    style={{ backgroundColor: "#D89834", color: "black" }}
-                    variant="contained"
-                  >
+                  <Button onClick={handleLogout} className="logout-btn">
                     Logout
                   </Button>
                 </div>
               ) : (
                 <>
                   <Nav.Link href="/login">Log In</Nav.Link>
-                  <Nav.Link href="/signup" eventKey={2}>
-                    Sign Up
-                  </Nav.Link>
+                  <Nav.Link href="/signup">Sign Up</Nav.Link>
                 </>
               )}
             </Nav>

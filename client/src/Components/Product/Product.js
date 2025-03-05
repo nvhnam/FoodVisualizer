@@ -822,310 +822,92 @@ const Product = ({ isChecked, isToggle }) => {
               onSelectCategory={handleSelectedCategory}
               selectedCategory={selectedCategory}
             />
-            <div style={{ marginBottom: "3.2rem" }}></div>
+            <div className="mb-4"></div>
             {isChecked && (
-              <div className="w-100 h-100">
-                <div className="w-100 h-auto d-flex justify-content-start mb-4">
+              <div className="w-100">
+                <div className="w-100 d-flex justify-content-start mb-4">
                   <h3 className="text-left fs-4">Traffic Light</h3>
                 </div>
-                <div className="w-100 h-auto d-flex flex-column gap-2">
-                  <div className="w-100 h-auto">
-                    <label className="w-50 mb-2 fs-6">Fat:</label>
-                    <div className="d-flex  w-100 gap-1">
-                      <div className="w-auto bg-secondary rounded px-2 py-1 d-flex justify-content-between gap-1">
-                        <input
-                          type="radio"
-                          id="fat-all"
-                          name="fat"
-                          value="all"
-                          checked={fatFilter === "all"}
-                          onChange={() => setFatFilter("all")}
-                        />
-                        <label
-                          htmlFor="fat-all"
-                          style={{ fontWeight: "bold", color: "black" }}
-                        >
-                          All
-                        </label>
-                      </div>
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-success">
-                        <input
-                          type="radio"
-                          id="fat-low"
-                          name="fat"
-                          value="low"
-                          checked={fatFilter === "low"}
-                          onChange={() => setFatFilter("low")}
-                        />
-                        <label
-                          htmlFor="fat-low"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          Low
-                        </label>
-                      </div>
-
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-warning">
-                        <input
-                          type="radio"
-                          id="fat-medium"
-                          name="fat"
-                          value="medium"
-                          checked={fatFilter === "medium"}
-                          onChange={() => setFatFilter("medium")}
-                        />
-                        <label
-                          htmlFor="fat-medium"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          Medium
-                        </label>
-                      </div>
-
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-danger">
-                        <input
-                          type="radio"
-                          id="fat-high"
-                          name="fat"
-                          value="high"
-                          checked={fatFilter === "high"}
-                          onChange={() => setFatFilter("high")}
-                        />
-                        <label
-                          htmlFor="fat-high"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          High
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-100 h-auto">
-                    <label className="w-50 mb-2 fs-6">Saturated Fat:</label>
-                    <div className="d-flex w-100 gap-1">
-                      <div className="w-auto bg-secondary rounded px-2 py-1 d-flex justify-content-between gap-1">
-                        <input
-                          type="radio"
-                          id="saturates-all"
-                          name="saturates"
-                          value="all"
-                          checked={saturatesFilter === "all"}
-                          onChange={() => setSaturatesFilter("all")}
-                        />
-                        <label
-                          htmlFor="saturates-all"
-                          style={{ fontWeight: "bold", color: "black" }}
-                        >
-                          All
-                        </label>
-                      </div>
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-success">
-                        <input
-                          type="radio"
-                          id="saturates-low"
-                          name="saturates"
-                          value="low"
-                          checked={saturatesFilter === "low"}
-                          onChange={() => setSaturatesFilter("low")}
-                        />
-                        <label
-                          htmlFor="saturates-low"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          Low
-                        </label>
-                      </div>
-
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-warning">
-                        <input
-                          type="radio"
-                          id="saturates-medium"
-                          name="saturates"
-                          value="medium"
-                          checked={saturatesFilter === "medium"}
-                          onChange={() => setSaturatesFilter("medium")}
-                        />
-                        <label
-                          htmlFor="saturates-medium"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          Medium
-                        </label>
-                      </div>
-
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-danger">
-                        <input
-                          type="radio"
-                          id="saturates-high"
-                          name="saturates"
-                          value="high"
-                          checked={saturatesFilter === "high"}
-                          onChange={() => setSaturatesFilter("high")}
-                        />
-                        <label
-                          htmlFor="saturates-high"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          High
-                        </label>
+                <div className="w-100 d-flex flex-column gap-2">
+                  {[
+                    { name: "Fat", state: fatFilter, setState: setFatFilter },
+                    {
+                      name: "Saturated Fat",
+                      state: saturatesFilter,
+                      setState: setSaturatesFilter,
+                    },
+                    {
+                      name: "Sugars",
+                      state: sugarsFilter,
+                      setState: setSugarsFilter,
+                    },
+                    {
+                      name: "Salt",
+                      state: saltFilter,
+                      setState: setSaltFilter,
+                    },
+                  ].map(({ name, state, setState }) => (
+                    <div key={name} className="w-100">
+                      <label className="w-50 mb-2 fs-6">{name}:</label>
+                      <div className="d-flex w-100 gap-1 flex-wrap">
+                        {[
+                          {
+                            id: "all",
+                            label: "All",
+                            color: "secondary",
+                            textColor: "black",
+                          },
+                          {
+                            id: "low",
+                            label: "Low",
+                            color: "success",
+                            textColor: "white",
+                          },
+                          {
+                            id: "medium",
+                            label: "Medium",
+                            color: "warning",
+                            textColor: "white",
+                          },
+                          {
+                            id: "high",
+                            label: "High",
+                            color: "danger",
+                            textColor: "white",
+                          },
+                        ].map(({ id, label, color, textColor }) => (
+                          <div
+                            key={id}
+                            className={`w-auto bg-${color} rounded px-2 py-1 d-flex gap-1`}
+                          >
+                            <input
+                              type="radio"
+                              id={`${name.toLowerCase()}-${id}`}
+                              name={name.toLowerCase()}
+                              value={id}
+                              checked={state === id}
+                              onChange={() => setState(id)}
+                            />
+                            <label
+                              htmlFor={`${name.toLowerCase()}-${id}`}
+                              style={{ fontWeight: "bold", color: textColor }}
+                            >
+                              {label}
+                            </label>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
-                  <div className="w-100 h-auto">
-                    <label className="w-50 mb-2 fs-6">Sugars:</label>
-                    <div className="d-flex  w-100 gap-1">
-                      <div className="w-auto bg-secondary rounded px-2 py-1 d-flex justify-content-between gap-1">
-                        <input
-                          type="radio"
-                          id="sugars-all"
-                          name="sugars"
-                          value="all"
-                          checked={sugarsFilter === "all"}
-                          onChange={() => setSugarsFilter("all")}
-                        />
-                        <label
-                          htmlFor="sugars-all"
-                          style={{ fontWeight: "bold", color: "black" }}
-                        >
-                          All
-                        </label>
-                      </div>
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-success">
-                        <input
-                          type="radio"
-                          id="sugars-low"
-                          name="sugars"
-                          value="low"
-                          checked={sugarsFilter === "low"}
-                          onChange={() => setSugarsFilter("low")}
-                        />
-                        <label
-                          htmlFor="sugars-low"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          Low
-                        </label>
-                      </div>
-
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-warning">
-                        <input
-                          type="radio"
-                          id="sugars-medium"
-                          name="sugars"
-                          value="medium"
-                          checked={sugarsFilter === "medium"}
-                          onChange={() => setSugarsFilter("medium")}
-                        />
-                        <label
-                          htmlFor="sugars-medium"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          Medium
-                        </label>
-                      </div>
-
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-danger">
-                        <input
-                          type="radio"
-                          id="sugars-high"
-                          name="sugars"
-                          value="high"
-                          checked={sugarsFilter === "high"}
-                          onChange={() => setSugarsFilter("high")}
-                        />
-                        <label
-                          htmlFor="sugars-high"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          High
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="w-100 h-auto">
-                    <label className="w-50 mb-2 fs-6">Salt:</label>
-                    <div className="d-flex  w-100 gap-1">
-                      <div className="w-auto bg-secondary rounded px-2 py-1 d-flex justify-content-between gap-1">
-                        <input
-                          type="radio"
-                          id="salt-all"
-                          name="salt"
-                          value="all"
-                          checked={saltFilter === "all"}
-                          onChange={() => setSaltFilter("all")}
-                        />
-                        <label
-                          htmlFor="salt-all"
-                          style={{ fontWeight: "bold", color: "black" }}
-                        >
-                          All
-                        </label>
-                      </div>
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-success">
-                        <input
-                          type="radio"
-                          id="salt-low"
-                          name="salt"
-                          value="low"
-                          checked={saltFilter === "low"}
-                          onChange={() => setSaltFilter("low")}
-                        />
-                        <label
-                          htmlFor="salt-low"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          Low
-                        </label>
-                      </div>
-
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-warning">
-                        <input
-                          type="radio"
-                          id="salt-medium"
-                          name="salt"
-                          value="medium"
-                          checked={saltFilter === "medium"}
-                          onChange={() => setSaltFilter("medium")}
-                        />
-                        <label
-                          htmlFor="salt-medium"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          Medium
-                        </label>
-                      </div>
-
-                      <div className="w-auto px-2 py-1 d-flex justify-content-between gap-1 rounded bg-danger">
-                        <input
-                          type="radio"
-                          id="salt-high"
-                          name="salt"
-                          value="high"
-                          checked={saltFilter === "high"}
-                          onChange={() => setSaltFilter("high")}
-                        />
-                        <label
-                          htmlFor="salt-high"
-                          style={{ fontWeight: "bold", color: "white" }}
-                        >
-                          High
-                        </label>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             )}
           </div>
 
           <div className="container-fluid">
-            <div className="d-flex justify-content-between align-items-center">
-              <div
-                className="nav-search"
-                style={{ outlineColor: "#7D9F00", borderColor: "#7D9F00" }}
-              >
-                <div className="form-outline" data-mdb-input-init>
+            <div className="d-flex flex-wrap justify-content-between align-items-center search-container">
+              <div className="nav-search">
+                <div className="form-outline">
                   <MDBInput
                     type="text"
                     id="formTextExample1"
@@ -1135,19 +917,18 @@ const Product = ({ isChecked, isToggle }) => {
                     value={searchTerm}
                     onChange={handleSearchChange}
                     onKeyDown={handleKeyDown}
-                    style={{ outlineColor: "#7D9F00", borderColor: "#7D9F00" }}
                   />
                   {searchTerm !== "" && (
-                    <div style={{ maxHeight: "160px", overflowY: "auto" }}>
+                    <div className="search-results">
                       {searchResults.map((productItem) => (
                         <div
                           key={productItem.product_id}
-                          style={{ marginBottom: "10px" }}
+                          className="search-item"
                         >
                           <Card.Body>
                             <Link
                               to={`/product-detail/${productItem.product_id}`}
-                              style={{ textDecoration: "none" }}
+                              className="search-link"
                             >
                               <p>{truncate(productItem.product_name, 50)}</p>
                             </Link>
@@ -1164,17 +945,12 @@ const Product = ({ isChecked, isToggle }) => {
 
               <div className="form-check form-switch">
                 <input
-                  className="form-check-input"
+                  className="form-check-input switch-input"
                   type="checkbox"
                   role="switch"
                   id="flexSwitchCheckChecked"
                   checked={isChecked}
                   onChange={isToggle}
-                  style={{
-                    backgroundColor: isChecked ? "#D89834" : "",
-                    borderColor: isChecked ? "#D89834" : "",
-                    color: isChecked ? "#D89834" : "",
-                  }}
                 />
                 <label
                   className="form-check-label"
@@ -1188,116 +964,64 @@ const Product = ({ isChecked, isToggle }) => {
             {loading ? (
               <LoadingIndicator />
             ) : (
-              <Row className="d-flex gap-3 mt-2">
-                {currentFood.map((productItem, index) => {
-                  return (
-                    <Col
-                      // style={{ marginTop: "1rem" }}
-                      key={productItem.product_id}
-                      // xs={12}
-                      // sm={6}
-                      md={4}
-                      lg={3}
-                      className={isOpenAIChatBox ? `` : `w-auto h-auto mx-auto`}
+              <Row className="d-flex gap-3 mt-2 justify-content-center">
+                {currentFood.map((productItem) => (
+                  <Col
+                    key={productItem.product_id}
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={3}
+                    className={`product-col ${
+                      isOpenAIChatBox ? "" : "w-auto h-auto mx-auto"
+                    }`}
+                  >
+                    <Card
+                      className={`card-product ${
+                        !isChecked ? "no-traffic-light" : ""
+                      }`}
                     >
-                      <Card
-                        style={
-                          {
-                            // width: "18rem",
-                            // maxHeight: "27.5rem",
-                            // minHeight: "20rem",
-                            // height: "100%",
-                            // overflow: "hidden",
-                          }
-                        }
-                        className={`card-product ${
-                          !isChecked ? "no-traffic-light" : ""
-                        }`}
-                      >
-                        <Link to={`/product-detail/${productItem.product_id}`}>
-                          {productItem.img ? (
-                            <Card.Img
-                              variant="top"
-                              src={productItem.img}
-                              style={{ minHeight: "12rem" }}
-                              // className="w-100 h-100 overflow-hidden rounded-top"
-                              className="card-product-img"
+                      <Link to={`/product-detail/${productItem.product_id}`}>
+                        {productItem.img ? (
+                          <Card.Img
+                            variant="top"
+                            src={productItem.img}
+                            className="card-product-img"
+                          />
+                        ) : (
+                          <div className="no-image-placeholder">
+                            <span>No Image Available</span>
+                          </div>
+                        )}
+                        <Card.Body className="card-product-container">
+                          <Card.Title
+                            className="card-product-title"
+                            title={productItem.product_name}
+                          >
+                            {truncate(productItem.product_name, 21)}
+                          </Card.Title>
+                          {isChecked && (
+                            <TrafficLight
+                              productId={productItem.product_id}
+                              showText={false}
+                              mainPage={true}
+                              showPerContainer={true}
+                              theWidth="calc(203px + 3vw)"
                             />
-                          ) : (
-                            <div
-                              style={{
-                                width: "17rem",
-                                height: "12rem",
-                                backgroundColor: "#e0e0e0",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                              }}
-                            >
-                              <span>No Image Available</span>
-                            </div>
                           )}
-                          <Card.Body
-                            // className="w-100 h-auto d-flex justify-content-center align-items-center"
-                            style={{ padding: "0" }}
-                            className="card-product-container"
-                          >
-                            <div
-                            // className="w-100 h-100 d-flex flex-column  align-items-center gap-2"
-                            >
-                              <Card.Title
-                                className="card-product-title"
-                                title={productItem.product_name}
-                              >
-                                {truncate(productItem.product_name, 21)}
-                              </Card.Title>
-                              {isChecked && (
-                                <TrafficLight
-                                  productId={productItem.product_id}
-                                  showText={false}
-                                  mainPage={true}
-                                  showPerContainer={true}
-                                  theWidth="calc(203px + 3vw)"
-                                />
-                              )}
-                            </div>
-                          </Card.Body>
-                        </Link>
-                        <div className="d-flex justify-content-center">
-                          {/* // className="d-flex justify-content-between align-items-center"> */}
-                          {/* <Link
-                                to={`/product-detail/${productItem.product_id}`}
-                              >
-                                <Button
-                                  variant="outlined"
-                                  size="small"
-                                  color="warning"
-                                >
-                                  View Detail
-                                </Button>
-                              </Link> */}
-                          <Button
-                            // variant="contained"
-                            // color="success"
-                            // size="medium"
-                            // className="px-5 py-2 mr-3"
-                            className="button-primary button-add-to-cart text-center d-flex align-items-center justify-content-center"
-                            onClick={() => handleAddToCart(productItem)}
-                          >
-                            <span>
-                              <i
-                                style={{
-                                  fontSize: "17px",
-                                }}
-                                className="fa-solid fa-cart-shopping"
-                              ></i>
-                            </span>
-                          </Button>
-                        </div>
-                      </Card>
-                    </Col>
-                  );
-                })}
+                        </Card.Body>
+                      </Link>
+                      <div className="d-flex justify-content-center mt-auto">
+                        <Button
+                          className="button-primary button-add-to-cart"
+                          onClick={() => handleAddToCart(productItem)}
+                        >
+                          <i className="fa-solid fa-cart-shopping"></i>
+                        </Button>
+                      </div>
+                    </Card>
+                  </Col>
+                ))}
               </Row>
             )}
           </div>
@@ -1326,41 +1050,6 @@ const Product = ({ isChecked, isToggle }) => {
                   caloriesCurrent={caloriesCurrent}
                   caloriesMaxSuggestion={caloriesMaxSuggestion}
                 />
-                {/* <div
-                  className="AI-advisor-status"
-                  // className="StatusBar d-flex align-items-center"
-                  // style={{
-                  //   display: "flex",
-                  //   width: 300,
-                  //   alignItems: "center",
-                  //   gap: "10px",
-                  //   padding: "10px 15px",
-                  //   backgroundColor: "#e9ecef",
-                  //   borderRadius: "8px",
-                  //   fontSize: "16px",
-                  //   fontWeight: "500",
-                  //   color: "#333",
-                  //   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                  // }}
-                >
-                  <p style={{ margin: 0, fontWeight: "400" }}>Max Calories:</p>
-                  <span
-                    style={{
-                      color:
-                        caloriesCurrent > caloriesMaxSuggestion
-                          ? "#dc3545"
-                          : "#007bff",
-                    }}
-                  >
-                    {caloriesCurrent}
-                  </span>
-                  <span style={{ fontWeight: "bold", color: "#6c757d" }}>
-                    /
-                  </span>
-                  <span style={{ color: "#28a745" }}>
-                    {caloriesMaxSuggestion}
-                  </span>
-                </div> */}
               </div>
 
               {/* Dropdown content */}
@@ -1369,9 +1058,6 @@ const Product = ({ isChecked, isToggle }) => {
                   <section className="mb-4">
                     <p className="title-filter-chatbox">Profile</p>
                     <hr className="divider" />
-                    {/* <div>
-                      <h3> Products Suggestion By ChatBot AI</h3>
-                    </div> */}
                     <form className="w-100 mt-3" onSubmit={handleUserInfo}>
                       <div className="w-100 d-flex align-items-center justify-content-between gap-3">
                         <div className="w-50">
