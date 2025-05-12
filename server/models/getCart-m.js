@@ -119,7 +119,7 @@ export default class Cart {
         await dbPool.query(insertQuery, [userId, productId]);
       }
       return {
-        status: "success",
+        status: 200,
         message: "Product added to cart successfully",
       };
     } catch (error) {

@@ -211,6 +211,7 @@ const Product = ({ isChecked, isToggle }) => {
       setMaxCal(caloriesMaxValue);
 
       setFoodGroup(foodGroups);
+      setSelectedCategory(foodGroups);
       setFatSuggest(fat);
       setSaturatesSuggest(saturates);
       setSugarSuggest(sugar);
@@ -237,16 +238,16 @@ const Product = ({ isChecked, isToggle }) => {
       alert("There was an error sending the request.");
     }
   };
-  const [loggedIn, setLoggedIn] = useState(true);
-  // useEffect(() => {
-  //   const storedUser = localStorage.getItem("user");
-  //   const token = localStorage.getItem("token");
-  //   if (storedUser || token) {
-  //     setLoggedIn(true);
-  //   } else {
-  //     setLoggedIn(false);
-  //   }
-  // }, []);
+  const [loggedIn, setLoggedIn] = useState(false);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    if (storedUser || token) {
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (productSuggestion && productSuggestion.length > 0) {
@@ -437,6 +438,8 @@ const Product = ({ isChecked, isToggle }) => {
               level0: foodGroups || null,
             },
           });
+
+          console.log("filter: ", response.data);
 
           const filteredProducts = response.data
             .map((filteredItem) => {
@@ -964,17 +967,15 @@ const Product = ({ isChecked, isToggle }) => {
             {loading ? (
               <LoadingIndicator />
             ) : (
-              <Row className="d-flex gap-3 mt-2 justify-content-center">
+              <Row className={`g-4 mt-2 ${isOpenAIChatBox ? "w-75" : "w-100"}`}>
                 {currentFood.map((productItem) => (
                   <Col
                     key={productItem.product_id}
                     xs={12}
-                    sm={6}
-                    md={4}
-                    lg={3}
-                    className={`product-col ${
-                      isOpenAIChatBox ? "" : "w-auto h-auto mx-auto"
-                    }`}
+                    sm={12}
+                    md={isOpenAIChatBox ? 12 : 6}
+                    lg={isOpenAIChatBox ? 6 : 4}
+                    className={`product-col`}
                   >
                     <Card
                       className={`card-product ${
@@ -998,7 +999,7 @@ const Product = ({ isChecked, isToggle }) => {
                             className="card-product-title"
                             title={productItem.product_name}
                           >
-                            {truncate(productItem.product_name, 21)}
+                            {truncate(productItem.product_name, 17)}
                           </Card.Title>
                           {isChecked && (
                             <TrafficLight
@@ -1027,250 +1028,250 @@ const Product = ({ isChecked, isToggle }) => {
           </div>
 
           {/* AI CHATBOX */}
-          {loggedIn && (
-            <div
-              className={`AI-advisor-container ${
-                isOpenAIChatBox ? "open" : "closed"
-              }`}
-              // className="d-flex flex-column w-50 h-75 align-items-center justify-content-center"
-            >
-              <div className="AI-advisor-header" onClick={toggleAIChatBox}>
-                <div className="AI-advisor-header-title">
-                  AI Product Advisor
-                  <span
-                    className={`AI-toggle-icon ${
-                      isOpenAIChatBox ? "open" : ""
-                    }`}
-                  >
-                    {isOpenAIChatBox ? "▲" : "▼"}
-                  </span>
-                </div>
-                <hr className="AI-header-divider" />
-                <StatusBar
-                  caloriesCurrent={caloriesCurrent}
-                  caloriesMaxSuggestion={caloriesMaxSuggestion}
-                />
+          {/* {loggedIn && ( */}
+          <div
+            className={`AI-advisor-container ${
+              isOpenAIChatBox ? "open" : "closed"
+            }`}
+            // className="d-flex flex-column w-50 h-75 align-items-center justify-content-center"
+          >
+            <div className="AI-advisor-header" onClick={toggleAIChatBox}>
+              <div className="AI-advisor-header-title">
+                AI Product Advisor
+                <span
+                  className={`AI-toggle-icon ${isOpenAIChatBox ? "open" : ""}`}
+                >
+                  {isOpenAIChatBox ? "▲" : "▼"}
+                </span>
               </div>
-
-              {/* Dropdown content */}
-              {isOpenAIChatBox && (
-                <div className="AI-advisor-content">
-                  <section className="mb-4">
-                    <p className="title-filter-chatbox">Profile</p>
-                    <hr className="divider" />
-                    <form className="w-100 mt-3" onSubmit={handleUserInfo}>
-                      <div className="w-100 d-flex align-items-center justify-content-between gap-3">
-                        <div className="w-50">
-                          <div className="mb-3 d-flex align-items-center justify-content-between">
-                            <label for="userAge" className="form-label fs-6">
-                              Age
-                            </label>
-                            <input
-                              id="userAge"
-                              className="form-control w-50"
-                              placeholder="20"
-                              type="number"
-                              value={age}
-                              min="1"
-                              onChange={(event) => {
-                                setAge(event.target.value);
-                              }}
-                              required
-                              style={{
-                                backgroundColor: "#FBF4EA",
-                                borderColor: "#7D9F00",
-                              }}
-                            />
-                          </div>
-                          <div className="mb-3 d-flex align-items-center justify-content-between gap-2">
-                            <label
-                              for="userGender"
-                              className=" form-label fs-6"
-                            >
-                              Gender
-                            </label>
-                            <select
-                              id="userGender"
-                              className="form-select form-select-sm w-50"
-                              required
-                              value={gender}
-                              onChange={(event) =>
-                                setGender(event.target.value)
-                              }
-                              style={{
-                                backgroundColor: "#FBF4EA",
-                                borderColor: "#7D9F00",
-                              }}
-                            >
-                              <option value="male">Male</option>
-                              <option value="female">Female</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="w-50">
-                          <div className="w-100 mb-3 d-flex align-items-center gap-2 justify-content-between">
-                            <label for="userWeight" className="form-label fs-6">
-                              Weight (kg)
-                            </label>
-                            <input
-                              id="userWeight"
-                              className="form-control w-50"
-                              placeholder="60"
-                              type="number"
-                              min="1"
-                              value={weight}
-                              onChange={(event) => {
-                                setWeight(event.target.value);
-                              }}
-                              required
-                              style={{
-                                backgroundColor: "#FBF4EA",
-                                borderColor: "#7D9F00",
-                              }}
-                            />
-                          </div>
-                          <div className="w-100 mb-3 d-flex align-items-center justify-content-between gap-2">
-                            <label for="userHeight" className="form-label fs-6">
-                              Height (cm)
-                            </label>
-                            <input
-                              id="userHeight"
-                              className="form-control w-50"
-                              min="10"
-                              placeholder="170"
-                              type="number"
-                              value={height}
-                              onChange={(event) => {
-                                setHeight(event.target.value);
-                              }}
-                              style={{
-                                backgroundColor: "#FBF4EA",
-                                borderColor: "#7D9F00",
-                              }}
-                              required
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="w-100 d-flex align-items-center justify-content-between gap-2">
-                        <label for="userGoal" className=" form-label fs-6">
-                          Goal
-                        </label>
-                        <select
-                          id="userGoal"
-                          className="form-select form-select w-50"
-                          required
-                          value={goal}
-                          onChange={(event) => setGoal(event.target.value)}
-                          style={{
-                            backgroundColor: "#FBF4EA",
-                            borderColor: "#7D9F00",
-                          }}
-                        >
-                          <option value="loseWeight">Lose weight</option>
-                          <option value="gainWeight">Gain weight</option>
-                          <option value="maintainWeight">
-                            Maintain weight
-                          </option>
-                          <option value="none">None</option>
-                        </select>
-                        <button
-                          className="btn btn-primary"
-                          type="submit"
-                          style={{
-                            backgroundColor: "#D89834",
-                            fontSize: "15px",
-                          }}
-                        >
-                          Set
-                        </button>
-                      </div>
-                    </form>
-                  </section>
-                  <section className="container p-0 w-100">
-                    <p className="title-filter-chatbox">ChatBox</p>
-                    <hr className="divider" />
-
-                    <ul
-                      ref={chatParent}
-                      className="chat-box-frame list-unstyled p-3 rounded-3 border-none outline-none shadow-none shadow-sm overflow-auto"
-                      style={{ height: "500px", backgroundColor: "#FDEED8" }}
-                    >
-                      {messages && messages.length > 0 ? (
-                        messages.map((m, index) => (
-                          <li
-                            key={m.id || index}
-                            className={
-                              m.role === "user"
-                                ? "d-flex mb-3"
-                                : "d-flex flex-row-reverse mb-3"
-                            }
-                          >
-                            <div
-                              className={`p-3 rounded-3 shadow-sm`}
-                              style={{
-                                backgroundColor:
-                                  m.role === "user" ? "#D2E296" : "#FBF4EA",
-                              }}
-                            >
-                              <p className="mb-0 fs-6">
-                                {handleNewlines(m.content)}
-                              </p>
-                            </div>
-                          </li>
-                        ))
-                      ) : (
-                        <p className="mb-0 fs-6">
-                          If you want me to recommend products based on your
-                          health, please fill out the form above now.
-                        </p>
-                      )}
-                    </ul>
-                  </section>
-                  <form
-                    className="d-flex align-items-center"
-                    onSubmit={handleSubmit}
-                  >
-                    <input
-                      className="form-control flex-1 me-2"
-                      placeholder="Type your question here..."
-                      type="text"
-                      value={input}
-                      onChange={(event) => {
-                        setInput(event.target.value);
-                      }}
-                      style={{
-                        backgroundColor: "#FBF4EA",
-                        borderColor: "#7D9F00",
-                      }}
-                    />
-                    <button
-                      className="btn btn-primary"
-                      type="submit"
-                      style={{ backgroundColor: "#D89834" }}
-                    >
-                      <i
-                        style={{ fontSize: "14px" }}
-                        class="fa-solid fa-paper-plane"
-                      ></i>
-                    </button>
-                  </form>
-                  <Button
-                    variant="contained"
-                    className="mt-2 w-100"
-                    size="small"
-                    color="error"
-                    onClick={deleteMessage}
-                  >
-                    Remove all messages
-                  </Button>
-                </div>
-              )}
-
-              {/* END DROPDOWN CONTENT */}
+              <hr className="AI-header-divider" />
+              <StatusBar
+                caloriesCurrent={caloriesCurrent}
+                caloriesMaxSuggestion={caloriesMaxSuggestion}
+              />
             </div>
-            // END AI CHATBOX
-          )}
+
+            {/* Dropdown content */}
+            {isOpenAIChatBox && (
+              <div className="AI-advisor-content">
+                <section className="mb-4">
+                  <p className="title-filter-chatbox">Profile</p>
+                  <hr className="divider" />
+                  <form className="w-100 mt-3" onSubmit={handleUserInfo}>
+                    <div className="w-100 d-flex align-items-center justify-content-between gap-3">
+                      <div className="w-50">
+                        <div className="mb-3 d-flex align-items-center justify-content-between">
+                          <label htmlFor="userAge" className="form-label fs-6">
+                            Age
+                          </label>
+                          <input
+                            id="userAge"
+                            className="form-control w-50"
+                            placeholder="20"
+                            type="number"
+                            value={age}
+                            min="1"
+                            onChange={(event) => {
+                              setAge(event.target.value);
+                            }}
+                            required
+                            style={{
+                              backgroundColor: "#FBF4EA",
+                              borderColor: "#7D9F00",
+                            }}
+                          />
+                        </div>
+                        <div className="mb-3 d-flex align-items-center justify-content-between gap-2">
+                          <label
+                            htmlFor="userGender"
+                            className=" form-label fs-6"
+                          >
+                            Gender
+                          </label>
+                          <select
+                            id="userGender"
+                            className="form-select form-select-sm w-50"
+                            required
+                            value={gender}
+                            onChange={(event) => setGender(event.target.value)}
+                            style={{
+                              backgroundColor: "#FBF4EA",
+                              borderColor: "#7D9F00",
+                            }}
+                          >
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="w-50">
+                        <div className="w-100 mb-3 d-flex align-items-center gap-2 justify-content-between">
+                          <label
+                            htmlFor="userWeight"
+                            className="form-label fs-6"
+                          >
+                            Weight (kg)
+                          </label>
+                          <input
+                            id="userWeight"
+                            className="form-control w-50"
+                            placeholder="60"
+                            type="number"
+                            min="1"
+                            value={weight}
+                            onChange={(event) => {
+                              setWeight(event.target.value);
+                            }}
+                            required
+                            style={{
+                              backgroundColor: "#FBF4EA",
+                              borderColor: "#7D9F00",
+                            }}
+                          />
+                        </div>
+                        <div className="w-100 mb-3 d-flex align-items-center justify-content-between gap-2">
+                          <label
+                            htmlFor="userHeight"
+                            className="form-label fs-6"
+                          >
+                            Height (cm)
+                          </label>
+                          <input
+                            id="userHeight"
+                            className="form-control w-50"
+                            min="10"
+                            placeholder="170"
+                            type="number"
+                            value={height}
+                            onChange={(event) => {
+                              setHeight(event.target.value);
+                            }}
+                            style={{
+                              backgroundColor: "#FBF4EA",
+                              borderColor: "#7D9F00",
+                            }}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="w-100 d-flex align-items-center justify-content-between gap-2">
+                      <label htmlFor="userGoal" className=" form-label fs-6">
+                        Goal
+                      </label>
+                      <select
+                        id="userGoal"
+                        className="form-select form-select w-50"
+                        required
+                        value={goal}
+                        onChange={(event) => setGoal(event.target.value)}
+                        style={{
+                          backgroundColor: "#FBF4EA",
+                          borderColor: "#7D9F00",
+                        }}
+                      >
+                        <option value="loseWeight">Lose weight</option>
+                        <option value="gainWeight">Gain weight</option>
+                        <option value="maintainWeight">Maintain weight</option>
+                        <option value="none">None</option>
+                      </select>
+                      <button
+                        className="btn btn-primary"
+                        type="submit"
+                        style={{
+                          backgroundColor: "#D89834",
+                          fontSize: "15px",
+                        }}
+                      >
+                        Set
+                      </button>
+                    </div>
+                  </form>
+                </section>
+                <section className="container p-0 w-100">
+                  <p className="title-filter-chatbox">ChatBox</p>
+                  <hr className="divider" />
+
+                  <ul
+                    ref={chatParent}
+                    className="chat-box-frame list-unstyled p-3 rounded-3 border-none outline-none shadow-none shadow-sm overflow-auto"
+                    style={{ height: "500px", backgroundColor: "#FDEED8" }}
+                  >
+                    {messages && messages.length > 0 ? (
+                      messages.map((m, index) => (
+                        <li
+                          key={m.id || index}
+                          className={
+                            m.role === "user"
+                              ? "d-flex mb-3"
+                              : "d-flex flex-row-reverse mb-3"
+                          }
+                        >
+                          <div
+                            className={`p-3 rounded-3 shadow-sm`}
+                            style={{
+                              backgroundColor:
+                                m.role === "user" ? "#D2E296" : "#FBF4EA",
+                            }}
+                          >
+                            <p className="mb-0 fs-6">
+                              {handleNewlines(m.content)}
+                            </p>
+                          </div>
+                        </li>
+                      ))
+                    ) : (
+                      <p className="mb-0 fs-6">
+                        If you want me to recommend products based on your
+                        health, please fill out the form above now.
+                      </p>
+                    )}
+                  </ul>
+                </section>
+                <form
+                  className="d-flex align-items-center"
+                  onSubmit={handleSubmit}
+                >
+                  <input
+                    className="form-control flex-1 me-2"
+                    placeholder="Type your question here..."
+                    type="text"
+                    value={input}
+                    onChange={(event) => {
+                      setInput(event.target.value);
+                    }}
+                    style={{
+                      backgroundColor: "#FBF4EA",
+                      borderColor: "#7D9F00",
+                    }}
+                  />
+                  <button
+                    className="btn btn-primary"
+                    type="submit"
+                    style={{ backgroundColor: "#D89834" }}
+                  >
+                    <i
+                      style={{ fontSize: "14px" }}
+                      className="fa-solid fa-paper-plane"
+                    ></i>
+                  </button>
+                </form>
+                <Button
+                  variant="contained"
+                  className="mt-2 w-100"
+                  size="small"
+                  color="error"
+                  onClick={deleteMessage}
+                >
+                  Remove all messages
+                </Button>
+              </div>
+            )}
+
+            {/* END DROPDOWN CONTENT */}
+          </div>
+          {/* END AI CHATBOX */}
+          {/* // )} */}
         </div>
 
         <div style={{ marginTop: "6rem" }}>

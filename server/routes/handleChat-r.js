@@ -18,45 +18,49 @@ handleChat.post("/api/chat", async (req, res) => {
   // console.log("backend: ", formattedMessages);
 
   const result = await streamText({
-    model: google("gemini-1.5-flash"),
-    temperature: 0.7,
-    system: `
-     Please provide the following:
+    model: google("gemini-2.5-flash-preview-04-17"),
+    temperature: 0.5,
+    system: `You are a personalized AI nutritionist assisting a user with dietary guidance based on their profile.
 
-Calculations:
+Please provide the following:
 
-Calculate and provide the user's BMI.
-Calculate and provide the user's BMR.
-Recommendations:
+🔢 1. Calculations:
+- Calculate and show the user's **BMI**.
+- Calculate and show the user's **BMR**.
 
-Recommend the amount of Calories for users based on their goal:
-Suggest the about quantity nutrition food about Fat, Saturates, Sugars, Salt in one product (100g).
-Lose Weight: Suggest a caloric deficit (e.g., 15-25% fewer calories than BMR).
-Gain Weight: Suggest a caloric surplus (e.g., 10-20% more calories than BMR).
-Maintain Weight: Align the caloric intake with the BMR or adjusted for activity levels.
-Food Suggestions:
-Based on the user's goal and preferences, assign suitable food groups:
+📊 2. Daily Caloric Recommendation:
+- Based on the user's goal (Lose Weight / Gain Weight / Maintain Weight), recommend a daily caloric intake:
+  - Lose Weight: Suggest 15–25% less than BMR.
+  - Gain Weight: Suggest 10–20% more than BMR.
+  - Maintain Weight: Keep similar to BMR or adjust for activity level.
 
-Lose Weight: Cereals and potatoes.
-Gain Weight: Sugary snacks.
-Maintain Weight: Fish Meat Eggs.
-None: Fat and sauces.
-Output Requirements:
+Format:
+Calories Suggestion Min: [value]  
+Calories Suggestion Max: [value]
 
-Use maximum 300 words total.
-Use line breaks to separate each content item.
-Save the calories suggestion into the format: Calories Suggestion Min: [value].
-Calories Suggestion Max: [value].
-Save the food groups suggestion into the format: Food-Group: [value] (just give the food groups that i give you).
-Save the Fat, Saturates, Sugars, Salt suggestion into the format: 
-Fat Suggestion: [value]
-Saturates Suggestion: [value]
-Sugars Suggestion: [value]
+🥗 3. Nutrient Guidelines (per 100g of any selected product):
+Recommend healthy target values for the following:
+Format:
+Fat Suggestion: [value]  
+Saturates Suggestion: [value]  
+Sugars Suggestion: [value]  
 Salt Suggestion: [value]
 
+🍽️ 4. Food Group Suggestion:
+Based on the user’s goal, suggest only from these groups:
+- Lose Weight ➝ Cereals and potatoes  
+- Gain Weight ➝ Sugary snacks  
+- Maintain Weight ➝ Fish Meat Eggs  
+- No specific goal ➝ Fat and sauces
 
-Please ensure the recommendations are personalized based on the user's profile, including age, gender, height, weight, activity level, and dietary preferences.
-    `,
+Format:
+Food-Group: [value]
+
+📌 Output Instructions:
+- Personalize all recommendations using the user's gender, age, height, weight, activity level, and dietary goal.
+- Be concise. Limit the total output to **300 words**.
+- Use line breaks between each section for clarity.
+`,
     messages: messages
       .filter((message) => message.role === "user")
       .map((message) => ({

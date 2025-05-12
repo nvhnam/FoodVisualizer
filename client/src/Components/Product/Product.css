@@ -34,7 +34,7 @@
   background-color: var(--color-acent-1-begie-2nd) !important;
   border-radius: 20px !important;
   box-shadow: var(--effect-cardProduct-shadow) !important;
-  height: calc(254px + 8vw) !important;
+  height: calc(294px + 8vw) !important;
   overflow: hidden !important;
   position: relative !important;
   width: calc(203px + 4vw) !important;
@@ -55,8 +55,7 @@
 }
 
 .product-col {
-  display: flex;
-  justify-content: center;
+  width: 100%;
 }
 
 .card-product-img {
@@ -148,11 +147,11 @@
 
 @media screen and (min-width: 600px) and (max-width: 999px) {
   .card-product {
-    height: calc(254px + 14vw) !important;
+    height: calc(274px + 14vw) !important;
   }
 
   .card-product.no-traffic-light {
-    height: calc(254px + 1vw) !important;
+    height: calc(284px + 1vw) !important;
   }
 
   .card-product.no-traffic-light .card-product-container .card-product-title {
@@ -199,7 +198,7 @@
 
 /* General container styling */
 .AI-advisor-container {
-  width: calc(450px + 2vw);
+  width: calc(550px + 2vw);
   max-width: 100%;
   height: auto;
   border-radius: 10px;
@@ -222,7 +221,7 @@
   }
 
   .chat-box-frame {
-    height: 400px !important;
+    height: 580px !important;
     will-change: height;
   }
 }
@@ -349,11 +348,6 @@
 .switch-input {
   background-color: #d89834;
   border-color: #d89834;
-}
-
-.product-col {
-  display: flex;
-  justify-content: center;
 }
 
 .card-product-img {

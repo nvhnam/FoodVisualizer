@@ -46,6 +46,7 @@
   display: flex;
   /* gap: 5px; */
   position: relative;
+  background-color: var(--color-acent-1-begie-2nd) !important;
   width: 100%;
   overflow: hidden;
 }

@@ -33,7 +33,6 @@ const Header = () => {
         });
 
       const storedUser = localStorage.getItem("user");
-      const token = localStorage.getItem("token");
 
       if (storedUser) {
         if (JSON.parse(storedUser)) {
@@ -47,10 +46,13 @@ const Header = () => {
   }, [username]);
 
   const handleLogout = async () => {
-    await fetch(`${URL || `http://localhost:${PORT}`}/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
+    const token = localStorage.getItem("token");
+    if (!token) {
+      await fetch(`${URL || `http://localhost:${PORT}`}/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    }
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -106,7 +108,10 @@ const Header = () => {
                     className="user-info"
                     style={{ pointerEvents: "none" }}
                   >
-                    <i className="fa-solid fa-user"></i>
+                    <i
+                      className="fa-solid fa-user"
+                      style={{ marginRight: "8px" }}
+                    ></i>
                     {username.length >= 10
                       ? username.substr(0, 10) + "..."
                       : username}

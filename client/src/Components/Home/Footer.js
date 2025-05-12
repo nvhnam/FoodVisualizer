@@ -37,7 +37,10 @@ const Footer = () => {
           <a href="/" className="me-4 text-reset">
             <MDBIcon color="secondary" fab icon="linkedin" />
           </a>
-          <a href="/" className="me-4 text-reset">
+          <a
+            href="https://github.com/nvhnam/FoodVisualizer/tree/main"
+            className="me-4 text-reset"
+          >
             <MDBIcon color="secondary" fab icon="github" />
           </a>
         </div>
@@ -105,12 +108,12 @@ const Footer = () => {
             <MDBCol md="4" lg="3" xl="3" className="mx-auto mb-md-0 mb-4">
               <h6 className="text-uppercase fw-bold mb-4">Contact</h6>
               <p>
-                <MDBIcon color="secondary" icon="home" className="me-2" />
-                New York, NY 10012, US
+                <MDBIcon color="secondary" icon="home" className="me-3" />
+                Ho Chi Minh City, Vietnam
               </p>
               <p>
                 <MDBIcon color="secondary" icon="envelope" className="me-3" />
-                info@example.com
+                nvhnam01@gmail.com
               </p>
               <p>
                 <MDBIcon color="secondary" icon="phone" className="me-3" /> + 01

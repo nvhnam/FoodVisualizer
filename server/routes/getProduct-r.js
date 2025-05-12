@@ -97,10 +97,11 @@ getProduct.get("/categories", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 getProduct.get("/filter", async (req, res) => {
-  const { id, level0 } = req.query;
+  const { level0 } = req.query;
   try {
-    const products = await Product.getProductByIdOrCategory(id, level0);
+    const products = await Product.getFilteredProductNutrients(level0);
     res.json(products);
   } catch (error) {
     console.error("Error fetching filtered foods:", error);
