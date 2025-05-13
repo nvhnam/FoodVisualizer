@@ -27,7 +27,7 @@ const ProductDetail = ({ isChecked }) => {
   const chatParent = useRef(null);
   const { messages, input, setInput, append, setMessages } = useChat({
     streamProtocol: "text",
-    fetch: `${URL || `http://localhost:${PORT}`}/api/chat`,
+    fetch: `${URL || `http://localhost:${PORT}`}/api/chat-product`,
   });
   const handleNewlines = (text) => {
     return text.split("\n").map((str, index) => (
@@ -120,7 +120,7 @@ const ProductDetail = ({ isChecked }) => {
       // Send messages to backend
       // console.log("FE: ", updatedMessages);
       const response = await fetch(
-        `${URL || `http://localhost:${PORT}`}/api/chat`,
+        `${URL || `http://localhost:${PORT}`}/api/chat-product`,
         {
           method: "POST",
           headers: {
@@ -282,7 +282,7 @@ const ProductDetail = ({ isChecked }) => {
           className="StatusBar d-flex align-items-center"
           style={{
             display: "flex",
-            width: 300,
+            width: "500px",
             alignItems: "center",
             gap: "10px",
             padding: "10px 15px",
@@ -394,94 +394,91 @@ const ProductDetail = ({ isChecked }) => {
               </div>
             </div>
 
-            {loggedIn && (
-              <div
-                className="chatbot"
-                style={{ width: "300px", height: "100%" }}
-              >
-                <div className="d-flex flex-column w-100 h-100 align-items-center justify-content-center">
-                  <StatusBar
-                    caloriesCurrent={caloriesCurrent}
-                    caloriesMaxSuggestion={caloriesMaxSuggestion}
-                  />
-                  <section className="container p-0 w-100">
-                    <ul
-                      ref={chatParent}
-                      className="list-unstyled p-3 rounded-3 shadow-sm overflow-auto"
-                      style={{
-                        height: "400px",
-                        maxWidth: "100%",
-                        overflowY: "auto",
-                        overflowX: "hidden",
-                        backgroundColor: "#FDEED8",
-                      }}
-                    >
-                      {messages.map((m, index) => (
-                        <li
-                          key={m.id || index}
-                          className={
-                            m.role === "user"
-                              ? "d-flex mb-3"
-                              : "d-flex flex-row-reverse mb-3"
-                          }
-                        >
-                          <div
-                            className={`p-3 rounded-3 shadow-sm`}
-                            style={{
-                              backgroundColor:
-                                m.role === "user" ? "#D2E296" : "#FBF4EA",
-                            }}
-                          >
-                            <p className="mb-0 fs-6">
-                              {handleNewlines(m.content)}
-                            </p>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                  <section className="mb-4">
-                    <form
-                      className="d-flex align-items-center"
-                      onSubmit={handleSubmit}
-                    >
-                      <input
-                        className="form-control flex-1 me-2"
-                        placeholder="Type your question here..."
-                        type="text"
-                        value={input}
-                        onChange={(event) => {
-                          setInput(event.target.value);
-                        }}
-                        style={{
-                          backgroundColor: "#FBF4EA",
-                          borderColor: "#7D9F00",
-                        }}
-                      />
-                      <button
-                        style={{ backgroundColor: "#D89834" }}
-                        className="btn btn-primary"
-                        type="submit"
+            {/* {loggedIn && ( */}
+            <div className="chatbot" style={{ width: "600px", height: "100%" }}>
+              <div className="d-flex flex-column w-100 h-100 align-items-center justify-content-center">
+                <StatusBar
+                  caloriesCurrent={caloriesCurrent}
+                  caloriesMaxSuggestion={caloriesMaxSuggestion}
+                />
+                <section className="container p-0 w-100">
+                  <ul
+                    ref={chatParent}
+                    className="list-unstyled p-3 rounded-3 shadow-sm overflow-auto"
+                    style={{
+                      height: "400px",
+                      maxWidth: "100%",
+                      overflowY: "auto",
+                      overflowX: "hidden",
+                      backgroundColor: "#FDEED8",
+                    }}
+                  >
+                    {messages.map((m, index) => (
+                      <li
+                        key={m.id || index}
+                        className={
+                          m.role === "user"
+                            ? "d-flex mb-3"
+                            : "d-flex flex-row-reverse mb-3"
+                        }
                       >
-                        <i
-                          style={{ fontSize: "14px" }}
-                          class="fa-solid fa-paper-plane"
-                        ></i>
-                      </button>
-                    </form>
-                    <Button
-                      variant="contained"
-                      className="mt-2 w-100"
-                      size="small"
-                      color="error"
-                      onClick={deleteMessage}
+                        <div
+                          className={`p-3 rounded-3 shadow-sm`}
+                          style={{
+                            backgroundColor:
+                              m.role === "user" ? "#D2E296" : "#FBF4EA",
+                          }}
+                        >
+                          <p className="mb-0 fs-6">
+                            {handleNewlines(m.content)}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+                <section className="mb-4 w-100">
+                  <form
+                    className="d-flex align-items-center"
+                    onSubmit={handleSubmit}
+                  >
+                    <input
+                      className="form-control flex-1 me-2"
+                      placeholder="Type your question here..."
+                      type="text"
+                      value={input}
+                      onChange={(event) => {
+                        setInput(event.target.value);
+                      }}
+                      style={{
+                        backgroundColor: "#FBF4EA",
+                        borderColor: "#7D9F00",
+                      }}
+                    />
+                    <button
+                      style={{ backgroundColor: "#D89834" }}
+                      className="btn btn-primary"
+                      type="submit"
                     >
-                      Remove all messages
-                    </Button>
-                  </section>
-                </div>
+                      <i
+                        style={{ fontSize: "14px" }}
+                        class="fa-solid fa-paper-plane"
+                      ></i>
+                    </button>
+                  </form>
+                  <Button
+                    variant="contained"
+                    className="mt-2 w-100"
+                    size="small"
+                    color="error"
+                    onClick={deleteMessage}
+                  >
+                    Remove all messages
+                  </Button>
+                </section>
               </div>
-            )}
+            </div>
+            {/* )} */}
           </div>
         </div>
       )}

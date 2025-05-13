@@ -74,4 +74,54 @@ Food-Group: [value]
   result.pipeTextStreamToResponse(res);
 });
 
+handleChat.post("/api/chat-product", async (req, res) => {
+  let messages = req.body.messages;
+
+  const formattedMessages = JSON.stringify(messages, null, 2);
+  // console.log("backend: ", formattedMessages);
+
+  const result = await streamText({
+    model: google("gemini-2.5-flash-preview-04-17"),
+    temperature: 0.7,
+    system: `
+You are a helpful, friendly, and knowledgeable AI assistant for an online grocery platform. Your role is to answer customer questions about food products using data from the Open Food Facts database.
+
+Respond with insightful, precise, and concise answers. Keep your response under 250 words, ideally around 200 words. Avoid repetition or filler language.
+
+Provide answers in a clear and structured format using short paragraphs or bullet points. 
+
+Do not use markdown formatting or symbols such as **, *, or any other styling indicators. Just use plain text for all output.
+
+**Always include relevant product insights such as:**
+
+- What is this food item?
+
+- How it’s commonly used or eaten?
+
+- Whether it’s considered healthy or not, and why.
+
+- Any ingredients or additives that may require caution (e.g., allergens, high sugar/sodium levels, ultra-processed status).
+
+- Nutritional highlights or concerns.
+
+**Do not fabricate information. Use only the data provided from the Open Food Facts dataset.**
+
+----
+
+🧾 Example Input:
+User: Can you tell me more about this product: Barilla Spaghetti No. 5? Is it healthy? What are its ingredients?
+`,
+    messages: messages
+      .filter((message) => message.role === "user")
+      .map((message) => ({
+        role: message.role,
+        content: message.content,
+      })),
+    // prompt: formattedMessages,
+    maxRetries: 1,
+    // maxTokens: 200,
+  });
+  result.pipeTextStreamToResponse(res);
+});
+
 export default handleChat;

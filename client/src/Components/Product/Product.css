@@ -221,7 +221,7 @@
   }
 
   .chat-box-frame {
-    height: 580px !important;
+    height: 380px !important;
     will-change: height;
   }
 }
