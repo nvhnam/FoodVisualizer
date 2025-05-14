@@ -53,8 +53,8 @@ NutriGuide is an online grocery platform that integrates **visual nutrition labe
 
 If **NutriGuide** inspires your work or study:
 
-- ⭐ Please consider giving this repository a **star** on [GitHub](https://github.com/nvhnam/NutriGuiding).
-- 📄 Cite our upcoming paper in your research
+- 🌟 Please consider giving this repository a **star** on [GitHub](https://github.com/nvhnam/NutriGuiding).
+- 📄 Cite our upcoming paper in your research (updating)
 - 📨 Contribute ideas or fork & PR improvements
 
 > 🆓 The **NutriGuide** is free to use for research and educational purposes **with proper citation**. Commercial use or redistribution is **not permitted**.
@@ -114,3 +114,12 @@ npm start
 - Expanded local database with authentic Vietnamese product labels
 - Longitudinal field study in real e-commerce platforms
 - Enhanced AI: deeper personalization, voice interface, multilingual support
+
+---
+
+## 📩 Contact
+
+For questions or collaborations:
+
+- 📧 Email: nvhnam01@gmail.com
+- 📝 LinkedIn: https://www.linkedin.com/in/nvhnam01/
