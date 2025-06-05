@@ -38,7 +38,7 @@ const Footer = () => {
             <MDBIcon color="secondary" fab icon="linkedin" />
           </a>
           <a
-            href="https://github.com/nvhnam/FoodVisualizer/tree/main"
+            href="https://github.com/nvhnam/TrafficShop/tree/main"
             className="me-4 text-reset"
           >
             <MDBIcon color="secondary" fab icon="github" />
@@ -52,7 +52,7 @@ const Footer = () => {
             <MDBCol md="3" lg="4" xl="3" className="mx-auto mb-4">
               <h6 className="text-uppercase fw-bold mb-4">
                 <MDBIcon color="secondary" icon="gem" className="me-3" />
-                NutriGuide
+                TrafficShop
               </h6>
               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
             </MDBCol>
@@ -94,12 +94,18 @@ const Footer = () => {
                 </a>
               </p>
               <p>
-                <a href="#!" className="text-reset">
+                <a
+                  href="https://nguyenviethoangnam.vercel.app/"
+                  className="text-reset"
+                >
                   Orders
                 </a>
               </p>
               <p>
-                <a href="#!" className="text-reset">
+                <a
+                  href="https://nguyenviethoangnam.vercel.app/"
+                  className="text-reset"
+                >
                   Help
                 </a>
               </p>
@@ -107,14 +113,14 @@ const Footer = () => {
 
             <MDBCol md="4" lg="3" xl="3" className="mx-auto mb-md-0 mb-4">
               <h6 className="text-uppercase fw-bold mb-4">Contact</h6>
-              <p>
+              {/* <p>
                 <MDBIcon color="secondary" icon="home" className="me-3" />
                 Ho Chi Minh City, Vietnam
               </p>
               <p>
                 <MDBIcon color="secondary" icon="envelope" className="me-3" />
                 nvhnam01@gmail.com
-              </p>
+              </p> */}
               <p>
                 <MDBIcon color="secondary" icon="phone" className="me-3" /> + 01
                 234 567 88
@@ -134,7 +140,7 @@ const Footer = () => {
       >
         © {new Date().getFullYear()} Website:
         <a className="text-reset fw-bold m-1" href="/">
-          NutriGuiding.vercel.app
+          Traffic-shop.vercel.app
         </a>
       </div>
     </MDBFooter>

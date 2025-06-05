@@ -18,8 +18,8 @@ const Carousel = () => {
           Make Smarter Food Choices with
         </h1>
         <h1 className="animate__animated animate__fadeInUp animate__delay-1s">
-          <span style={{ color: "#D89834" }}>Nutri</span>
-          <span style={{ color: "black" }}>Guide</span>
+          <span style={{ color: "#D89834" }}>Traffic</span>
+          <span style={{ color: "black" }}>Shop</span>
         </h1>
         <div className="desciption_main-home">
           <ul className="animate__animated animate__fadeInUp animate__delay-2s">

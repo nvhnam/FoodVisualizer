@@ -14,10 +14,10 @@ const AboutMore = () => {
           style={{ lineHeight: "1.8", textAlign: "justify" }}
         >
           <h2 className="mb-3" style={{ color: "#D89834" }}>
-            Welcome to NutriGuide!
+            Welcome to TrafficShop!
           </h2>
           <p>
-            NutriGuide is your trusted platform for nutritional assessment and
+            TrafficShop is your trusted platform for nutritional assessment and
             food awareness, designed to help you make informed, healthier
             dietary choices. Built on scientific research and tailored for
             everyday use, our tools provide clear, easy-to-understand insights
@@ -44,7 +44,7 @@ const AboutMore = () => {
           <p>
             By evaluating key nutritional values such as <em>calories</em>,{" "}
             <em>fats</em>, <em>saturates</em>,<em>sugar</em>, and <em>salt</em>,
-            NutriGuide helps you quickly identify the foods that support your
+            TrafficShop helps you quickly identify the foods that support your
             well-being. Whether you’re planning meals, grocery shopping, or
             improving your diet, our system empowers you to make smarter and
             more conscious eating decisions.
@@ -53,7 +53,7 @@ const AboutMore = () => {
             className="mt-4"
             style={{ fontStyle: "italic", fontSize: "1.1rem" }}
           >
-            Start your journey toward a healthier lifestyle with NutriGuide
+            Start your journey toward a healthier lifestyle with TrafficShop
             today!
           </p>
         </div>

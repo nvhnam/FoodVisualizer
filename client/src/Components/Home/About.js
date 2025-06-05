@@ -47,14 +47,14 @@ const About = () => {
             </h1>
           </div>
           <p style={{ lineHeight: "1.8" }}>
-            At NutriGuide, we aim to revolutionize the way you understand and
+            At TrafficShop, we aim to revolutionize the way you understand and
             assess the nutritional value of food products. Based on our
             research, we utilize a color-coded traffic light system (green,
             amber, red) to clearly indicate the healthiness of food items. Our
             platform simplifies nutritional information, helping you make
             informed, healthier decisions about your eating habits. Whether you
             are monitoring your calorie intake or reducing unhealthy nutrients
-            like fats, sugar, and salt, NutriGuide is here to guide you every
+            like fats, sugar, and salt, TrafficShop is here to guide you every
             step of the way.
           </p>
           <ul style={{ paddingLeft: "1.5rem", lineHeight: "2" }}>

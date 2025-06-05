@@ -81,8 +81,8 @@ const HeaderSub = () => {
                 alt="Icon Visualization"
               />
               <h1 className="brand-title">
-                <span className="nutri">Nutri</span>
-                <span className="guide">Guide</span>
+                <span className="nutri">Traffic</span>
+                <span className="guide">Shop</span>
               </h1>
             </Navbar.Brand>
           </div>
