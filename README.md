@@ -1,6 +1,6 @@
-# 🛒 NutriGuide
+# 🛒 TrafficShop
 
-NutriGuide is an online grocery platform that integrates **visual nutrition labeling** and an **AI assistant** to help Vietnamese online grocery shoppers make healthier, more informed choices. Building on user-centered design and AI, NutriGuide combines traffic-light nutrient labels with a conversational agent for personalized guidance.
+TrafficShop is an online grocery platform that integrates **visual nutrition labeling** and an **AI assistant** to help Vietnamese online grocery shoppers make healthier, more informed choices. Building on user-centered design and AI, TrafficShop combines traffic-light nutrient labels with a conversational agent for personalized guidance.
 
 ---
 
@@ -16,7 +16,7 @@ NutriGuide is an online grocery platform that integrates **visual nutrition labe
 
 ## 📚 Publication  
 
-- **"NutriGuide: Designing Visual Nutrition Support with AI Assistance for Online Grocery Shoppers in Vietnam"**  
+- **"TrafficShop: Designing Visual Nutrition Support with AI Assistance for Online Grocery Shoppers in Vietnam"**  
 - Submitting to *International Journal of Food Design*.  
 - Traffic-light labels & AI assistant evaluated across three user studies
 - Empirical evidence on visualization preferences, behavioral influence, and UX implications
@@ -51,13 +51,13 @@ NutriGuide is an online grocery platform that integrates **visual nutrition labe
 
 ## ⭐ Support This Project
 
-If **NutriGuide** inspires your work or study:
+If **TrafficShop** inspires your work or study:
 
-- 🌟 Please consider giving this repository a **star** on [GitHub](https://github.com/nvhnam/NutriGuiding).
+- 🌟 Please consider giving this repository a **star** on [GitHub](https://github.com/nvhnam/TrafficShop).
 - 📄 Cite our upcoming paper in your research (updating)
 - 📨 Contribute ideas or fork & PR improvements
 
-> 🆓 The **NutriGuide** is free to use for research and educational purposes **with proper citation**. Commercial use or redistribution is **not permitted**.
+> 🆓 The **TrafficShop** is free to use for research and educational purposes **with proper citation**. Commercial use or redistribution is **not permitted**.
 
 ---
 
@@ -77,18 +77,18 @@ If **NutriGuide** inspires your work or study:
 
 ### Clone & install
 <pre>
-git clone https://github.com/nvhnam/NutriGuiding.git
-cd NutriGuiding
+git clone https://github.com/nvhnam/TrafficShop.git
+cd TrafficShop
 </pre>  
 
 ### Import the sample data
 Make sure you have MySQL running, then create a database and load the SQL dump: 
 <pre>
 # in your MySQL client shell
-CREATE DATABASE nutriguide;
+CREATE DATABASE TrafficShop;
 EXIT;
 # back in your terminal
-mysql -u your_user -p nutriguide < datafood/openfood.sql
+mysql -u your_user -p TrafficShop < datafood/openfood.sql
 </pre>
 
 ### Start the backend (Node.js / Express)
@@ -122,4 +122,5 @@ npm start
 For questions or collaborations:
 
 - 📧 Email: nvhnam01@gmail.com
+- 👨‍💻 Portfolio: https://nguyenviethoangnam.vercel.app/
 - 📝 LinkedIn: https://www.linkedin.com/in/nvhnam01/
