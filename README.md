@@ -17,7 +17,7 @@ TrafficShop is an online grocery platform that integrates **visual nutrition lab
 ## 📚 Publication  
 
 - **"TrafficShop: Designing Visual Nutrition Support with AI Assistance for Online Grocery Shoppers in Vietnam"**  
-- Submitting to *International Journal of Food Design*.  
+- Submitting to *International Journal of Human-Computer Studies*.  
 - Traffic-light labels & AI assistant evaluated across three user studies
 - Empirical evidence on visualization preferences, behavioral influence, and UX implications
 
