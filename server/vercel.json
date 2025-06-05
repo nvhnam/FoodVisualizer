@@ -6,7 +6,7 @@
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://traffic-shop.vercel.app/"
+          "value": "https://traffic-shop.vercel.app"
         },
         {
           "key": "Access-Control-Allow-Methods",

@@ -161,7 +161,7 @@ const Login = () => {
       >
         {"Copyright © "}
         <Link color="inherit" href="/">
-          NutriGuide
+          TrafficShop
         </Link>{" "}
         {new Date().getFullYear()}
         {"."}
