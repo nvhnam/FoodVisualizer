@@ -28,7 +28,10 @@ const Footer = () => {
           <a href="/" className="me-4 text-reset">
             <MDBIcon color="secondary" fab icon="twitter" />
           </a>
-          <a href="/" className="me-4 text-reset">
+          <a
+            href="https://nguyenviethoangnam.vercel.app/"
+            className="me-4 text-reset"
+          >
             <MDBIcon color="secondary" fab icon="google" />
           </a>
           <a href="/" className="me-4 text-reset">
